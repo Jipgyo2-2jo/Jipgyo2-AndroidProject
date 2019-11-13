@@ -1,11 +1,12 @@
-package org.techtown.http;
+package com.example.version1;
 
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,18 +15,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class UniversityTourAccessDB extends AppCompatActivity {
 
-    String idList[] = new String[2000];
-    String CityList[] = new String [2000];
     TextView textView;
     Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_universitytourdbtest);
 
         textView = findViewById(R.id.textView);
 
@@ -75,19 +73,23 @@ public class MainActivity extends AppCompatActivity {
 
             JSONArray Array = jsonObject.getJSONArray("start");
 
+            UniversityTour[] universityTourarray = new UniversityTour[100];
+
             for(int i=0;i<Array.length();i++){
                 JSONObject Object = Array.getJSONObject(i);
 
-                Student student = new Student();
+                UniversityTour universityTour = new UniversityTour();
 
-                student.setTitle(Object.getString("id_num"));
-                student.setCategory(Object.getString("city"));
-                idList[i] = student.getTitle();
-                CityList[i] = student.getCategory();
+                universityTour.setId_num(Object.getInt("id_num"));
+                universityTour.setLatitude(Object.getDouble("위도"));
+                universityTour.setLonitude(Object.getDouble("경도"));
+                universityTour.set시설(Object.getString("시설"));
+                universityTour.set기본_사항(Object.getString("기본_사항"));
+                universityTour.set한줄평(Object.getString("한줄평"));
 
-                println(idList[i]);
-                println(CityList[i]);
+                universityTourarray[i] = universityTour;
 
+                println(universityTour.get시설());
             }
 
         } catch (Exception ex) {
