@@ -17,6 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import domain.Universities;
+
 public class UniversitiesAccessDB extends AppCompatActivity {
 
     ArrayList<Universities> Universitiesarray = new ArrayList<>();
