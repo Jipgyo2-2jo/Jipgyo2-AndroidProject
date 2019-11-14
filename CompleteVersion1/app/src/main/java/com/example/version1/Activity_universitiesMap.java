@@ -131,15 +131,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         // 중심점 변경 + 줌 레벨 변경
         mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(36.536516, 127.865852), 10, true);
 
-//        MapPOIItem marker = new MapPOIItem();
-//        marker.setItemName("Default Marker");
-//        marker.setTag(0);
-//        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(37.281597, 127.044295));
-//        marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-//        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양
-//
-//        mMapView.addPOIItem(marker);
-
         // 구현한 CalloutBalloonAdapter 등록
         mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
         createCustomMarker(mMapView);
@@ -363,6 +354,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             if ( check_result ) {
                 Log.d("@@@", "start");
                 //위치 값을 가져올 수 있음
+                Log.d("MapRotation", Float.toString(mMapView.getMapRotationAngle()));
+                mMapView.setMapRotationAngle(0, false);
                 mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
             }
             else {
@@ -404,6 +397,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
 
             // 3.  위치 값을 가져올 수 있음, 위치에 따른 맵 뷰 설정도 가능하다.
+            Log.d("MapRotation", Float.toString(mMapView.getMapRotationAngle()));
+            mMapView.setMapRotationAngle(0, false);
             mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
 
         } else {  //2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요합니다. 2가지 경우(3-1, 4-1)가 있습니다.

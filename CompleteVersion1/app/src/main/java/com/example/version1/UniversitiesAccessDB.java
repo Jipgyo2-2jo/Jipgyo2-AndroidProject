@@ -2,7 +2,6 @@ package com.example.version1;
 
 import android.os.Handler;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,10 +17,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class UniversityTourAccessDB extends AppCompatActivity {
+public class UniversitiesAccessDB extends AppCompatActivity {
 
-    ArrayList<UniversityTour> universityTourarray = new ArrayList<>();
-
+    ArrayList<Universities> Universitiesarray = new ArrayList<>();
     TextView textView;
     Handler handler = new Handler();
     @Override
@@ -35,7 +33,7 @@ public class UniversityTourAccessDB extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String urlStr = "http://3.114.244.9/test.php";
+                final String urlStr = "http://3.114.244.9/test2.php";
 
                 new Thread(new Runnable() {
                     @Override
@@ -80,42 +78,36 @@ public class UniversityTourAccessDB extends AppCompatActivity {
             for(int i=0;i<Array.length();i++){
                 JSONObject Object = Array.getJSONObject(i);
 
-                UniversityTour universityTour = new UniversityTour();
+                Universities universities = new Universities();
 
-                universityTour.setId_num(Object.getInt("id_num"));
-                universityTour.setLatitude(Object.getDouble("위도"));
-                universityTour.setLonitude(Object.getDouble("경도"));
-                universityTour.set시설(Object.getString("시설"));
-                universityTour.set기본_사항(Object.getString("기본_사항"));
-                universityTour.set한줄평(Object.getString("한줄평"));
+                universities.setId_num(Object.getString("id_num"));
+                universities.set시도(Object.getString("시도"));
+                universities.set학교명(Object.getString("학교명"));
+                universities.set학교명영문(Object.getString("학교명영문"));
+                universities.set본분교(Object.getString("본분교"));
+                universities.set설립(Object.getString("설립"));
+                universities.set주소(Object.getString("주소"));
+                universities.set전화번호(Object.getString("전화번호"));
+                universities.set홈페이지(Object.getString("홈페이지"));
 
-                universityTourarray.add(universityTour);
-                Log.d("3456", universityTourarray.get(i).get시설());
+                Universitiesarray.add(universities);
+
+                println(universities.get학교명());
             }
 
         } catch (Exception ex) {
-            Log.d("UniversityTourAccessDB", "예외 발생함 : " + ex.toString());
+            println("예외 발생함 : " + ex.toString());
         }
     }
 
-    public ArrayList<UniversityTour> getUniversityTourFromDB(String UnivName){
-        //임시로 대학 이름을 test로 설정
-        final String urlStr = "http://3.114.244.9/" + UnivName + ".php";
-
-        Thread thread = new Thread(new Runnable() {
+    public void println(final String data) {
+        handler.post(new Runnable() {
             @Override
             public void run() {
-                request(urlStr);
+                textView.append(data + "\n");
             }
         });
-        thread.start();
-
-        try {
-            thread.join();
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
-        return universityTourarray;
     }
+
 }
+
