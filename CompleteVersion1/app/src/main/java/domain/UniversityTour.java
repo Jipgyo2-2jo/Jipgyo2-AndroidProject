@@ -1,4 +1,4 @@
-package com.example.version1;
+package domain;
 
 public class UniversityTour {
     private int id_num;

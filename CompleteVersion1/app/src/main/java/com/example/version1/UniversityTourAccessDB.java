@@ -18,6 +18,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import domain.UniversityTour;
+
 public class UniversityTourAccessDB extends AppCompatActivity {
 
     ArrayList<UniversityTour> universityTourarray = new ArrayList<>();
