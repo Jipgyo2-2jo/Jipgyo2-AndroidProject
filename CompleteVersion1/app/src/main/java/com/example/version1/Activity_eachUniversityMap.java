@@ -45,6 +45,8 @@ import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
 
+import domain.UniversityTour;
+
 public class Activity_eachUniversityMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener {
 
     private static final String LOG_TAG = "Act_eachUniversitiesMap";

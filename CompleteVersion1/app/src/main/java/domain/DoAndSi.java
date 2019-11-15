@@ -1,4 +1,4 @@
-package com.example.version1;
+package domain;
 
 public class DoAndSi {
     String name;
