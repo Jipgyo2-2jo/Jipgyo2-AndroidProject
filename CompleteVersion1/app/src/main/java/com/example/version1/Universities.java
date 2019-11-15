@@ -10,8 +10,8 @@ public class Universities {
     String 주소;
     String 전화번호;
     String 홈페이지;
-    float latitude;
-    float lonitude;
+    Double latitude;
+    Double lonitude;
 
     public String getId_num() {
         return id_num;
@@ -85,19 +85,19 @@ public class Universities {
         this.홈페이지 = 홈페이지;
     }
 
-    public float getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public float getLonitude() {
+    public Double getLonitude() {
         return lonitude;
     }
 
-    public void setLonitude(float lonitude) {
+    public void setLonitude(Double lonitude) {
         this.lonitude = lonitude;
     }
 }

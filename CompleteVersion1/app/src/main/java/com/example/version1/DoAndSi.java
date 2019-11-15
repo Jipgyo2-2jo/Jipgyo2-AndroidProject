@@ -2,18 +2,26 @@ package com.example.version1;
 
 public class DoAndSi {
     String name;
-    float latitude;
-    float lonitude;
+    double latitude;
+    double lonitude;
+    int zoomlevel;
+
+    public DoAndSi(String name, double latitude, double lonitude, int zoomlevel){
+        this.name = name;
+        this.latitude = latitude;
+        this.lonitude = lonitude;
+        this.zoomlevel = zoomlevel;
+    }
 
     public String getName() {
         return name;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public float getLonitude() {
+    public double getLonitude() {
         return lonitude;
     }
 
@@ -21,11 +29,19 @@ public class DoAndSi {
         this.name = name;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public void setLonitude(float lonitude) {
+    public void setLonitude(double lonitude) {
         this.lonitude = lonitude;
+    }
+
+    public int getZoomlevel() {
+        return zoomlevel;
+    }
+
+    public void setZoomlevel(int zoomlevel) {
+        this.zoomlevel = zoomlevel;
     }
 }

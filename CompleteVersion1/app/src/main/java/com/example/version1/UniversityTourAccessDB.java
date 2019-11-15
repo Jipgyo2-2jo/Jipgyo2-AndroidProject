@@ -90,7 +90,6 @@ public class UniversityTourAccessDB extends AppCompatActivity {
                 universityTour.set한줄평(Object.getString("한줄평"));
 
                 universityTourarray.add(universityTour);
-                Log.d("3456", universityTourarray.get(i).get시설());
             }
 
         } catch (Exception ex) {
@@ -98,9 +97,9 @@ public class UniversityTourAccessDB extends AppCompatActivity {
         }
     }
 
-    public ArrayList<UniversityTour> getUniversityTourFromDB(String UnivName){
+    public ArrayList<UniversityTour> getUniversityTourFromDB(String univName){
         //임시로 대학 이름을 test로 설정
-        final String urlStr = "http://3.114.244.9/" + UnivName + ".php";
+        final String urlStr = "http://3.114.244.9/" + univName + ".php";
 
         Thread thread = new Thread(new Runnable() {
             @Override

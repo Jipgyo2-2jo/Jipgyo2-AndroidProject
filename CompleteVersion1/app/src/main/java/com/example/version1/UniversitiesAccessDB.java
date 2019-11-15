@@ -2,6 +2,7 @@ package com.example.version1;
 
 import android.os.Handler;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -89,24 +90,35 @@ public class UniversitiesAccessDB extends AppCompatActivity {
                 universities.set주소(Object.getString("주소"));
                 universities.set전화번호(Object.getString("전화번호"));
                 universities.set홈페이지(Object.getString("홈페이지"));
+                universities.setLatitude(Object.getDouble("위도"));
+                universities.setLonitude(Object.getDouble("경도"));
 
                 Universitiesarray.add(universities);
-
-                println(universities.get학교명());
             }
 
         } catch (Exception ex) {
-            println("예외 발생함 : " + ex.toString());
+            Log.d("UniversitiesAccessDB","예외 발생함 : " + ex.toString());
         }
     }
+    public ArrayList<Universities> getUniversitiesFromDB(){
 
-    public void println(final String data) {
-        handler.post(new Runnable() {
+        final String urlStr = "http://3.114.244.9/test2.php";
+
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                textView.append(data + "\n");
+                request(urlStr);
             }
         });
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        return Universitiesarray;
     }
 
 }
