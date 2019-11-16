@@ -15,7 +15,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".Activity_choose_school">
+            android:name=".activity.Activity_univ_intro"
+            android:label="@string/title_activity_univ_intro"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.Activity_eachUniversityMap"
+            android:label="@string/title_activity_each_university_map"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.Activity_choose_location"
+            android:label="@string/title_activity_choose_location"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,24 +33,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity_eachUniversityMap"
-            android:label="@string/title_activity_each_university_map"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activity_choose_location"
-            android:label="@string/title_activity_choose_location"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".Activity_testsub"
+            android:name=".activity.Activity_testsub"
             android:label="@string/title_activity_testsub"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity_universitiesMap"
+            android:name=".activity.Activity_universitiesMap"
             android:label="mainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".UniversityTourAccessDB"
+            android:name=".database.UniversityTourAccessDB"
             android:label="UniversityTourAccessDB"
             android:theme="@style/AppTheme.NoActionBar" />
 
