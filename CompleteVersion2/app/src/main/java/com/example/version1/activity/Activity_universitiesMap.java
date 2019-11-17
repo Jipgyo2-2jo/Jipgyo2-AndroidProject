@@ -2,8 +2,11 @@ package com.example.version1.activity;
 
 import android.Manifest;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 
 import android.content.Intent;
@@ -12,6 +15,7 @@ import android.content.pm.PackageManager;
 
 import android.location.LocationManager;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,9 +28,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +72,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     private RelativeLayout rela;
+
+    //for 검색기능
+    public MenuItem searchItem;
 
     //도, 시를 가져와서 일차적으로 이 것들만 가져오도록 한다.
     private ArrayList<DoAndSi> setAndgetDoAndSiFromDB() {
@@ -110,6 +121,48 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             return null;
         }
     }
+
+    @Override
+    //검색부분 구현
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            searchItem = menu.findItem(R.id.action_search);
+            SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+            searchView.setMaxWidth(Integer.MAX_VALUE);
+
+            searchView.setQueryHint("학교명 검색");
+            searchView.setOnQueryTextListener(queryTextListener);
+            SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+            if(null!=searchManager){
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            }
+            searchView.setIconifiedByDefault(true);
+        }
+        return true;
+    }
+
+    //검색 리스너
+    private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+        @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            // TODO Auto-generated method stub
+
+            createCustomMarkerSearched(mMapView, query);
+            return false;
+        }
+
+        //검색시 실시간으로 바뀌게 하는 기능
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +214,30 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    private void createCustomMarkerSearched(MapView mapView, String name){
+
+        Universities searchedUniv = new Universities();
+        for(int i = 0; i < Universitiesarray.size(); i++){
+            if(Universitiesarray.get(i).get학교명().contains(name)) {
+                searchedUniv = Universitiesarray.get(i);
+                Toast.makeText(getApplicationContext(), "Searched: " + searchedUniv.get학교명(), Toast.LENGTH_LONG).show();
+                break;
+            }
+            else if(i == Universitiesarray.size() - 1){
+                Toast.makeText(getApplicationContext(), "Not Found: " + name, Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        Intent intent=new Intent(Activity_universitiesMap.this, Activity_eachUniversityMap.class);
+        intent.putExtra("univName",searchedUniv.get학교명());
+        //sharedpreference를 이용하여 view설정을 저장한 후에 remove를 하도록 해서 나중에 resume이 되더라도 설정값을 이용하여 다시 보여줄 수 있도록 한다.
+        //혹은 그냥 하나의 맵 뷰에 모든 기능 넣음
+        //어차피 학교에 대한 간단한 설명을 하고 다시 맵 뷰를 보여주기 때문에 메인화면을 resume할 때 맵 뷰 재생성만 해주면 될 것 같다.
+        rela.removeAllViewsInLayout();
+        startActivity(intent);
+
     }
 
     private void createCustomMarkerDoAndSi(MapView mapView, DoAndSi doAndSi) {
