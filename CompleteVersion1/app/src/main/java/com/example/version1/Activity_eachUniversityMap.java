@@ -10,8 +10,10 @@ import android.content.Intent;
 
 import android.content.pm.PackageManager;
 
+import android.location.Location;
 import android.location.LocationManager;
 
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -52,9 +54,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private MapView mMapView;
     private MapPOIItem mCustomMarker;
     private Button button1;
-
-    private static final MapPoint CUSTOM_MARKER_POINT = MapPoint.mapPointWithGeoCoord(37.291597, 127.046295);
-    private static final MapPoint DEFAULT_MARKER_POINT = MapPoint.mapPointWithGeoCoord(37.281597, 127.044295);
+    private ArrayList<UniversityTour> universityTourarray;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -77,29 +77,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         public View getCalloutBalloon(MapPOIItem poiItem) {
             ((ImageView) mCalloutBalloon.findViewById(R.id.badge)).setImageResource(R.drawable.ic_launcher_foreground);
             ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
-            ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText("Custom CalloutBalloon");
-            return mCalloutBalloon;
-        }
-
-        @Override
-        public View getPressedCalloutBalloon(MapPOIItem poiItem) {
-            return null;
-        }
-    }
-
-    // CalloutBalloonAdapter2 인터페이스 구현
-    class CustomCalloutBalloonAdapter2 implements CalloutBalloonAdapter {
-        private final View mCalloutBalloon;
-
-        public CustomCalloutBalloonAdapter2() {
-            mCalloutBalloon = getLayoutInflater().inflate(R.layout.custom_callout_balloon, null);
-        }
-
-        @Override//디폴트 값
-        public View getCalloutBalloon(MapPOIItem poiItem) {
-            ((ImageView) mCalloutBalloon.findViewById(R.id.badge)).setImageResource(R.drawable.ic_launcher_background);
-            ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
-            ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText("Custom CalloutBalloon");
+            ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(universityTourarray.get(poiItem.getTag()-1).get한줄평());
             return mCalloutBalloon;
         }
 
@@ -113,19 +91,14 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //일단 아주대학교의 이름을 test로 둔다고 가정 intent를 통해 아주대의 정보를 넘겨받아야 함
-        String UnivName = "test";
-        ArrayList<UniversityTour> universityTourarray;
-
-        Log.d("4321", "1234");
+        Intent intent = getIntent(); //이 액티비티를 부른 인텐트를 받는다.
+        String univName = intent.getStringExtra("univName");
 
         //일단 DB에서 해당 학교에 대한 위치를 모두 받는 메소드를 실행한다.
         UniversityTourAccessDB universityTourAccessDB = new UniversityTourAccessDB();
-        universityTourarray = universityTourAccessDB.getUniversityTourFromDB(UnivName);
+        universityTourarray = universityTourAccessDB.getUniversityTourFromDB(univName);
 
-        Log.d("1234", universityTourarray.get(1).get시설());
-
-        setContentView(R.layout.activity_universitiesmap);
+        setContentView(R.layout.activity_universitymap);
 
         button1 = findViewById(R.id.button);
         button1.setOnClickListener(mClickListener);
@@ -136,29 +109,18 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mMapView.setPOIItemEventListener(this);
         mMapView.setCurrentLocationEventListener(this);
         // 중심점 변경 + 줌 레벨 변경
-        mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(36.536516, 127.865852), 10, true);
-
-
-//        MapPOIItem marker = new MapPOIItem();
-//        marker.setItemName("Default Marker");
-//        marker.setTag(0);
-//        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(37.281597, 127.044295));
-//        marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-//        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양
-//
-//        mMapView.addPOIItem(marker);
+        mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(36.536516, 127.865852), 2, true);
 
         // 구현한 CalloutBalloonAdapter 등록
         mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
         for(int i = 0; i < universityTourarray.size(); i++){
-
-            Log.d("onCreate", ":"+universityTourarray.get(i).get시설());
             createCustomMarker(mMapView, universityTourarray.get(i));
         }
+
 //        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter2());//이런식으로 다른 벌룬 인터페이스가 각각의 마커에 들어간다.
 //        createCustomMarker2(mMapView, universityTourarray[i]);
 
-        showAll();
+        mMapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.28163800,127.04539600), false);
 
         if (!checkLocationServicesStatus()) {
 
@@ -191,41 +153,19 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         mapView.addPOIItem(mCustomMarker);
         mapView.selectPOIItem(mCustomMarker, true);
-        mapView.setMapCenterPoint(CUSTOM_MARKER_POINT, false);
-    }
-
-    private void createCustomMarker2(MapView mapView, UniversityTour universityTourSculpture) {
-        mCustomMarker = new MapPOIItem();
-        String name = "Custom2 Marker";//이름
-        mCustomMarker.setItemName(name);
-        mCustomMarker.setTag(1);
-        mCustomMarker.setMapPoint(DEFAULT_MARKER_POINT);//맵 포인트
-
-        mCustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-
-        mCustomMarker.setCustomImageResourceId(R.drawable.custom_map_present);//이미지(png파일로 하자)
-        mCustomMarker.setCustomImageAutoscale(false);
-        mCustomMarker.setCustomImageAnchor(0.5f, 1.0f);
-
-        mapView.addPOIItem(mCustomMarker);
-        mapView.selectPOIItem(mCustomMarker, true);
-        mapView.setMapCenterPoint(CUSTOM_MARKER_POINT, false);
-    }
-
-    private void showAll() {
-        int padding = 20;
-        float minZoomLevel = 7;
-        float maxZoomLevel = 10;
-        MapPointBounds bounds = new MapPointBounds(CUSTOM_MARKER_POINT, DEFAULT_MARKER_POINT);
-        mMapView.moveCamera(CameraUpdateFactory.newMapPointBounds(bounds, padding, minZoomLevel, maxZoomLevel));
     }
 
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         MapPoint.GeoCoordinate mapPointGeo = currentLocation.getMapPointGeoCoord();
         Log.i(LOG_TAG, String.format("MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)", mapPointGeo.latitude, mapPointGeo.longitude, accuracyInMeters));
-        //gps와 건물의 거리가 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
+        //gps와 건물의 거리가 (40m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
+        Location cl = new Location("1");
+        Location gl = new Location("2");
+        cl.setLatitude(mapPointGeo.latitude);
+        cl.setLongitude(mapPointGeo.longitude);
 
+        cl.distanceTo(gl);
     }
 
     @Override
@@ -263,9 +203,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         //최종적으로 결정된 학교를 선택하면 Activity_eachUniversityMap 액티비티로 이동
         if(mapView.getZoomLevel() <= 4){
             //POIitem의 학교 정보를 이용함
-
         }
-
     }
 
     @Override
@@ -293,12 +231,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     }
 
-    //줌 레벨 별로 void removePOIItems(MapPOIItem[]) 관련 메소드를 사용하여 마커를 지도에 보이게 할지 안보이게 할지 구성한다.
-    //map의 줌 레벨 가져오기, 줌이 바뀔 때 event listener도 있다.
     @Override
     public void onMapViewZoomLevelChanged(MapView mapView, int zoomLevel) {
-        //다른 마커들 안보이게(테스트)
-        //mapView.removePOIItem(mapPOIItem);
+
     }
 
     @Override

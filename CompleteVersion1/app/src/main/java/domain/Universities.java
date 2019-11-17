@@ -10,8 +10,13 @@ public class Universities {
     String 주소;
     String 전화번호;
     String 홈페이지;
+<<<<<<< HEAD:CompleteVersion1/app/src/main/java/com/example/version1/Universities.java
+    Double latitude;
+    Double lonitude;
+=======
     double latitude;
     double lonitude;
+>>>>>>> 11bf7d735547d7f6895ea25ffb0c413a433cf748:CompleteVersion1/app/src/main/java/domain/Universities.java
 
     public String getId_num() {
         return id_num;
@@ -85,6 +90,21 @@ public class Universities {
         this.홈페이지 = 홈페이지;
     }
 
+<<<<<<< HEAD:CompleteVersion1/app/src/main/java/com/example/version1/Universities.java
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLonitude() {
+        return lonitude;
+    }
+
+    public void setLonitude(Double lonitude) {
+=======
     public double getLatitude() {
         return latitude;
     }
@@ -115,6 +135,7 @@ public class Universities {
         this.전화번호 = 전화번호;
         this.홈페이지 = 홈페이지;
         this.latitude = latitude;
+>>>>>>> 11bf7d735547d7f6895ea25ffb0c413a433cf748:CompleteVersion1/app/src/main/java/domain/Universities.java
         this.lonitude = lonitude;
     }
 }
