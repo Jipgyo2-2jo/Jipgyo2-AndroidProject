@@ -14,17 +14,32 @@
 
     </net.daum.mf.map.api.MapView>
 
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/buttonschool"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="30dp"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonback"
+        android:text="큰 화면"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="30dp"
-        android:text="Button" />
+        android:layout_marginBottom="60dp"
+        android:layout_marginRight="30dp"
+        android:visibility="invisible" />
 
     <SlidingDrawer
         android:id="@+id/slidingdrawer"

@@ -19,6 +19,7 @@ public class Activity_univ_introduction extends AppCompatActivity {
 
     Button button1;
     Button button2;
+    String univName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class Activity_univ_introduction extends AppCompatActivity {
         setContentView(R.layout.activity_univ_introduction);
 
         Intent intent = getIntent(); //이 액티비티를 부른 인텐트를 받는다.
-        String univName = intent.getStringExtra("univName");
+        univName = intent.getStringExtra("univName");
 
         //db에서 univName에 해당하는 정보를 불러온다.
         button1 = findViewById(R.id.button1);
@@ -39,14 +40,15 @@ public class Activity_univ_introduction extends AppCompatActivity {
 
     Button.OnClickListener ClickListener1 = new View.OnClickListener() {
         public void onClick(View v) {
-            Intent intent = new Intent(Activity_univ_introduction.this, Activity_universitiesMap.class);
-            startActivity(intent);
+            finish();
         }
     };
 
     Button.OnClickListener ClickListener2 = new View.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(Activity_univ_introduction.this, Activity_eachUniversityMap.class);
+            //대학교 이름도 넘겨줌
+            intent.putExtra("univName", univName);
             startActivity(intent);
         }
     };
