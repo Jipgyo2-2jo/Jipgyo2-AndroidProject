@@ -4,4 +4,10 @@
     <string name="title_activity_choose_location">Activity_choose_location</string>
     <string name="title_activity_each_university_map">Activity_eachUniversityMap</string>
     <string name="title_activity_univ_intro">Activity_univ_intro</string>
+    <string name="title_activity_univ_introduction">activity_univ_introduction</string>
+    <string name="title_activity_loc_informaion">Activity_loc_informaion</string>
+    <string name="title_activity_basic_mission">Activity_basic_mission</string>
+    <string name="title_activity_high_mission">Activity_high_mission</string>
+    <string name="title_activity_photo_mission">Activity_photo_mission</string>
+    <string name="title_activity_tour_finish">Activity_tour_finish</string>
 </resources>
