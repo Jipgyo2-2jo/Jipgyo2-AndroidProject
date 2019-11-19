@@ -33,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -54,8 +55,10 @@ import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class Activity_universitiesMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener {
+public class Activity_universitiesMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener, sBtnAdapter.ListBtnClickListener {
 
     private static final String LOG_TAG = "Act_universitiesMap";
     ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
@@ -216,28 +219,61 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         super.onResume();
     }
 
+    //검색버튼 눌렀을때
     private void createCustomMarkerSearched(MapView mapView, String name){
+        int count = 0;
+        int[] schools = new int[500];
+        ListView listview ;
+        sBtnAdapter adapter;
+        ArrayList<sBtnItem> list = new ArrayList<>();
 
-        Universities searchedUniv = new Universities();
+        Queue<Universities> searchedUniv = new LinkedList<Universities>();
+
+        //검색버튼 누른경우 학교목록에서 검색
         for(int i = 0; i < Universitiesarray.size(); i++){
             if(Universitiesarray.get(i).get학교명().contains(name)) {
-                searchedUniv = Universitiesarray.get(i);
-                Toast.makeText(getApplicationContext(), "Searched: " + searchedUniv.get학교명(), Toast.LENGTH_LONG).show();
-                break;
-            }
-            else if(i == Universitiesarray.size() - 1){
-                Toast.makeText(getApplicationContext(), "Not Found: " + name, Toast.LENGTH_LONG).show();
-                return;
+                searchedUniv.offer(Universitiesarray.get(i));
+                count++;
             }
         }
-        Intent intent=new Intent(Activity_universitiesMap.this, Activity_eachUniversityMap.class);
-        intent.putExtra("univName",searchedUniv.get학교명());
-        //sharedpreference를 이용하여 view설정을 저장한 후에 remove를 하도록 해서 나중에 resume이 되더라도 설정값을 이용하여 다시 보여줄 수 있도록 한다.
-        //혹은 그냥 하나의 맵 뷰에 모든 기능 넣음
-        //어차피 학교에 대한 간단한 설명을 하고 다시 맵 뷰를 보여주기 때문에 메인화면을 resume할 때 맵 뷰 재생성만 해주면 될 것 같다.
-        rela.removeAllViewsInLayout();
-        startActivity(intent);
+        Toast.makeText(getApplicationContext(), "Searched: " + Integer.toString(count) + "개 학교", Toast.LENGTH_LONG).show();
 
+        //없는경우
+        if(count==0){
+            Toast.makeText(getApplicationContext(), "Not Found: " + name, Toast.LENGTH_LONG).show();
+            return;
+        }
+        //1개인경우
+        else if (count == 1) {
+            Intent intent = new Intent(Activity_universitiesMap.this, Activity_eachUniversityMap.class);
+            intent.putExtra("univName", searchedUniv.poll().get학교명());
+            //sharedpreference를 이용하여 view설정을 저장한 후에 remove를 하도록 해서 나중에 resume이 되더라도 설정값을 이용하여 다시 보여줄 수 있도록 한다.
+            //혹은 그냥 하나의 맵 뷰에 모든 기능 넣음
+            //어차피 학교에 대한 간단한 설명을 하고 다시 맵 뷰를 보여주기 때문에 메인화면을 resume할 때 맵 뷰 재생성만 해주면 될 것 같다.
+            rela.removeAllViewsInLayout();
+            startActivity(intent);
+        }
+        //여러개인경우
+        else{
+            sBtnItem item;
+
+            while(searchedUniv.isEmpty()==false){
+                //listview 아이템 생성
+                item = new sBtnItem();
+                Universities temp = searchedUniv.poll();
+                item.setText(temp.get학교명() + "  전화번호: " + temp.get전화번호());
+                item.setUniversities(temp);
+                list.add(item);
+            }
+
+            // Adapter 생성
+            adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this) ;
+
+            // 리스트뷰 참조 및 Adapter달기
+            listview = (ListView) findViewById(R.id.slistView);
+            listview.setAdapter(adapter);
+
+        }
     }
 
     private void createCustomMarkerDoAndSi(MapView mapView, DoAndSi doAndSi) {
