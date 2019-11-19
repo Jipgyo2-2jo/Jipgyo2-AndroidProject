@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.transition.Slide;
 import android.util.Log;
 
 import android.view.Menu;
@@ -37,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,34 +82,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     private RelativeLayout rela;
-
     //for 검색기능
     public MenuItem searchItem;
-/*
-    //도, 시를 가져와서 일차적으로 이 것들만 가져오도록 한다.
-    private ArrayList<DoAndSi> setAndgetDoAndSiFromDB() {
-        ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
-        doAndSiarray.add(new DoAndSi("서울", 37.5642135, 127.0016985, 8));
-        doAndSiarray.add(new DoAndSi("경기", 37.290301, 127.095697, 8));
-        //doAndSiarray.add(new DoAndSi("경기 북부", 37.746260, 127.081964, 8));
-        doAndSiarray.add(new DoAndSi("인천", 37.516495, 126.715548, 8));
-        doAndSiarray.add(new DoAndSi("강원", 37.8304115, 128.2260705, 9));
-        doAndSiarray.add(new DoAndSi("충북", 36.991615, 127.717028, 9));
-        doAndSiarray.add(new DoAndSi("충남", 36.547203, 126.954132, 9));
-        doAndSiarray.add(new DoAndSi("대전", 36.342518, 127.395548, 8));
-        doAndSiarray.add(new DoAndSi("전북", 35.594455, 127.170825, 9));
-        doAndSiarray.add(new DoAndSi("전남", 34.929944, 127.001457, 9));
-        doAndSiarray.add(new DoAndSi("광주", 35.145689, 126.839936, 8));
-        doAndSiarray.add(new DoAndSi("경북", 36.511197, 128.705964, 9));
-        doAndSiarray.add(new DoAndSi("경남", 35.487832, 128.485218, 9));
-        doAndSiarray.add(new DoAndSi("대구", 35.829030, 128.558030, 8));
-        doAndSiarray.add(new DoAndSi("울산", 35.540098, 129.296991, 8));
-        doAndSiarray.add(new DoAndSi("부산", 35.147905, 129.034805, 8));
-        doAndSiarray.add(new DoAndSi("제주", 33.378994, 126.521648, 9));
 
-        return doAndSiarray;
-    }
-*/
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
         private final View mCalloutBalloon;
@@ -180,12 +157,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         setContentView(R.layout.activity_universitiesmap);
 
         Intent intent = getIntent();
-        //일단 DB에서 해당 학교에 대한 위치를 모두 받는 메소드를 실행한다.
-        //doAndSiarray = setAndgetDoAndSiFromDB();
+        //MainActivity에서 시도정보와 학교정보 받아옴
         doAndSiarray = (ArrayList<DoAndSi>) intent.getSerializableExtra("doAndSiarray");
-
-        //UniversitiesAccessDB universitiesAccessDB = new UniversitiesAccessDB();
-        //Universitiesarray = universitiesAccessDB.getUniversitiesFromDB();
         Universitiesarray = (ArrayList<Universities>)intent.getSerializableExtra("Universitiesarray");
 
         mMapView = (MapView) findViewById(R.id.map_view);
@@ -239,11 +212,12 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     //검색버튼 눌렀을때
     private void createCustomMarkerSearched(MapView mapView, String name){
         int count = 0;
-        int[] schools = new int[500];
         ListView listview ;
         sBtnAdapter adapter;
         ArrayList<sBtnItem> list = new ArrayList<>();
+        SlidingDrawer slidingDrawer;
 
+        slidingDrawer = (SlidingDrawer)findViewById(R.id.slidingdrawer);
         Queue<Universities> searchedUniv = new LinkedList<Universities>();
 
         //검색버튼 누른경우 학교목록에서 검색
@@ -278,7 +252,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 //listview 아이템 생성
                 item = new sBtnItem();
                 Universities temp = searchedUniv.poll();
-                item.setText(temp.get학교명() + "  전화번호: " + temp.get전화번호());
+                item.setUnivname(temp.get학교명());
+                item.setUnivnum(temp.get전화번호());
                 item.setUniversities(temp);
                 list.add(item);
             }
@@ -289,8 +264,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             // 리스트뷰 참조 및 Adapter달기
             listview = (ListView) findViewById(R.id.slistView);
             listview.setAdapter(adapter);
-
         }
+
+        slidingDrawer.animateOpen();
     }
 
     private void createCustomMarkerDoAndSi(MapView mapView, DoAndSi doAndSi) {

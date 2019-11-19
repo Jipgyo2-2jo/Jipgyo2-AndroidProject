@@ -50,15 +50,17 @@ public class sBtnAdapter extends ArrayAdapter {
         }
 
         // 화면에 표시될 View(Layout이 inflate된)로부터 위젯에 대한 참조 획득
-        final ImageView iconImageView = (ImageView) convertView.findViewById(R.id.imageView1);
-        final TextView textTextView = (TextView) convertView.findViewById(R.id.textView1);
+//        final ImageView iconImageView = (ImageView) convertView.findViewById(R.id.imageView1);
+        final TextView Univname = (TextView) convertView.findViewById(R.id.univ_name);
+        final TextView Univnum = (TextView) convertView.findViewById(R.id.univ_num);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         final sBtnItem listViewItem = (sBtnItem) getItem(position);
 
         // 아이템 내 각 위젯에 데이터 반영
-        iconImageView.setImageDrawable(listViewItem.getIcon());
-        textTextView.setText(listViewItem.getText());
+//        iconImageView.setImageDrawable(listViewItem.getIcon());
+        Univname.setText(listViewItem.getUnivname());
+        Univnum.setText(listViewItem.getUnivnum());
 
         // button1 클릭 시 TextView(textView1)의 내용 변경.
         Button button1 = (Button) convertView.findViewById(R.id.button1);

@@ -16,19 +16,25 @@ public class sBtnItem {
     }
 
     private Drawable iconDrawable ;
-    private String textStr ;
+    private String Univname, Univnum;
 
     public void setIcon(Drawable icon) {
         iconDrawable = icon ;
     }
-    public void setText(String text) {
-        textStr = text ;
+    public void setUnivname(String text) {
+        Univname = text ;
+    }
+    public void setUnivnum(String text) {
+        Univnum = text ;
     }
 
     public Drawable getIcon() {
         return this.iconDrawable ;
     }
-    public String getText() {
-        return this.textStr ;
+    public String getUnivname() {
+        return this.Univname ;
+    }
+    public String getUnivnum() {
+        return this.Univnum ;
     }
 }
