@@ -83,7 +83,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
     //for 검색기능
     public MenuItem searchItem;
-
+/*
     //도, 시를 가져와서 일차적으로 이 것들만 가져오도록 한다.
     private ArrayList<DoAndSi> setAndgetDoAndSiFromDB() {
         ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
@@ -107,7 +107,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         return doAndSiarray;
     }
-
+*/
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
         private final View mCalloutBalloon;
@@ -134,6 +134,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     //검색부분 구현
     public boolean onCreateOptionsMenu(Menu menu){
         super.onCreateOptionsMenu(menu);
+
+        Log.d("Activity_universities: ", "실행");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
 
@@ -175,14 +177,16 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //일단 DB에서 해당 학교에 대한 위치를 모두 받는 메소드를 실행한다.
-        doAndSiarray = setAndgetDoAndSiFromDB();
-
-        UniversitiesAccessDB universitiesAccessDB = new UniversitiesAccessDB();
-        Universitiesarray = universitiesAccessDB.getUniversitiesFromDB();
-
         setContentView(R.layout.activity_universitiesmap);
+
+        Intent intent = getIntent();
+        //일단 DB에서 해당 학교에 대한 위치를 모두 받는 메소드를 실행한다.
+        //doAndSiarray = setAndgetDoAndSiFromDB();
+        doAndSiarray = (ArrayList<DoAndSi>) intent.getSerializableExtra("doAndSiarray");
+
+        //UniversitiesAccessDB universitiesAccessDB = new UniversitiesAccessDB();
+        //Universitiesarray = universitiesAccessDB.getUniversitiesFromDB();
+        Universitiesarray = (ArrayList<Universities>)intent.getSerializableExtra("Universitiesarray");
 
         mMapView = (MapView) findViewById(R.id.map_view);
         buttonschool = (Button) findViewById(R.id.buttonschool);

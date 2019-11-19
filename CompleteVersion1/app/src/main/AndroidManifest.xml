@@ -17,7 +17,7 @@
         <activity
             android:name=".activity.Activity_tour_finish"
             android:label="@string/title_activity_tour_finish"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activity.Activity_photo_mission"
             android:label="@string/title_activity_photo_mission"
@@ -48,11 +48,14 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.Activity_universitiesMap"
-            android:label="mainActivity"
-            android:theme="@style/AppTheme">
+            android:label="Activity_universitiesMap"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
