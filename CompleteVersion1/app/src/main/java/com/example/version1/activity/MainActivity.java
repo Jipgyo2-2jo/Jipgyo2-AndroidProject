@@ -1,13 +1,10 @@
 package com.example.version1.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
 
         Log.d("MainActivity ", "실행");
 
-        current_task = (TextView) findViewById(R.id.current_task);
+//        current_task = (TextView) findViewById(R.id.current_task);
         doAndSiarray = setAndgetDoAndSiFromDB();
 
         UniversitiesAccessDB universitiesAccessDB = new UniversitiesAccessDB();
@@ -41,11 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(), "Mainactivity 실행", Toast.LENGTH_LONG).show();
 
-/*        try{
+        try{
             Thread.sleep(1000);
         }catch(InterruptedException e){
             e.printStackTrace();
-        }*/
+        }
 
         Intent intent = new Intent(this, Activity_universitiesMap.class);
 
@@ -60,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     //도, 시를 가져와서 일차적으로 이 것들만 가져오도록 한다.
     private ArrayList<DoAndSi> setAndgetDoAndSiFromDB() {
-        current_task.setText("시도정보 불러오는중...");
+//        current_task.setText("시도정보 불러오는중...");
         Log.d("MainActivity ", "시도정보 불러오는중...");
         ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
         doAndSiarray.add(new DoAndSi("서울", 37.5642135, 127.0016985, 8));
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadItemsFromDB(ArrayList<Universities> list) {
-        current_task.setText("대학교 정보 불러오는중...");
+//        current_task.setText("대학교 정보 불러오는중...");
         Log.d("MainActivity ", "대학교 정보 불러오는중...");
         UniversitiesAccessDBTask t = new UniversitiesAccessDBTask();
         try
