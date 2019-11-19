@@ -15,9 +15,29 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.Activity_univ_intro"
-            android:label="@string/title_activity_univ_intro"
+            android:name=".activity.Activity_tour_finish"
+            android:label="@string/title_activity_tour_finish"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.Activity_photo_mission"
+            android:label="@string/title_activity_photo_mission"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.Activity_high_mission"
+            android:label="@string/title_activity_high_mission"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.Activity_basic_mission"
+            android:label="@string/title_activity_basic_mission"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.Activity_loc_information"
+            android:label="@string/title_activity_loc_informaion"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.Activity_univ_introduction"
+            android:label="@string/title_activity_univ_introduction"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.Activity_eachUniversityMap"
             android:label="@string/title_activity_each_university_map"
@@ -25,25 +45,17 @@
         <activity
             android:name=".activity.Activity_choose_location"
             android:label="@string/title_activity_choose_location"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.Activity_universitiesMap"
+            android:label="mainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.Activity_testsub"
-            android:label="@string/title_activity_testsub"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.Activity_universitiesMap"
-            android:label="mainActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".database.UniversityTourAccessDB"
-            android:label="UniversityTourAccessDB"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

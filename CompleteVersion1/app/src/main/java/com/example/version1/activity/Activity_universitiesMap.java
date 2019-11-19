@@ -245,12 +245,12 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
         //1개인경우
         else if (count == 1) {
-            Intent intent = new Intent(Activity_universitiesMap.this, Activity_eachUniversityMap.class);
+            Intent intent = new Intent(Activity_universitiesMap.this, Activity_univ_introduction.class);
             intent.putExtra("univName", searchedUniv.poll().get학교명());
             //sharedpreference를 이용하여 view설정을 저장한 후에 remove를 하도록 해서 나중에 resume이 되더라도 설정값을 이용하여 다시 보여줄 수 있도록 한다.
             //혹은 그냥 하나의 맵 뷰에 모든 기능 넣음
             //어차피 학교에 대한 간단한 설명을 하고 다시 맵 뷰를 보여주기 때문에 메인화면을 resume할 때 맵 뷰 재생성만 해주면 될 것 같다.
-            rela.removeAllViewsInLayout();
+            //rela.removeAllViewsInLayout();
             startActivity(intent);
         }
         //여러개인경우
@@ -364,13 +364,12 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
         Toast.makeText(this, "Clicked " + mapPOIItem.getItemName(), Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(Activity_universitiesMap.this, Activity_eachUniversityMap.class);
+        Intent intent=new Intent(Activity_universitiesMap.this, Activity_univ_introduction.class);
         intent.putExtra("univName",String.valueOf(mapPOIItem.getItemName()));
-        Log.d("1234", mapPOIItem.getItemName());
         //sharedpreference를 이용하여 view설정을 저장한 후에 remove를 하도록 해서 나중에 resume이 되더라도 설정값을 이용하여 다시 보여줄 수 있도록 한다.
         //혹은 그냥 하나의 맵 뷰에 모든 기능 넣음
         //어차피 학교에 대한 간단한 설명을 하고 다시 맵 뷰를 보여주기 때문에 메인화면을 resume할 때 맵 뷰 재생성만 해주면 될 것 같다.
-        rela.removeAllViewsInLayout();
+        //rela.removeAllViewsInLayout();
         startActivity(intent);
     }
 
