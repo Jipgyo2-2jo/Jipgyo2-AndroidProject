@@ -1,6 +1,8 @@
 package com.example.version1.domain;
 
-public class DoAndSi {
+import java.io.Serializable;
+
+public class DoAndSi implements Serializable {
     String name;
     double latitude;
     double lonitude;

@@ -1,6 +1,8 @@
 package com.example.version1.domain;
 
-public class Universities {
+import java.io.Serializable;
+
+public class Universities implements Serializable {
     String id_num;
     String 시도;
     String 학교명;
