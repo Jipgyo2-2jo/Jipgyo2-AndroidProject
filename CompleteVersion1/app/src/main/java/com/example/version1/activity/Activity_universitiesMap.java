@@ -192,9 +192,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         // 중심점 변경 + 줌 레벨 변경
         mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11, true);
 
-        // 구현한 CalloutBalloonAdapter 등록
-        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-
         slidingDrawer = (SlidingDrawer)findViewById(R.id.slidingdrawer);
         listview = (ListView)findViewById(R.id.slistView);
 
@@ -202,6 +199,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             createCustomMarkerDoAndSi(mMapView, doAndSiarray.get(i));
         }
 
+        // 구현한 CalloutBalloonAdapter 등록
+        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
         for(int j = 0; j < Universitiesarray.size(); j++){
             Log.d("0123", "onCreate: "+j);
             createCustomMarkerUniversities(mMapView, Universitiesarray.get(j));
@@ -290,6 +289,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mCustomMarker.setCustomImageResourceId(R.drawable.custom_map_present);//이미지(png파일로 하자)
         mCustomMarker.setCustomImageAutoscale(false);
         mCustomMarker.setCustomImageAnchor(0.5f, 1.0f);
+        mCustomMarker.setShowCalloutBalloonOnTouch(false);
 
         mapView.addPOIItem(mCustomMarker);
         mapPOIItemsDoAndSi.add(mCustomMarker);

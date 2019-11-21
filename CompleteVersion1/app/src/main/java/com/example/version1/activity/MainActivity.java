@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity ", "시도정보 불러오는중...");
         ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
         doAndSiarray.add(new DoAndSi("서울", 37.5642135, 127.0016985, 8));
-        doAndSiarray.add(new DoAndSi("경기 남부", 37.290301, 127.095697, 8));
-        doAndSiarray.add(new DoAndSi("경기 북부", 37.746260, 127.081964, 8));
+        doAndSiarray.add(new DoAndSi("경기남부", 37.290301, 127.095697, 8));
+        doAndSiarray.add(new DoAndSi("경기북부", 37.746260, 127.081964, 8));
         doAndSiarray.add(new DoAndSi("인천", 37.516495, 126.715548, 8));
         doAndSiarray.add(new DoAndSi("강원", 37.8304115, 128.2260705, 9));
         doAndSiarray.add(new DoAndSi("충북", 36.991615, 127.717028, 9));
