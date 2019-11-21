@@ -1,31 +1,15 @@
 package com.example.version1.activity;
 
 import android.Manifest;
-
 import android.app.AlertDialog;
-
 import android.content.DialogInterface;
-
 import android.content.Intent;
-
 import android.content.pm.PackageManager;
-
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-
-import androidx.core.app.ActivityCompat;
-
-import androidx.core.content.ContextCompat;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -33,17 +17,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.version1.R;
 import com.example.version1.database.UniversityTourAccessDB;
-import com.example.version1.domain.DoAndSi;
+import com.example.version1.database.UniversityTourPolylineDB;
 import com.example.version1.domain.MissionQuiz;
 import com.example.version1.domain.UniversityTour;
+import com.example.version1.domain.UniversityTourPolyline;
 
 import net.daum.mf.map.api.CalloutBalloonAdapter;
-import net.daum.mf.map.api.CameraPosition;
-import net.daum.mf.map.api.CameraUpdateFactory;
-import net.daum.mf.map.api.CancelableCallback;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapPolyline;
@@ -66,39 +52,11 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private FrameLayout courseFrameLayout;
     private ArrayList<UniversityTour> universityTourarray;
     private ArrayList<MissionQuiz> missionQuizs;
+    private ArrayList<UniversityTourPolyline> universityTourPolylinearray;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION};
-
-    //일단 DB에서 해당 학교들의 위치를 모두 받는 메소드, DB내용은 class를 이용하여 그 class의 list형태로 가져와 사용하도록 한다.
-    private void getUniversityTourFromDB(String UnivName) {
-
-    }
-
-    //DB에서 polyline을 가져온다.
-    /*private ArrayList<DoAndSi> setAndgetDoAndSiFromDB() {
-        ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
-        doAndSiarray.add(new DoAndSi("서울", 37.5642135, 127.0016985, 8));
-        doAndSiarray.add(new DoAndSi("경기 남부", 37.290301, 127.095697, 8));
-        doAndSiarray.add(new DoAndSi("경기 북부", 37.746260, 127.081964, 8));
-        doAndSiarray.add(new DoAndSi("인천", 37.516495, 126.715548, 8));
-        doAndSiarray.add(new DoAndSi("강원", 37.8304115, 128.2260705, 9));
-        doAndSiarray.add(new DoAndSi("충북", 36.991615, 127.717028, 9));
-        doAndSiarray.add(new DoAndSi("충남", 36.547203, 126.954132, 9));
-        doAndSiarray.add(new DoAndSi("대전", 36.342518, 127.395548, 8));
-        doAndSiarray.add(new DoAndSi("전북", 35.594455, 127.170825, 9));
-        doAndSiarray.add(new DoAndSi("전남", 34.929944, 127.001457, 9));
-        doAndSiarray.add(new DoAndSi("광주", 35.145689, 126.839936, 8));
-        doAndSiarray.add(new DoAndSi("경북", 36.511197, 128.705964, 9));
-        doAndSiarray.add(new DoAndSi("경남", 35.487832, 128.485218, 9));
-        doAndSiarray.add(new DoAndSi("대구", 35.829030, 128.558030, 8));
-        doAndSiarray.add(new DoAndSi("울산", 35.540098, 129.296991, 8));
-        doAndSiarray.add(new DoAndSi("부산", 35.147905, 129.034805, 8));
-        doAndSiarray.add(new DoAndSi("제주", 33.378994, 126.521648, 9));
-
-        return doAndSiarray;
-    }*/
 
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
@@ -126,18 +84,27 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //***********************
+
+        //**********************
+
         Intent intent = getIntent(); //이 액티비티를 부른 인텐트를 받는다.
         String univName = intent.getStringExtra("univName");
 
-        //일단 DB에서 해당 학교에 대한 위치를 모두 받는 메소드를 실행한다.
+        //일단 DB에서 해당 학교의 장소 위치를 모두 받는 메소드를 실행한다.
         UniversityTourAccessDB universityTourAccessDB = new UniversityTourAccessDB();
         universityTourarray = universityTourAccessDB.getUniversityTourFromDB(univName);
 
+        //DB에서 polyline을 가져온다.
+        UniversityTourPolylineDB universityTourPolylineDB = new UniversityTourPolylineDB();
+        universityTourPolylinearray = universityTourPolylineDB.getUniversityTourPolylineFromDB(univName);
+
+        //test
         mPolyline2Points = new MapPoint[]{
-                MapPoint.mapPointWithGeoCoord(37.2800030, 127.04364400),
-                MapPoint.mapPointWithGeoCoord(37.28149600, 127.04330800),
-                MapPoint.mapPointWithGeoCoord(37.282395000, 127.0434580000),
-                MapPoint.mapPointWithGeoCoord(37.282899000, 127.043502000),
+                MapPoint.mapPointWithGeoCoord(universityTourPolylinearray.get(0).getLatitudeArraypoint(0), universityTourPolylinearray.get(0).getLogitudeArraypoint(0)),
+                MapPoint.mapPointWithGeoCoord(universityTourPolylinearray.get(0).getLatitudeArraypoint(1), universityTourPolylinearray.get(0).getLogitudeArraypoint(1)),
+                MapPoint.mapPointWithGeoCoord(universityTourPolylinearray.get(0).getLatitudeArraypoint(2), universityTourPolylinearray.get(0).getLogitudeArraypoint(2)),
+                MapPoint.mapPointWithGeoCoord(universityTourPolylinearray.get(0).getLatitudeArraypoint(3), universityTourPolylinearray.get(0).getLogitudeArraypoint(3)),
         };
 
         //그리고 미션에 대한 정보를 모두 받는 메소드도 실행한다.
@@ -184,9 +151,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         polyline2.setTag(2000);
         polyline2.setLineColor(Color.argb(128, 0, 0, 255));
         polyline2.addPoints(mPolyline2Points);
-
-//        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter2());//이런식으로 다른 벌룬 인터페이스가 각각의 마커에 들어간다.
-//        createCustomMarker2(mMapView, universityTourarray[i]);
 
         if (!checkLocationServicesStatus()) {
 
@@ -300,34 +264,18 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override//전국 지도 화면에서 예를 들어 경기도를 누르면 경기도를 카메라 확대를 하고 다른 마커들도 보이도록 한다.
     public void onPOIItemSelected(MapView mapView, final MapPOIItem mapPOIItem) {
 
-        if(mapView.getZoomLevel() > 4){
-            //카메라 확대
-            mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), 4)), 200, new CancelableCallback() {
-                @Override
-                public void onFinish() {
-                    Toast.makeText(getBaseContext(), "Animation to "+mapPOIItem.getItemName()+" complete", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onCancel() {
-                    Toast.makeText(getBaseContext(), "Animation to Hannam canceled", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        //최종적으로 결정된 학교를 선택하면 Activity_eachUniversityMap 액티비티로 이동
-        if(mapView.getZoomLevel() <= 4){
-            //POIitem의 학교 정보를 이용함
-        }
     }
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
 
     }
-
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+        Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_loc_information.class);
+        intent.putExtra("locationName", mapPOIItem.getItemName());
 
+        startActivity(intent);
     }
 
     @Override
