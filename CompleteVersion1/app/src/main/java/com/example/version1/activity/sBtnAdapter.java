@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,8 +15,11 @@ import com.example.version1.R;
 
 import java.util.ArrayList;
 
-public class sBtnAdapter extends ArrayAdapter {
-    private ArrayList<sBtnItem> l = new ArrayList<>();
+public class sBtnAdapter extends ArrayAdapter implements Filterable {
+    private ArrayList<sBtnItem> listViewItemList = new ArrayList<>();
+    // 필터링된 결과 데이터를 저장하기 위한 ArrayList. 최초에는 전체 리스트 보유.
+    private ArrayList<sBtnItem> filteredItemList = listViewItemList ;
+    private Filter listFilter;
 
     // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의.
     public interface ListBtnClickListener {
@@ -34,7 +39,7 @@ public class sBtnAdapter extends ArrayAdapter {
         this.resourceId = resource ;
 
         this.listBtnClickListener = clickListener ;
-        l = list;
+        listViewItemList = list;
     }
 
     // 새롭게 만든 Layout을 위한 View를 생성하는 코드
@@ -55,7 +60,7 @@ public class sBtnAdapter extends ArrayAdapter {
         final TextView Univnum = (TextView) convertView.findViewById(R.id.univ_num);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        final sBtnItem listViewItem = (sBtnItem) getItem(position);
+        sBtnItem listViewItem = filteredItemList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
 //        iconImageView.setImageDrawable(listViewItem.getIcon());
@@ -86,4 +91,61 @@ public class sBtnAdapter extends ArrayAdapter {
         return convertView;
     }
 
+    @Override
+    public Object getItem(int position){
+        return filteredItemList.get(position);
+    }
+
+    // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
+    @Override
+    public int getCount() {
+        return filteredItemList.size() ;
+    }
+
+    @Override
+    public Filter getFilter(){
+        if(listFilter == null){
+            listFilter = new ListFilter();
+        }
+
+        return listFilter;
+    }
+
+    private class ListFilter extends Filter{
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint){
+            FilterResults results = new FilterResults();
+
+            if(constraint == null || constraint.length() == 0){
+                results.values = listViewItemList;
+                results.count = listViewItemList.size();
+            }
+            else{
+                ArrayList<sBtnItem> itemList = new ArrayList<>();
+
+                for(sBtnItem item : listViewItemList){
+                    if(item.getUnivname().contains(constraint.toString()))
+                        itemList.add(item);
+                }
+
+                results.values = itemList;
+                results.count = itemList.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results){
+
+            // update listview by filtered data list.
+            filteredItemList = (ArrayList<sBtnItem>) results.values ;
+
+            // notify
+            if (results.count > 0) {
+                notifyDataSetChanged() ;
+            } else {
+                notifyDataSetInvalidated() ;
+            }
+        }
+    }
 }

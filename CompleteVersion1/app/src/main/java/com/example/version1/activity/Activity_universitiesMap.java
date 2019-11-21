@@ -25,7 +25,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 
+import android.text.Editable;
 import android.transition.Slide;
 import android.util.Log;
 
@@ -44,6 +46,9 @@ import android.widget.Toast;
 
 
 import com.example.version1.R;
+import com.example.version1.activity.Activity_univ_introduction;
+import com.example.version1.activity.sBtnAdapter;
+import com.example.version1.activity.sBtnItem;
 import com.example.version1.database.UniversitiesAccessDB;
 import com.example.version1.domain.DoAndSi;
 import com.example.version1.domain.Universities;
@@ -82,8 +87,13 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     private RelativeLayout rela;
+
     //for 검색기능
-    public MenuItem searchItem;
+    private MenuItem searchItem;
+    private SlidingDrawer slidingDrawer;
+    private ListView listview ;
+    Queue<Universities> searchedUniv = new LinkedList<Universities>();
+    sBtnAdapter adapter;
 
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
@@ -147,14 +157,20 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         @Override
         public boolean onQueryTextChange(String newText) {
             // TODO Auto-generated method stub
+            slidingDrawer.open();
+            ((sBtnAdapter)listview.getAdapter()).getFilter().filter(newText);
+
             return false;
         }
+
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_universitiesmap);
+
+        ArrayList<sBtnItem> list = new ArrayList<>();
 
         Intent intent = getIntent();
         //MainActivity에서 시도정보와 학교정보 받아옴
@@ -179,6 +195,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         // 구현한 CalloutBalloonAdapter 등록
         mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
 
+        slidingDrawer = (SlidingDrawer)findViewById(R.id.slidingdrawer);
+        listview = (ListView)findViewById(R.id.slistView);
+
         for(int i = 0; i < doAndSiarray.size(); i++){
             createCustomMarkerDoAndSi(mMapView, doAndSiarray.get(i));
         }
@@ -195,7 +214,25 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
             checkRunTimePermission();
         }
-    }
+
+        sBtnItem item;
+
+        for(int i = 0; i < Universitiesarray.size(); i++){
+            //listview 아이템 생성
+            item = new sBtnItem();
+            Universities temp = Universitiesarray.get(i);
+            item.setUnivname(temp.get학교명());
+            item.setUnivnum(temp.get전화번호());
+            item.setUniversities(temp);
+            list.add(item);
+        }
+
+        // Adapter 생성
+        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this) ;
+        // 리스트뷰 참조 및 Adapter달기
+        listview.setAdapter(adapter);
+
+}
 
     @Override
     protected void onDestroy() {
@@ -212,28 +249,20 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     //검색버튼 눌렀을때
     private void createCustomMarkerSearched(MapView mapView, String name){
         int count = 0;
-        ListView listview ;
-        sBtnAdapter adapter;
-        ArrayList<sBtnItem> list = new ArrayList<>();
-        SlidingDrawer slidingDrawer;
 
-        slidingDrawer = (SlidingDrawer)findViewById(R.id.slidingdrawer);
-        Queue<Universities> searchedUniv = new LinkedList<Universities>();
-
-        //검색버튼 누른경우 학교목록에서 검색
-        for(int i = 0; i < Universitiesarray.size(); i++){
-            if(Universitiesarray.get(i).get학교명().contains(name)) {
-                searchedUniv.offer(Universitiesarray.get(i));
+        for(Universities u : Universitiesarray){
+            if(u.get학교명().contains(name)){
                 count++;
+                searchedUniv.add(u);
             }
         }
-        Toast.makeText(getApplicationContext(), "Searched: " + Integer.toString(count) + "개 학교", Toast.LENGTH_LONG).show();
 
         //없는경우
         if(count==0){
             Toast.makeText(getApplicationContext(), "Not Found: " + name, Toast.LENGTH_LONG).show();
             return;
         }
+
         //1개인경우
         else if (count == 1) {
             Intent intent = new Intent(Activity_universitiesMap.this, Activity_univ_introduction.class);
@@ -244,29 +273,12 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             //rela.removeAllViewsInLayout();
             startActivity(intent);
         }
+
         //여러개인경우
         else{
-            sBtnItem item;
-
-            while(searchedUniv.isEmpty()==false){
-                //listview 아이템 생성
-                item = new sBtnItem();
-                Universities temp = searchedUniv.poll();
-                item.setUnivname(temp.get학교명());
-                item.setUnivnum(temp.get전화번호());
-                item.setUniversities(temp);
-                list.add(item);
-            }
-
-            // Adapter 생성
-            adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this) ;
-
-            // 리스트뷰 참조 및 Adapter달기
-            listview = (ListView) findViewById(R.id.slistView);
-            listview.setAdapter(adapter);
+            Toast.makeText(getApplicationContext(), count + "개 대학", Toast.LENGTH_LONG).show();
         }
 
-        slidingDrawer.animateOpen();
     }
 
     private void createCustomMarkerDoAndSi(MapView mapView, DoAndSi doAndSi) {
