@@ -15,31 +15,33 @@ import com.example.version1.R;
 
 import java.util.ArrayList;
 
+import net.daum.mf.map.api.CameraPosition;
+import net.daum.mf.map.api.CameraUpdateFactory;
+import net.daum.mf.map.api.CancelableCallback;
+import net.daum.mf.map.api.MapView;
+
 public class sBtnAdapter extends ArrayAdapter implements Filterable {
-    private ArrayList<sBtnItem> listViewItemList = new ArrayList<>();
-    // 필터링된 결과 데이터를 저장하기 위한 ArrayList. 최초에는 전체 리스트 보유.
+    private ArrayList<sBtnItem> listViewItemList;
+    // 필터링된 결과 데이터를 저장하기 위한 ArrayList.
     private ArrayList<sBtnItem> filteredItemList;
     private Filter listFilter;
 
-    // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의.
-    public interface ListBtnClickListener {
-//        void onListBtnClick(int position) ;
-    }
-
     // 생성자로부터 전달된 resource id 값을 저장.
-    int resourceId ;
+    private int resourceId ;
     // 생성자로부터 전달된 ListBtnClickListener  저장.
-    private sBtnAdapter.ListBtnClickListener listBtnClickListener ;
+    private ArrayList<Button.OnClickListener> listBtnClickListener ;
 
     // ListViewBtnAdapter 생성자. 마지막에 ListBtnClickListener 추가.
-    sBtnAdapter(Context context, int resource, ArrayList<sBtnItem> list, sBtnAdapter.ListBtnClickListener clickListener) {
+    sBtnAdapter(Context context, int resource, ArrayList<sBtnItem> list, ArrayList<Button.OnClickListener> clickListener) {
         super(context, resource, list) ;
 
         // resource id 값 복사. (super로 전달된 resource를 참조할 방법이 없음.)
         this.resourceId = resource ;
 
-        this.listBtnClickListener = clickListener ;
+        listBtnClickListener = clickListener ;
         listViewItemList = list;
+
+        //필터링된 리스트 최초에는 전체 아이템 보유
         filteredItemList = listViewItemList ;
     }
 
@@ -70,8 +72,18 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
 
         // button1 클릭 시 TextView(textView1)의 내용 변경.
         Button button1 = (Button) convertView.findViewById(R.id.button1);
-        button1.setOnClickListener(new Button.OnClickListener() {
+        button1.setOnClickListener(listBtnClickListener.get(position)); /*new Button.OnClickListener() {
             public void onClick(View v) {
+                /*
+                map_main.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), 3)), 200, new CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                });*/
+
 /*                EatenMenu m = new EatenMenu();
                 m.setCalorie(l.get(pos).getSpecificmenu().getCalorie());
                 m.setName(l.get(pos).getSpecificmenu().getName());
@@ -84,10 +96,10 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
                 RecordDietActivity.eatenmenu.add(m);
 
              //   Intent intent = new Intent(this, )
-                ((Activity)context).finish();*/
+                ((Activity)context).finish();
             }
 
-        });
+        });*/
 
         return convertView;
     }

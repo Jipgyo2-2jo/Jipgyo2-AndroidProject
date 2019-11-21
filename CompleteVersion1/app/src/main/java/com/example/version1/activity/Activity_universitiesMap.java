@@ -66,7 +66,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Activity_universitiesMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener, sBtnAdapter.ListBtnClickListener {
+public class Activity_universitiesMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener {
 
     private static final String LOG_TAG = "Act_universitiesMap";
     ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
@@ -92,8 +92,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private MenuItem searchItem;
     private SlidingDrawer slidingDrawer;
     private ListView listview ;
-    Queue<Universities> searchedUniv = new LinkedList<Universities>();
+    Queue<Universities> searchedUniv = new LinkedList<>();
     sBtnAdapter adapter;
+    ArrayList<Button.OnClickListener> clickListeners = new ArrayList<>();
 
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
@@ -215,6 +216,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
 
         sBtnItem item;
+        Button.OnClickListener clickListener;
 
         for(int i = 0; i < Universitiesarray.size(); i++){
             //listview 아이템 생성
@@ -224,10 +226,33 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             item.setUnivnum(temp.get전화번호());
             item.setUniversities(temp);
             list.add(item);
+            final String univname = item.getUnivname();
+
+            clickListener = new Button.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    final MapPOIItem temp;
+
+                    for( MapPOIItem poiitem : mapPOIItemsUniv){
+                        if(poiitem.getItemName().equals(univname)) {
+                            temp = poiitem;
+
+                            onPOIItemSelected(mMapView, temp);
+                            slidingDrawer.close();
+                            return;
+                        }
+                    }
+
+                    Toast.makeText(getApplicationContext(), "Not Found: " + univname, Toast.LENGTH_LONG).show();
+                    return;
+                }
+            };
+
+            clickListeners.add(clickListener);
         }
 
         // Adapter 생성
-        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this) ;
+        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this.clickListeners) ;
         // 리스트뷰 참조 및 Adapter달기
         listview.setAdapter(adapter);
 
