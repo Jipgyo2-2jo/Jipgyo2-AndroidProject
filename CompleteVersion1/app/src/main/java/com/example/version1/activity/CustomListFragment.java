@@ -20,9 +20,9 @@ public class CustomListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Adapter 생성 및 Adapter 지정.
+        // Adapter 생성 및 Adapter 지정. (ListFragment에서 제공)
         adapter = new ListViewAdapter() ;
-        setListAdapter(adapter) ;
+        setListAdapter(adapter);
 
         // 첫 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(getActivity(), R.drawable.btn),

@@ -1,18 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    android:padding="10dp"
+    android:orientation="vertical"
+    >
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="210dp"
+        android:layout_marginTop="570dp"
+        android:background="@drawable/btn_finmap" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="565dp"
+        android:background="@drawable/btn_maing" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="640dp"
+        android:background="@drawable/btn_fin" />
 
     <TextView
+        android:id="@+id/Clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:textColor="#1e90ff"
+        android:textStyle="bold"
+        android:text="미션 0/0개 Clear!"
+        android:textSize="40dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/Capil"
+        android:layout_width="301dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="430dp"
+        android:gravity="center"
+        android:text="이 화면을 캡쳐해서 용지관 XXX호로 제출하시면 경품을 드립니다."
+        android:textColor="#b0c4de"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
