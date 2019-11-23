@@ -26,8 +26,8 @@
 
     <FrameLayout
         android:id="@+id/courseFrameLayout"
-        android:layout_width="140dp"
-        android:layout_height="142dp"
+        android:layout_width="330dp"
+        android:layout_height="149dp"
         android:layout_alignEnd="@+id/map_view"
         android:layout_alignRight="@+id/map_view"
         android:layout_alignBottom="@+id/map_view"
@@ -35,32 +35,71 @@
         android:layout_alignParentLeft="true"
         android:layout_marginStart="80dp"
         android:layout_marginLeft="80dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginBottom="30dp"
         android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/buttonCourse"
-                android:layout_width="wrap_content"
+            <fragment
+                android:layout_width="240dp"
                 android:layout_height="wrap_content"
-                android:text="코스"/>
+                android:id="@+id/courselistfragment"
+                android:name="com.example.version1.activity.CourseListFragment"/>
 
             <Button
-                android:layout_marginTop="50dp"
-                android:layout_marginLeft="150dp"
                 android:id="@+id/buttonCourseSelect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="코스결정"/>
+                android:layout_marginTop="100dp"
+                android:text="코스결정" />
 
         </LinearLayout>
 
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/missionFrameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/map_view"
+        android:visibility="invisible">
+
+        <SlidingDrawer
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:content="@+id/content"
+            android:handle="@+id/handle"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/handle"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/slidetop"
+                android:gravity="bottom|center"
+                android:text="목록"
+                android:textSize="10sp" />
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/missionlistfragment"
+                    android:name="com.example.version1.activity.MissionListFragment"/>
+
+            </LinearLayout>
+
+        </SlidingDrawer>
     </FrameLayout>
 
 </RelativeLayout>
