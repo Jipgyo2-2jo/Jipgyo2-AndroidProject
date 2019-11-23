@@ -1,36 +1,17 @@
 package com.example.version1.activity;
 
 import android.Manifest;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
-
 import android.content.Intent;
-
 import android.content.pm.PackageManager;
-
 import android.location.LocationManager;
-
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-
-import androidx.core.app.ActivityCompat;
-
-import androidx.core.content.ContextCompat;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.slidingpanelayout.widget.SlidingPaneLayout;
-
-import android.text.Editable;
-import android.transition.Slide;
 import android.util.Log;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,12 +25,12 @@ import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.version1.R;
-import com.example.version1.activity.Activity_univ_introduction;
-import com.example.version1.activity.sBtnAdapter;
-import com.example.version1.activity.sBtnItem;
-import com.example.version1.database.UniversitiesAccessDB;
 import com.example.version1.domain.DoAndSi;
 import com.example.version1.domain.Universities;
 
@@ -66,7 +47,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Activity_universitiesMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener {
+public class Activity_universitiesMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener, sBtnAdapter.ListBtnClickListener {
 
     private static final String LOG_TAG = "Act_universitiesMap";
     ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
@@ -92,9 +73,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private MenuItem searchItem;
     private SlidingDrawer slidingDrawer;
     private ListView listview ;
-    Queue<Universities> searchedUniv = new LinkedList<>();
+    Queue<Universities> searchedUniv = new LinkedList<Universities>();
     sBtnAdapter adapter;
-    ArrayList<Button.OnClickListener> clickListeners = new ArrayList<>();
 
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
@@ -216,7 +196,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
 
         sBtnItem item;
-        Button.OnClickListener clickListener;
 
         for(int i = 0; i < Universitiesarray.size(); i++){
             //listview 아이템 생성
@@ -226,33 +205,10 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             item.setUnivnum(temp.get전화번호());
             item.setUniversities(temp);
             list.add(item);
-            final String univname = item.getUnivname();
-
-            clickListener = new Button.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    final MapPOIItem temp;
-
-                    for( MapPOIItem poiitem : mapPOIItemsUniv){
-                        if(poiitem.getItemName().equals(univname)) {
-                            temp = poiitem;
-
-                            onPOIItemSelected(mMapView, temp);
-                            slidingDrawer.close();
-                            return;
-                        }
-                    }
-
-                    Toast.makeText(getApplicationContext(), "Not Found: " + univname, Toast.LENGTH_LONG).show();
-                    return;
-                }
-            };
-
-            clickListeners.add(clickListener);
         }
 
         // Adapter 생성
-        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this.clickListeners) ;
+        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this) ;
         // 리스트뷰 참조 및 Adapter달기
         listview.setAdapter(adapter);
 
@@ -266,8 +222,51 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
+        setContentView(R.layout.activity_universitiesmap);
+        mMapView = (MapView) findViewById(R.id.map_view);
+        //기본 환경 설정
+        mMapView.setMapViewEventListener(this);
+        mMapView.setPOIItemEventListener(this);
+        mMapView.setCurrentLocationEventListener(this);
+        // 중심점 변경 + 줌 레벨 변경
+        mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11, true);
+        for(int i = 0; i < doAndSiarray.size(); i++){
+            createCustomMarkerDoAndSi(mMapView, doAndSiarray.get(i));
+        }
+
+        // 구현한 CalloutBalloonAdapter 등록
+        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+        for(int j = 0; j < Universitiesarray.size(); j++){
+            Log.d("0123", "onCreate: "+j);
+            createCustomMarkerUniversities(mMapView, Universitiesarray.get(j));
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setMessage("종료하시겠습니까?");
+
+        // "예" 버튼을 누르면 실행되는 리스너
+        alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish(); // 현재 액티비티를 종료한다. (MainActivity에서 작동하기 때문에 애플리케이션을 종료한다.)
+            }
+        });
+        // "아니오" 버튼을 누르면 실행되는 리스너
+        alBuilder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return; // 아무런 작업도 하지 않고 돌아간다
+            }
+        });
+        alBuilder.setTitle("프로그램 종료");
+        alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
     }
 
     //검색버튼 눌렀을때
@@ -311,7 +310,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(doAndSi.getLatitude(), doAndSi.getLonitude()));//맵 포인트
         mCustomMarker.setTag(doAndSi.getZoomlevel());
         mCustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-        mCustomMarker.setCustomImageResourceId(R.drawable.custom_map_present);//이미지(png파일로 하자)
+        mCustomMarker.setCustomImageResourceId(doAndSi.getImgid());//이미지(png파일로 하자)
         mCustomMarker.setCustomImageAutoscale(false);
         mCustomMarker.setCustomImageAnchor(0.5f, 1.0f);
         mCustomMarker.setShowCalloutBalloonOnTouch(false);
@@ -366,11 +365,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 //-------------------------------------------------------------------------
     @Override//전국 지도 화면에서 예를 들어 경기도를 누르면 경기도를 카메라 확대를 하고 다른 마커들도 보이도록 한다.
     public void onPOIItemSelected(MapView mapView, final MapPOIItem mapPOIItem) {
-        if (touchnum == 0){
-            touchnum = 1;
-            return;
-        }
-        else if (zoomlevelevent == 1) {
+        if (zoomlevelevent == 1) {
             Log.d(mapPOIItem.getItemName(), "onPOIItemSelected: ");
             mapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
 
@@ -385,22 +380,19 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             buttonback.setVisibility(View.VISIBLE);
             mapView.removePOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
 
+            //카메라 확대
+            mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), mapPOIItem.getTag())), 200, new CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    Toast.makeText(getBaseContext(), "Animation to " + mapPOIItem.getItemName() + " complete", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
         }
-
-        //카메라 확대
-        mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), mapPOIItem.getTag())), 200, new CancelableCallback() {
-            @Override
-            public void onFinish() {
-                Toast.makeText(getBaseContext(), "Animation to " + mapPOIItem.getItemName() + " complete", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });
-
-        touchnum = 0;
     }
 
     @Override
@@ -424,7 +416,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         public void onClick(View v) {
             Intent intent=new Intent(Activity_universitiesMap.this, Activity_univ_introduction.class);
             intent.putExtra("univName", selectedSchoolName);
-
+            zoomlevelevent = 1;
             startActivity(intent);
         }
     };

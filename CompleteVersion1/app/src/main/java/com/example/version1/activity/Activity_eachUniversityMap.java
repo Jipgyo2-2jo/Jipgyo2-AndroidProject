@@ -148,9 +148,10 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mMapView.setMapViewEventListener(this);
         mMapView.setPOIItemEventListener(this);
         mMapView.setCurrentLocationEventListener(this);
-        // 중심점 변경 + 줌 레벨 변경
+        //중심점 변경 + 줌 레벨 변경
         mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(37.28163800, 127.04539600), 2, true);
-
+        //이전에 생성된 poiitems제거
+        mMapView.removeAllPOIItems();
         // 구현한 CalloutBalloonAdapter 등록
         mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
         for(int i = 0; i < universityTourarray.size(); i++){

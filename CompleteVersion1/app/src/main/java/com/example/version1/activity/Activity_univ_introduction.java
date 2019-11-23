@@ -2,21 +2,14 @@ package com.example.version1.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.example.version1.R;
-import com.example.version1.database.UniversityIntroductionDB;
-import com.example.version1.database.UniversityTourAccessDB;
-import com.example.version1.domain.UniversityIntroduction;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.View;
 import android.widget.Button;
 
-import net.daum.mf.map.api.MapView;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.version1.R;
+import com.example.version1.database.UniversityIntroductionDB;
+import com.example.version1.domain.UniversityIntroduction;
 
 import java.util.ArrayList;
 
@@ -48,7 +41,6 @@ public class Activity_univ_introduction extends AppCompatActivity {
 
         button1.setOnClickListener(ClickListener1);
         button2.setOnClickListener(ClickListener2);
-
     }
 
     Button.OnClickListener ClickListener1 = new View.OnClickListener() {
