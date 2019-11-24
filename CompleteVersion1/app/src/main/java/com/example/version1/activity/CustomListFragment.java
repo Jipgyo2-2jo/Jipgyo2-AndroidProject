@@ -25,10 +25,10 @@ public class CustomListFragment extends ListFragment {
         setListAdapter(adapter);
 
         // 첫 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(getActivity(), R.drawable.btn),
+        adapter.addItem(ContextCompat.getDrawable(getActivity(), R.drawable.btnme),
                 "Box", "Account Box Black 36dp") ;
         // 두 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(getActivity(), R.drawable.btn_main),
+        adapter.addItem(ContextCompat.getDrawable(getActivity(), R.drawable.btnmaing),
                 "Circle", "Account Circle Black 36dp") ;
         // 세 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(getActivity(), R.drawable.help),

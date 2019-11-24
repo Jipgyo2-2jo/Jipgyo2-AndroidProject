@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/iv_image"
+        android:id="@+id/locImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_margin="30dp"
@@ -26,7 +26,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/locImage"
+        android:id="@+id/text3"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
