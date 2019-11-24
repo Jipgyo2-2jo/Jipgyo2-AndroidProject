@@ -41,6 +41,7 @@ public class Activity_univ_introduction extends AppCompatActivity {
 
         button1.setOnClickListener(ClickListener1);
         button2.setOnClickListener(ClickListener2);
+
     }
 
     Button.OnClickListener ClickListener1 = new View.OnClickListener() {

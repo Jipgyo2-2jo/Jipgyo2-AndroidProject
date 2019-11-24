@@ -38,7 +38,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button2"
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_marginLeft="210dp"
@@ -46,7 +46,7 @@
         android:background="@drawable/btnfinmap" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button1"
         android:layout_width="150dp"
         android:layout_height="70dp"
         android:layout_marginLeft="30dp"
