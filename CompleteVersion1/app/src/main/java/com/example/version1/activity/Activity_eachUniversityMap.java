@@ -32,6 +32,9 @@ import com.example.version1.domain.UniversityTour;
 import com.example.version1.domain.UniversityTourPolyline;
 
 import net.daum.mf.map.api.CalloutBalloonAdapter;
+import net.daum.mf.map.api.CameraPosition;
+import net.daum.mf.map.api.CameraUpdateFactory;
+import net.daum.mf.map.api.CancelableCallback;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapPolyline;
@@ -45,7 +48,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private static final String LOG_TAG = "Act_eachUniversitiesMap";
 
     private int playmode = 0;
-
+    private int tracking = 0;
     private MapPolyline polyline2;
     private MapPoint[] mPolyline2Points;
     private ArrayList<MapPolyline> polylineArrayList;
@@ -61,6 +64,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private ArrayList<UniversityTourPolyline> universityTourPolylinearray;
     private CourseListFragment courseListFragment;
     private MissionListFragment missionListFragment;
+    private MapPoint.GeoCoordinate mapPointGeo;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -205,6 +209,18 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         public void onClick(View v) {
             courseFrameLayout.setVisibility(View.INVISIBLE);
             missionFrameLayout.setVisibility(View.VISIBLE);
+            //카메라 확대
+            mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(mapPointGeo.latitude, mapPointGeo.longitude),1)), 200, new CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    Toast.makeText(getBaseContext(), "Animation to " + " complete", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
             playmode = 1;
         }
     };
@@ -212,7 +228,14 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     //버튼을 누르면 설정 화면 전환
     Button.OnClickListener mClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
+            if(tracking == 0){
+                mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
+                tracking = 1;
+            }
+            else{
+                mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+                tracking = 0;
+            }
         }
     };
 
@@ -240,7 +263,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
-        MapPoint.GeoCoordinate mapPointGeo = currentLocation.getMapPointGeoCoord();
+        mapPointGeo = currentLocation.getMapPointGeoCoord();
         Log.i(LOG_TAG, String.format("MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)", mapPointGeo.latitude, mapPointGeo.longitude, accuracyInMeters));
 
         //gps와 건물의 거리가 (40m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
@@ -265,7 +288,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 Log.d("asdq", "" + missionQuizs.get(i).getTypeName() + "/" + missionQuizs.get(i).getQuizArrayList().size());
                 //이름을 미리 지정해서 넘겨준다.
                 missionListFragment.addMission(1, ""+tmppoiItem.getItemName()+ " " +missionQuizs.get(i).getTypeName(),
-                        "0/"+missionQuizs.get(i).getQuizArrayList().size(), missionQuizs.get(i));
+                        missionQuizs.get(i).getRightAnswer() + "/"+missionQuizs.get(i).getQuizArrayList().size(), missionQuizs.get(i));
                 missionListFragment.adapter.notifyDataSetChanged();
                 //테스트용 토스트 메세지
                 Toast.makeText(this, "미션 활성화", Toast.LENGTH_SHORT).show();

@@ -11,6 +11,7 @@ public class MissionQuiz implements Serializable {
     Double logitude;
     int activated = 0;//미션이 활성화 되었을 경우 1, 아니면 0
     ArrayList<Quiz> quizArrayList;
+    int rightAnswer = 0;
 
     public MissionQuiz(int id, int type, Double latitude, Double logitude, int activated, ArrayList<Quiz> quizArrayList) {
         this.id = id;
@@ -67,6 +68,22 @@ public class MissionQuiz implements Serializable {
 
     public void setQuizArrayList(ArrayList<Quiz> quizArrayList) {
         this.quizArrayList = quizArrayList;
+    }
+
+    public int getActivated() {
+        return activated;
+    }
+
+    public void setActivated(int activated) {
+        this.activated = activated;
+    }
+
+    public int getRightAnswer() {
+        return rightAnswer;
+    }
+
+    public void setRightAnswer(int rightAnswer) {
+        this.rightAnswer = rightAnswer;
     }
 
     public String getTypeName() {
