@@ -8,11 +8,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -69,7 +74,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
-    String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION};
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
@@ -83,7 +88,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         public View getCalloutBalloon(MapPOIItem poiItem) {
             ((ImageView) mCalloutBalloon.findViewById(R.id.badge)).setImageResource(R.drawable.ic_launcher_foreground);
             ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
-            ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(universityTourarray.get(poiItem.getTag()-1).get한줄평());
+            ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(universityTourarray.get(poiItem.getTag() - 1).get한줄평());
             return mCalloutBalloon;
         }
 
@@ -118,13 +123,27 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         //아래 것은 예시 - 미션
         missionQuizs = new ArrayList<>();
         ArrayList<Quiz> tempStrArray = new ArrayList<>();
+
         ArrayList<String> quizs = new ArrayList<>();
-        quizs.add("1번답");
-        quizs.add("2번답");
+        quizs.add("1번답답");
+        quizs.add("2번답답");
         tempStrArray.add(new Quiz("질문1?", quizs, 1));
+
+        ArrayList<String> quizs2 = new ArrayList<>();
+        quizs2.add("11번답");
+        quizs2.add("22번답");
+        quizs2.add("33번답");
+        tempStrArray.add(new Quiz("질문2?", quizs2, 2));
+
+        ArrayList<String> quizs3 = new ArrayList<>();
+        quizs3.add("111번답");
+        quizs3.add("222번답");
+        quizs3.add("333번답");
+        quizs3.add("444번답");
+        tempStrArray.add(new Quiz("질문3?", quizs3, 3));
         missionQuizs.add(new MissionQuiz(1, 0, 37.2800030, 127.0436440, 0, tempStrArray));
 
-       //-------------------------------------------------------------
+        //-------------------------------------------------------------
 
         setContentView(R.layout.activity_each_university_map);
 
@@ -138,10 +157,10 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         //어댑터를 이용해 코스 리스트 생성
         FragmentManager manager = getSupportFragmentManager();
         courseListFragment = (CourseListFragment) manager.findFragmentById(R.id.courselistfragment);
-        for(int c = 0; c < universityTourPolylinearray.size(); c++){
+        for (int c = 0; c < universityTourPolylinearray.size(); c++) {
             //length랑 courseTime 다시 설정해야함
             courseListFragment.addItem(universityTourPolylinearray.get(c).getCourseType(),
-                    ""+c, "00");
+                    "" + c, "00");
         }
 
         FragmentManager manager2 = getSupportFragmentManager();
@@ -159,15 +178,15 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mMapView.removeAllPOIItems();
         // 구현한 CalloutBalloonAdapter 등록
         mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-        for(int i = 0; i < universityTourarray.size(); i++){
+        for (int i = 0; i < universityTourarray.size(); i++) {
             createCustomMarker(mMapView, universityTourarray.get(i));
         }
 
         polylineArrayList = new ArrayList<MapPolyline>();
-        for(int ps = 0; ps < universityTourPolylinearray.size(); ps++){
+        for (int ps = 0; ps < universityTourPolylinearray.size(); ps++) {
             //맵포인트 추가
             mPolyline2Points = new MapPoint[universityTourPolylinearray.get(ps).getLatitudeArray().size()];
-            for(int p = 0; p < universityTourPolylinearray.get(ps).getLatitudeArray().size(); p++){
+            for (int p = 0; p < universityTourPolylinearray.get(ps).getLatitudeArray().size(); p++) {
                 mPolyline2Points[p] = MapPoint.mapPointWithGeoCoord(universityTourPolylinearray.get(ps).getLatitudeArraypoint(p),
                         universityTourPolylinearray.get(ps).getLogitudeArraypoint(p));
             }
@@ -175,7 +194,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             //polyline생성 및 arraylist에 추가
             polyline2 = new MapPolyline(21);
             polyline2.setTag(2000);
-            polyline2.setLineColor(Color.argb(128, 0, 0, ps/universityTourPolylinearray.size()*255));
+            polyline2.setLineColor(Color.argb(128, 0, 0, ps / universityTourPolylinearray.size() * 255));
             polyline2.addPoints(mPolyline2Points);
             polylineArrayList.add(polyline2);
         }
@@ -183,7 +202,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         if (!checkLocationServicesStatus()) {
 
             showDialogForLocationServiceSetting();
-        }else {
+        } else {
 
             checkRunTimePermission();
         }
@@ -199,22 +218,63 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     }
 
     //코스가 선택되면 경로를 지도상에 그려줌
-    public void onCourseSelected(String courseName, int position){
-        Toast.makeText(this, "선택: "+courseName, Toast.LENGTH_SHORT).show();
+    public void onCourseSelected(String courseName, int position) {
+        Toast.makeText(this, "선택: " + courseName, Toast.LENGTH_SHORT).show();
         mMapView.removeAllPolylines();//나머지 polyline다 지워주고
         mMapView.addPolyline(polylineArrayList.get(position));
     }
 
     //코스를 선택하면 코스 선택 메뉴가 사라지고, 본격적인 투어를 제공하도록 한다.
     Button.OnClickListener buttonCourseSelectClickListener = new View.OnClickListener() {
+        @RequiresApi(api = Build.VERSION_CODES.M)
         public void onClick(View v) {
             courseFrameLayout.setVisibility(View.INVISIBLE);
             missionFrameLayout.setVisibility(View.VISIBLE);
             //카메라 확대
-            mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(mapPointGeo.latitude, mapPointGeo.longitude),1)), 200, new CancelableCallback() {
+            final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return;
+            }
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            final LocationListener gpsLocationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
+
+                public void onProviderEnabled(String provider) {
+                }
+
+                public void onProviderDisabled(String provider) {
+                }
+            };
+
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    1000,
+                    1,
+                    gpsLocationListener);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    1000,
+                    1,
+                    gpsLocationListener);
+
+
+            mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude()),1)), 200, new CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    Toast.makeText(getBaseContext(), "Animation to " + " complete", Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
@@ -223,6 +283,20 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 }
             });
             playmode = 1;
+            //커스텀 토스트 메세지
+            Context context = getApplicationContext();
+            CharSequence txt = "투어를 시작합니다.";
+            int time = Toast.LENGTH_LONG;
+            Toast.makeText(context, txt, time).show();
+            Toast toast = Toast.makeText(context, txt, time);
+            LayoutInflater inflater = getLayoutInflater();
+            View view =
+                    inflater.inflate(R.layout.custom_toastview,
+                            (ViewGroup)findViewById(R.id.containers));
+            TextView txtView = view.findViewById(R.id.txtview);
+            txtView.setText(txt);
+            toast.setView(view);
+            toast.show();
         }
     };
 

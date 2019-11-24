@@ -9,14 +9,6 @@
     android:background="@drawable/misback"
     >
 
-
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="wrap_content"
-        android:layout_height="400dp"
-        android:layout_marginTop="170dp"
-        android:background="#68ffffff"></ListView>
-
     <TextView
         android:id="@+id/Clear"
         android:layout_width="wrap_content"
@@ -30,6 +22,14 @@
         android:text="팔달관 기초 미션"
         android:textSize="30dp" />
 
+    <LinearLayout
+        android:id="@+id/con"
+        android:layout_width="299dp"
+        android:layout_height="483dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="84dp"
+        android:orientation="vertical"></LinearLayout>
 
     <Button
         android:id="@+id/button1"
