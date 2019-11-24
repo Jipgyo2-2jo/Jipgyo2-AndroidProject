@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp"
-    android:orientation="vertical"
-    android:background="#ff6">
 
-    <TextView android:text="대학교 정보"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_margin="60dp"
+        android:adjustViewBounds="true" />
+
+    <TextView
+        android:id="@+id/Clear1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="400dp"
+        android:gravity="center"
+        android:textColor="#1e90ff"
+        android:textStyle="bold"
+        android:text="대학교 설명 쭉 쓰면 됩니다 ^^"
+        android:textSize="20dp" />
 
     <Button
         android:id="@+id/button1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="지도로 돌아가기"
-        android:background="#eee"/>
+        android:layout_width="166dp"
+        android:layout_height="76dp"
+        android:layout_marginLeft="225dp"
+        android:layout_marginTop="600dp"
+        android:background="@drawable/btnfinmap" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="투어 시작하기"
-        android:background="#eee"/>
-
-</LinearLayout>
+        android:layout_width="180dp"
+        android:layout_height="90dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="595dp"
+        android:background="@drawable/btnmaing" />
+</RelativeLayout>
