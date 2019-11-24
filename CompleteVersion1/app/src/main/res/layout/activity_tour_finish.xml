@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:orientation="vertical"
-    >
+    android:background="@drawable/finishfin">
 
     <Button
         android:id="@+id/button1"
@@ -14,7 +14,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="210dp"
         android:layout_marginTop="570dp"
-        android:background="@drawable/btn_finmap" />
+        android:background="@drawable/btnfinmap" />
 
     <Button
         android:id="@+id/button2"
@@ -22,7 +22,7 @@
         android:layout_height="70dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="565dp"
-        android:background="@drawable/btn_maing" />
+        android:background="@drawable/btnmaing" />
 
     <Button
         android:id="@+id/button3"
@@ -30,7 +30,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="640dp"
-        android:background="@drawable/btn_fin" />
+        android:background="@drawable/btnfinfin" />
 
     <TextView
         android:id="@+id/Clear"
