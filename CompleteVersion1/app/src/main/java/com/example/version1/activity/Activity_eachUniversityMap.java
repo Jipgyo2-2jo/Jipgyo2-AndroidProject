@@ -2,6 +2,7 @@ package com.example.version1.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,7 +58,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private MapPOIItem mCustomMarker;
     private Button button1;
     private Button buttonCourseSelect;
-    private Button buttonCourse;
     private FrameLayout courseFrameLayout;
     private FrameLayout missionFrameLayout;
     private ArrayList<UniversityTour> universityTourarray;
@@ -120,7 +121,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         ArrayList<String> quizs = new ArrayList<>();
         quizs.add("1번답");
         quizs.add("2번답");
-        tempStrArray.add(new Quiz("질문1?", quizs));
+        tempStrArray.add(new Quiz("질문1?", quizs, 1));
         missionQuizs.add(new MissionQuiz(1, 0, 37.2800030, 127.0436440, 0, tempStrArray));
 
        //-------------------------------------------------------------
@@ -244,6 +245,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         super.onDestroy();
         mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
         mMapView.setShowCurrentLocationMarker(false);
+        playmode = 0;
     }
 
     private void createCustomMarker(MapView mapView, UniversityTour universityTourSculpture) {
@@ -297,12 +299,10 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 //마커의 색 변화
                 tmppoiItem.setCustomImageResourceId(R.drawable.custom_map_present2);
                 mMapView.addPOIItem(tmppoiItem);
-
+                final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(1000);
             }
-
         }
-//        final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-//        vibrator.vibrate(1000);
         //missionQuizs
         //미션이 활성화 될 건물이 있는지 확인
     }
