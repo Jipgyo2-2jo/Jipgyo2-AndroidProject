@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class MissionQuiz implements Serializable {
     int id;//구분하는 id값
-    int type;//기초 미션이면 1, 심화 미션이면 2
+    int type;//기초 미션이면 1, 심화 미션이면 2, 포토존 미션이면 3
     //미션이 발생할 위치
     Double latitude;
     Double logitude;

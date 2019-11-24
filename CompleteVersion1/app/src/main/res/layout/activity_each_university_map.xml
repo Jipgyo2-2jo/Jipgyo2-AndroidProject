@@ -71,7 +71,7 @@
 
         <SlidingDrawer
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="280dp"
             android:content="@+id/content"
             android:handle="@+id/handle"
             android:orientation="vertical">
@@ -79,10 +79,10 @@
             <Button
                 android:id="@+id/handle"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="50dp"
                 android:background="@drawable/slidetop"
                 android:gravity="bottom|center"
-                android:text="목록"
+                android:text="미션 목록"
                 android:textSize="10sp" />
 
             <LinearLayout
