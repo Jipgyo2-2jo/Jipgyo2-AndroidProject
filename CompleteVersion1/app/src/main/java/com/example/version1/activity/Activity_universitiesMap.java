@@ -221,9 +221,11 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mMapView.setShowCurrentLocationMarker(false);
     }
 
+    //sharedreference를 이용하여 다시 구현하자.
     @Override
     protected void onRestart() {
         super.onRestart();
+        ArrayList<sBtnItem> list = new ArrayList<>();
         setContentView(R.layout.activity_universitiesmap);
         mMapView = (MapView) findViewById(R.id.map_view);
         //기본 환경 설정
@@ -232,17 +234,43 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mMapView.setCurrentLocationEventListener(this);
         // 중심점 변경 + 줌 레벨 변경
         mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11, true);
-        for(int i = 0; i < doAndSiarray.size(); i++){
-            createCustomMarkerDoAndSi(mMapView, doAndSiarray.get(i));
-        }
 
-        // 구현한 CalloutBalloonAdapter 등록
+        mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
         mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-        for(int j = 0; j < Universitiesarray.size(); j++){
-            Log.d("0123", "onCreate: "+j);
-            createCustomMarkerUniversities(mMapView, Universitiesarray.get(j));
+
+        buttonschool = (Button) findViewById(R.id.buttonschool);
+        buttonback = (Button) findViewById(R.id.buttonback);
+        rela = (RelativeLayout) findViewById(R.id.relativelayout);
+        slidingDrawer = (SlidingDrawer)findViewById(R.id.slidingdrawer);
+        listview = (ListView)findViewById(R.id.slistView);
+
+        buttonschool.setOnClickListener(buttonSchoolClickListener);
+        buttonback.setOnClickListener(buttonbackClickListener);
+
+        if (!checkLocationServicesStatus()) {
+
+            showDialogForLocationServiceSetting();
+        }else {
+
+            checkRunTimePermission();
         }
 
+        sBtnItem item;
+
+        for(int i = 0; i < Universitiesarray.size(); i++){
+            //listview 아이템 생성
+            item = new sBtnItem();
+            Universities temp = Universitiesarray.get(i);
+            item.setUnivname(temp.get학교명());
+            item.setUnivnum(temp.get전화번호());
+            item.setUniversities(temp);
+            list.add(item);
+        }
+
+        // Adapter 생성
+        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this) ;
+        // 리스트뷰 참조 및 Adapter달기
+        listview.setAdapter(adapter);
     }
 
     @Override
