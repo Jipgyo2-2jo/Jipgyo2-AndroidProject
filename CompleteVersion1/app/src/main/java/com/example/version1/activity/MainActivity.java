@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.version1.R;
 import com.example.version1.database.UniversitiesAccessDB;
 import com.example.version1.database.UniversitiesAccessDBTask;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         finish();
     }
+
 
     //도, 시를 가져와서 일차적으로 이 것들만 가져오도록 한다.
     private ArrayList<DoAndSi> setAndgetDoAndSiFromDB() {
