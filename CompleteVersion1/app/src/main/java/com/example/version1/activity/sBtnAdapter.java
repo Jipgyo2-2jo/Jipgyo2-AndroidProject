@@ -16,8 +16,8 @@ import com.example.version1.R;
 import java.util.ArrayList;
 
 public class sBtnAdapter extends ArrayAdapter implements Filterable {
-    private ArrayList<sBtnItem> listViewItemList;
-    // 필터링된 결과 데이터를 저장하기 위한 ArrayList.
+    private ArrayList<sBtnItem> listViewItemList = new ArrayList<>();
+    // 필터링된 결과 데이터를 저장하기 위한 ArrayList. 최초에는 전체 리스트 보유.
     private ArrayList<sBtnItem> filteredItemList;
     private Filter listFilter;
 

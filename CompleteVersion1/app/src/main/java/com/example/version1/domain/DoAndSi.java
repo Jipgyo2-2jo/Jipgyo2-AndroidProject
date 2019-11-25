@@ -7,12 +7,14 @@ public class DoAndSi implements Serializable {
     double latitude;
     double lonitude;
     int zoomlevel;
+    int imgid;
 
-    public DoAndSi(String name, double latitude, double lonitude, int zoomlevel){
+    public DoAndSi(String name, double latitude, double lonitude, int zoomlevel, int imgid){
         this.name = name;
         this.latitude = latitude;
         this.lonitude = lonitude;
         this.zoomlevel = zoomlevel;
+        this.imgid = imgid;
     }
 
     public String getName() {
@@ -45,5 +47,13 @@ public class DoAndSi implements Serializable {
 
     public void setZoomlevel(int zoomlevel) {
         this.zoomlevel = zoomlevel;
+    }
+
+    public int getImgid() {
+        return imgid;
+    }
+
+    public void setImgid(int imgid) {
+        this.imgid = imgid;
     }
 }

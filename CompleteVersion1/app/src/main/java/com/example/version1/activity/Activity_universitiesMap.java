@@ -265,9 +265,80 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mMapView.setShowCurrentLocationMarker(false);
     }
 
+    //sharedreference를 이용하여 다시 구현하자.
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
+        ArrayList<sBtnItem> list = new ArrayList<>();
+        setContentView(R.layout.activity_universitiesmap);
+        mMapView = (MapView) findViewById(R.id.map_view);
+        //기본 환경 설정
+        mMapView.setMapViewEventListener(this);
+        mMapView.setPOIItemEventListener(this);
+        mMapView.setCurrentLocationEventListener(this);
+        // 중심점 변경 + 줌 레벨 변경
+        mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11, true);
+
+        mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
+        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+
+        buttonschool = (Button) findViewById(R.id.buttonschool);
+        buttonback = (Button) findViewById(R.id.buttonback);
+        rela = (RelativeLayout) findViewById(R.id.relativelayout);
+        slidingDrawer = (SlidingDrawer)findViewById(R.id.slidingdrawer);
+        listview = (ListView)findViewById(R.id.slistView);
+
+        buttonschool.setOnClickListener(buttonSchoolClickListener);
+        buttonback.setOnClickListener(buttonbackClickListener);
+
+        if (!checkLocationServicesStatus()) {
+
+            showDialogForLocationServiceSetting();
+        }else {
+
+            checkRunTimePermission();
+        }
+
+        sBtnItem item;
+
+        for(int i = 0; i < Universitiesarray.size(); i++){
+            //listview 아이템 생성
+            item = new sBtnItem();
+            Universities temp = Universitiesarray.get(i);
+            item.setUnivname(temp.get학교명());
+            item.setUnivnum(temp.get전화번호());
+            item.setUniversities(temp);
+            list.add(item);
+        }
+
+        // Adapter 생성
+        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list, this) ;
+        // 리스트뷰 참조 및 Adapter달기
+        listview.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setMessage("종료하시겠습니까?");
+
+        // "예" 버튼을 누르면 실행되는 리스너
+        alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish(); // 현재 액티비티를 종료한다. (MainActivity에서 작동하기 때문에 애플리케이션을 종료한다.)
+            }
+        });
+        // "아니오" 버튼을 누르면 실행되는 리스너
+        alBuilder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return; // 아무런 작업도 하지 않고 돌아간다
+            }
+        });
+        alBuilder.setTitle("프로그램 종료");
+        alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
     }
 
     //검색버튼 눌렀을때
@@ -307,7 +378,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
     private void createCustomMarkerDoAndSi(MapView mapView, DoAndSi doAndSi) {
         mCustomMarker = new MapPOIItem();
-        mCustomMarker.setUserObject(doAndSi);
         mCustomMarker.setItemName(doAndSi.getName());
         mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(doAndSi.getLatitude(), doAndSi.getLonitude()));//맵 포인트
         mCustomMarker.setTag(doAndSi.getZoomlevel());
@@ -324,7 +394,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private void createCustomMarkerUniversities(MapView mapView, Universities university) {
         mCustomMarker = new MapPOIItem();
         mCustomMarker.setItemName(university.get학교명());
-        mCustomMarker.setUserObject(university);
         mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(university.getLatitude(), university.getLonitude()));//맵 포인트
 
         mCustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
@@ -368,12 +437,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 //-------------------------------------------------------------------------
     @Override//전국 지도 화면에서 예를 들어 경기도를 누르면 경기도를 카메라 확대를 하고 다른 마커들도 보이도록 한다.
     public void onPOIItemSelected(MapView mapView, final MapPOIItem mapPOIItem) {
-        if (touchnum == 0){
-            touchnum = 1;
-            return;
-        }
-
-        else if (/*zoomlevelevent == 1*/mapPOIItem.getUserObject().getClass().equals(DoAndSi.class)) {
+        if (zoomlevelevent == 1) {
             Log.d(mapPOIItem.getItemName(), "onPOIItemSelected: ");
             mapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
 
@@ -397,13 +461,12 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 Toast.makeText(getBaseContext(), "Animation to " + mapPOIItem.getItemName() + " complete", Toast.LENGTH_SHORT).show();
             }
 
-            @Override
-            public void onCancel() {
+                @Override
+                public void onCancel() {
 
-            }
-        });
-
-        touchnum = 0;
+                }
+            });
+        }
     }
 
     @Override
