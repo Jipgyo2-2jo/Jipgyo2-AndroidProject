@@ -307,6 +307,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
     private void createCustomMarkerDoAndSi(MapView mapView, DoAndSi doAndSi) {
         mCustomMarker = new MapPOIItem();
+        mCustomMarker.setUserObject(doAndSi);
         mCustomMarker.setItemName(doAndSi.getName());
         mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(doAndSi.getLatitude(), doAndSi.getLonitude()));//맵 포인트
         mCustomMarker.setTag(doAndSi.getZoomlevel());
@@ -323,6 +324,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private void createCustomMarkerUniversities(MapView mapView, Universities university) {
         mCustomMarker = new MapPOIItem();
         mCustomMarker.setItemName(university.get학교명());
+        mCustomMarker.setUserObject(university);
         mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(university.getLatitude(), university.getLonitude()));//맵 포인트
 
         mCustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
@@ -370,7 +372,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             touchnum = 1;
             return;
         }
-        else if (zoomlevelevent == 1) {
+
+        else if (/*zoomlevelevent == 1*/mapPOIItem.getUserObject().getClass().equals(DoAndSi.class)) {
             Log.d(mapPOIItem.getItemName(), "onPOIItemSelected: ");
             mapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
 

@@ -15,11 +15,6 @@ import com.example.version1.R;
 
 import java.util.ArrayList;
 
-import net.daum.mf.map.api.CameraPosition;
-import net.daum.mf.map.api.CameraUpdateFactory;
-import net.daum.mf.map.api.CancelableCallback;
-import net.daum.mf.map.api.MapView;
-
 public class sBtnAdapter extends ArrayAdapter implements Filterable {
     private ArrayList<sBtnItem> listViewItemList;
     // 필터링된 결과 데이터를 저장하기 위한 ArrayList.
@@ -54,7 +49,7 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
         // 생성자로부터 저장된 resourceId(listview_btn_item)에 해당하는 Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(this.resourceId/*R.layout.listview_btn_item*/, parent, false);
+            convertView = inflater.inflate(this.resourceId, parent, false);
         }
 
         // 화면에 표시될 View(Layout이 inflate된)로부터 위젯에 대한 참조 획득
@@ -72,34 +67,7 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
 
         // button1 클릭 시 TextView(textView1)의 내용 변경.
         Button button1 = (Button) convertView.findViewById(R.id.button1);
-        button1.setOnClickListener(listBtnClickListener.get(position)); /*new Button.OnClickListener() {
-            public void onClick(View v) {
-                /*
-                map_main.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), 3)), 200, new CancelableCallback() {
-                    @Override
-                    public void onFinish() {
-                    }
-                    @Override
-                    public void onCancel() {
-                    }
-                });*/
-
-/*                EatenMenu m = new EatenMenu();
-                m.setCalorie(l.get(pos).getSpecificmenu().getCalorie());
-                m.setName(l.get(pos).getSpecificmenu().getName());
-                m.setRating(0f);
-                m.setSpecificMenuID(l.get(pos).getSpecificmenu().getSpecificMenuID());
-                m.setCount(Integer.valueOf(counteditText.getText().toString()));
-
-                int remc = UserDailyInfo.getRemainingCalorie();
-                UserDailyInfo.setRemainingCalorie(remc-(m.getCalorie()*m.getCount()));
-                RecordDietActivity.eatenmenu.add(m);
-
-             //   Intent intent = new Intent(this, )
-                ((Activity)context).finish();
-            }
-
-        });*/
+        button1.setOnClickListener(listBtnClickListener.get(pos));
 
         return convertView;
     }
