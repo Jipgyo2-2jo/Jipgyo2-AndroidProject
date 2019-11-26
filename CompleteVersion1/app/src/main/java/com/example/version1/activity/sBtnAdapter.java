@@ -16,7 +16,7 @@ import com.example.version1.R;
 import java.util.ArrayList;
 
 public class sBtnAdapter extends ArrayAdapter implements Filterable {
-    private ArrayList<sBtnItem> listViewItemList = new ArrayList<>();
+    private ArrayList<sBtnItem> listViewItemList;
     // 필터링된 결과 데이터를 저장하기 위한 ArrayList. 최초에는 전체 리스트 보유.
     private ArrayList<sBtnItem> filteredItemList;
     private Filter listFilter;
@@ -63,7 +63,7 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
         // 아이템 내 각 위젯에 데이터 반영
 //        iconImageView.setImageDrawable(listViewItem.getIcon());
         Univname.setText(listViewItem.getUnivname());
-        Univnum.setText(listViewItem.getUnivnum());
+        Univnum.setText(listViewItem.getUniversities().get주소());
 
         // button1 클릭 시 TextView(textView1)의 내용 변경.
         Button button1 = (Button) convertView.findViewById(R.id.button1);
