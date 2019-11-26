@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +53,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     private static final String LOG_TAG = "Act_eachUniversitiesMap";
 
+    private int courseselect = 0;
     private int playmode = 0;
     private int tracking = 0;
     private MapPolyline polyline2;
@@ -86,7 +86,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         @Override//디폴트 값
         public View getCalloutBalloon(MapPOIItem poiItem) {
-            ((ImageView) mCalloutBalloon.findViewById(R.id.badge)).setImageResource(R.drawable.ic_launcher_foreground);
             ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
             ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(universityTourarray.get(poiItem.getTag() - 1).get한줄평());
             return mCalloutBalloon;
@@ -101,9 +100,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //***********************
-        //***********************
 
         Intent intent = getIntent(); //이 액티비티를 부른 인텐트를 받는다.
         String univName = intent.getStringExtra("univName");
@@ -178,6 +174,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mMapView.removeAllPOIItems();
         // 구현한 CalloutBalloonAdapter 등록
         mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+
+        mMapView.setCustomCurrentLocationMarkerImage(R.drawable.dest, new MapPOIItem.ImageOffset(0,0));
+
         for (int i = 0; i < universityTourarray.size(); i++) {
             createCustomMarker(mMapView, universityTourarray.get(i));
         }
@@ -222,81 +221,99 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         Toast.makeText(this, "선택: " + courseName, Toast.LENGTH_SHORT).show();
         mMapView.removeAllPolylines();//나머지 polyline다 지워주고
         mMapView.addPolyline(polylineArrayList.get(position));
+        courseselect = 1;
     }
 
     //코스를 선택하면 코스 선택 메뉴가 사라지고, 본격적인 투어를 제공하도록 한다.
     Button.OnClickListener buttonCourseSelectClickListener = new View.OnClickListener() {
         @RequiresApi(api = Build.VERSION_CODES.M)
         public void onClick(View v) {
-            courseFrameLayout.setVisibility(View.INVISIBLE);
-            missionFrameLayout.setVisibility(View.VISIBLE);
-            //카메라 확대
-            final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    Activity#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for Activity#requestPermissions for more details.
+            if(courseselect == 0){
+                Toast.makeText(Activity_eachUniversityMap.this, "코스를 선택하세요", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            final LocationListener gpsLocationListener = new LocationListener() {
-                public void onLocationChanged(Location location) {
 
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
+            AlertDialog.Builder alBuilder = new AlertDialog.Builder(Activity_eachUniversityMap.this);
+            alBuilder.setMessage("선택한 코스로 투어를 시작하시겠습니까?\n투어 중 다른 코스로 변경하면\n클리어한 미션이 초기화됩니다.");
 
-                }
-
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                }
-
-                public void onProviderEnabled(String provider) {
-                }
-
-                public void onProviderDisabled(String provider) {
-                }
-            };
-
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-
-
-            mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude()),1)), 200, new CancelableCallback() {
+            // "예" 버튼을 누르면 실행되는 리스너
+            alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                 @Override
-                public void onFinish() {
+                public void onClick(DialogInterface dialog, int which) {
+                    courseFrameLayout.setVisibility(View.INVISIBLE);
+                    missionFrameLayout.setVisibility(View.VISIBLE);
 
-                }
+                    //카메라 확대
+                    final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    Activity#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for Activity#requestPermissions for more details.
+                        return;
+                    }
+                    Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    final LocationListener gpsLocationListener = new LocationListener() {
+                        public void onLocationChanged(Location location) {
+                        }
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+                        }
+                        public void onProviderEnabled(String provider) {
+                        }
+                        public void onProviderDisabled(String provider) {
+                        }
+                    };
 
-                @Override
-                public void onCancel() {
+                    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            1000,
+                            1,
+                            gpsLocationListener);
+                    lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                            1000,
+                            1,
+                            gpsLocationListener);
+
+                    mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude()),1)), 200, new CancelableCallback() {
+                        @Override
+                        public void onFinish() {
+                        }
+                        @Override
+                        public void onCancel() {
+                        }
+                    });
+
+                    playmode = 1;
+                    //커스텀 토스트 메세지
+                    Context context = getApplicationContext();
+                    CharSequence txt = "투어를 시작합니다.";
+                    int time = Toast.LENGTH_LONG;
+                    Toast.makeText(context, txt, time).show();
+                    Toast toast = Toast.makeText(context, txt, time);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view =
+                            inflater.inflate(R.layout.custom_toastview,
+                                    (ViewGroup)findViewById(R.id.containers));
+                    TextView txtView = view.findViewById(R.id.txtview);
+                    txtView.setText(txt);
+                    toast.setView(view);
+                    toast.show();
+
+                    courseFrameLayout.setVisibility(View.INVISIBLE);
+                    missionFrameLayout.setVisibility(View.VISIBLE);
 
                 }
             });
-            playmode = 1;
-            //커스텀 토스트 메세지
-            Context context = getApplicationContext();
-            CharSequence txt = "투어를 시작합니다.";
-            int time = Toast.LENGTH_LONG;
-            Toast.makeText(context, txt, time).show();
-            Toast toast = Toast.makeText(context, txt, time);
-            LayoutInflater inflater = getLayoutInflater();
-            View view =
-                    inflater.inflate(R.layout.custom_toastview,
-                            (ViewGroup)findViewById(R.id.containers));
-            TextView txtView = view.findViewById(R.id.txtview);
-            txtView.setText(txt);
-            toast.setView(view);
-            toast.show();
+            // "아니오" 버튼을 누르면 실행되는 리스너
+            alBuilder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    return; // 아무런 작업도 하지 않고 돌아간다
+                }
+            });
+            alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
         }
     };
 
@@ -315,11 +332,36 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     };
 
     @Override
+    public void onBackPressed() {
+        // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setMessage("투어를 종료하시겠습니까?\n클리어한 미션이 저장되지 않습니다.");
+
+        // "예" 버튼을 누르면 실행되는 리스너
+        alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish(); // 현재 액티비티를 종료한다. (MainActivity에서 작동하기 때문에 애플리케이션을 종료한다.)
+            }
+        });
+        // "아니오" 버튼을 누르면 실행되는 리스너
+        alBuilder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return; // 아무런 작업도 하지 않고 돌아간다
+            }
+        });
+        alBuilder.setTitle("프로그램 종료");
+        alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
         mMapView.setShowCurrentLocationMarker(false);
         playmode = 0;
+        courseselect = 0;
     }
 
     private void createCustomMarker(MapView mapView, UniversityTour universityTourSculpture) {
@@ -344,7 +386,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         //gps와 건물의 거리가 (40m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
         activateMission(mapPointGeo);
-
     }
 
     public void activateMission(MapPoint.GeoCoordinate mapPointGeo){
@@ -478,6 +519,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private void onFinishReverseGeoCoding(String result) {
 //        Toast.makeText(LocationDemoActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
     }
+
 
 
     //ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.

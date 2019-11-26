@@ -5,12 +5,21 @@
     android:orientation="horizontal"
     android:id="@+id/anslayout">
 
-    <RadioButton
-        android:id="@+id/answertv"
-        android:button="@drawable/radio_button"
-        android:layout_width="200dp"
+    <RadioGroup
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:text="답1" />
+        android:id="@+id/radiogroup">
+
+        <!--<RadioButton-->
+            <!--android:id="@+id/answertv"-->
+            <!--android:button="@drawable/radio_button"-->
+            <!--android:layout_width="200dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text="답1" />-->
+
+    </RadioGroup>
+    
+
 
 </LinearLayout>
