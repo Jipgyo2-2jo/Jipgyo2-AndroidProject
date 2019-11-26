@@ -4,19 +4,54 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity ="center"
+        android:fillViewport="true"
+        android:layout_marginTop="0dp"
+        android:id="@+id/scrollView">
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/anslayout">
 
-        <TextView
-            android:layout_width="300dp"
+        <LinearLayout
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:id="@+id/ques"
-            android:maxLines = "2"
-            android:text="1. 문제1"
-            android:textSize="20dp"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ques"
+                android:maxLines = "2"
+                android:text="1. 문제1"
+                android:textSize="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/ans"
+                android:text="정답!"
+                android:textSize="20dp"
+                android:visibility="invisible"
+                />
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radiogroup">
+
+        </RadioGroup>
 
     </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>

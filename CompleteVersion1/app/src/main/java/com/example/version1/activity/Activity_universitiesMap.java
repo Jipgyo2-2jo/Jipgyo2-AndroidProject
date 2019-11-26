@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -86,9 +85,10 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         @Override//디폴트 값
         public View getCalloutBalloon(MapPOIItem poiItem) {
-            ((ImageView) mCalloutBalloon.findViewById(R.id.badge)).setImageResource(R.drawable.ic_launcher_foreground);
             ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
-            ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText("Custom CalloutBalloon");
+            Universities a;
+            a = (Universities) poiItem.getUserObject();
+            ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(a.get학교명영문());
             return mCalloutBalloon;
         }
 
@@ -357,6 +357,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mCustomMarker.setCustomImageAutoscale(false);
         mCustomMarker.setCustomImageAnchor(0.5f, 1.0f);
 
+        mCustomMarker.setUserObject(university);
         mapPOIItemsUniv.add(mCustomMarker);
     }
 
