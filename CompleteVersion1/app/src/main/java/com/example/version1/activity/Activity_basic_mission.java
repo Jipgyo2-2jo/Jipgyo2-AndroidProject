@@ -22,6 +22,7 @@ public class Activity_basic_mission extends AppCompatActivity {
     MissionQuiz missionQuiz;
     private ArrayList<RadioGroup> rgArray;
     private ArrayList<TextView> ansArray;
+    private ArrayList<LinearLayout> lloutArray;
     Button ansbutton;
     Button backbutton;
 
@@ -38,17 +39,19 @@ public class Activity_basic_mission extends AppCompatActivity {
 
         rgArray = new ArrayList<>();
         ansArray = new ArrayList<>();
+        lloutArray = new ArrayList<>();
         //미션을 유동적으로 넣어준다.
         for(int i = 0; i < missionQuiz.getQuizArrayList().size(); i++) {
             Sub n_layout = new Sub(getApplicationContext());
             LinearLayout con = (LinearLayout) findViewById(R.id.con);
             TextView ques = n_layout.findViewById(R.id.ques);
-
+            LinearLayout llout = n_layout.findViewById(R.id.anslayout);
             ques.setTextColor(Color.WHITE);
             TextView ans = n_layout.findViewById(R.id.ans);
             ans.setTextColor(Color.WHITE);
             ans.setId(i);
             ansArray.add(ans);
+            lloutArray.add(llout);
             RadioGroup radioGroup = n_layout.findViewById(R.id.radiogroup);
             ques.setText(missionQuiz.getQuizArrayList().get(i).getQuestion());
 
@@ -73,18 +76,21 @@ public class Activity_basic_mission extends AppCompatActivity {
     //정답 여부를 표시한다.
     Button.OnClickListener clickListener = new View.OnClickListener() {
         public void onClick(View v) {
+            correctNum = 0;
             for(int i = 0; i < ansArray.size(); i++) {
                 //정답인경우
                 if(rgArray.get(i).getCheckedRadioButtonId() == missionQuiz.getQuizArrayList().get(i).getRightAnswerone()){
                     ansArray.get(i).setVisibility(View.VISIBLE);
                     ansArray.get(i).setText("정답!");
-
+                    ansArray.get(i).setTextColor(Color.GREEN);
+                    lloutArray.get(i).setBackgroundResource(R.drawable.circle);
                     correctNum++;
 
                 }
                 else{
                     ansArray.get(i).setVisibility(View.VISIBLE);
                     ansArray.get(i).setText("오답!");
+                    ansArray.get(i).setTextColor(Color.RED);
                 }
             }
         }
