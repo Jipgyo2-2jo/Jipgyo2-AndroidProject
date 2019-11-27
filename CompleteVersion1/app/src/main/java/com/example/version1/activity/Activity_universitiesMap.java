@@ -353,7 +353,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(university.getLatitude(), university.getLonitude()));//맵 포인트
 
         mCustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-        mCustomMarker.setCustomImageResourceId(R.drawable.custom_map_present);//이미지(png파일로 하자)
+        mCustomMarker.setCustomImageResourceId(R.drawable.schoolicon);//이미지(png파일로 하자)
         mCustomMarker.setCustomImageAutoscale(false);
         mCustomMarker.setCustomImageAnchor(0.5f, 1.0f);
 

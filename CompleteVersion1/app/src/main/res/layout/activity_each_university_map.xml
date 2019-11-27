@@ -12,12 +12,48 @@
 
     </net.daum.mf.map.api.MapView>
 
-    <Button
-        android:id="@+id/finishbutton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="투어 종료"
-        android:visibility="invisible"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/finishbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="투어 종료"
+            android:visibility="invisible"/>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/mapradiogroup">
+
+            <RadioButton
+                android:id="@+id/mapnormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="노말 맵"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/maphybrid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="하이브리드 맵"
+                android:checked="false"/>
+
+            <RadioButton
+                android:id="@+id/mapsatellite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="인공위성 맵"
+                android:checked="false"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
 
     <CheckBox
         android:id="@+id/button"

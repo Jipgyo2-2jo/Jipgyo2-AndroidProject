@@ -89,10 +89,10 @@ public class MissionQuiz implements Serializable {
     }
 
     public String getTypeName() {
-        if (type == 1) {
-            return "기초 미션";
+        if (type == 0) {
+            return "미션";
         } else {
-            return "심화 미션";
+            return "포토존";
         }
     }
 }
