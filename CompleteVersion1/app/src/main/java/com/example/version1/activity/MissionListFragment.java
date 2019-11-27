@@ -42,4 +42,13 @@ public class MissionListFragment extends ListFragment{
     public void addMission(int bulb, String missionType, String correctness, MissionQuiz q) {
         adapter.addMission(bulb, missionType, correctness, q) ;
     }
+
+    public void modifyMission(int correctNum, MissionQuiz q){
+        adapter.modifyMission(correctNum, q);
+    }
+
+
+    public int getanswers() {
+        return adapter.getanswers();
+    }
 }

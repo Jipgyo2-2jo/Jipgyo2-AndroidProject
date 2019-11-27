@@ -2,7 +2,6 @@ package com.example.version1.database;
 
 import android.util.Log;
 
-import com.example.version1.domain.UniversityIntroduction;
 import com.example.version1.domain.UniversityTourPolyline;
 
 import org.json.JSONArray;
@@ -55,6 +54,7 @@ public class UniversityTourPolylineDB {
 
                 UniversityTourPolyline universityTourPolyline = new UniversityTourPolyline();
                 universityTourPolyline.setCourseType(Object.getString("course"));
+                universityTourPolyline.setMissionNum(Object.getInt("mission_num"));
 
                 for (int j = 0; j < 100; j = j+2) {//100은 maxsize
                     //null이 나올 때 까지 반복해서 읽음

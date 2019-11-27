@@ -14,33 +14,34 @@
         android:id="@+id/scrollView">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/anslayout">
 
         <LinearLayout
-            android:layout_width="350dp"
+
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="345dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/ques"
                 android:maxLines = "2"
-                android:text="1. 문제1"
+                android:text="10000000000000000000123456789123456789123456789"
                 android:textSize="20dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="5dp"
                 android:id="@+id/ans"
+                android:maxLines = "2"
                 android:text="정답!"
                 android:textSize="20dp"
-                android:visibility="invisible"
-                />
+                android:visibility="invisible" />
 
         </LinearLayout>
 

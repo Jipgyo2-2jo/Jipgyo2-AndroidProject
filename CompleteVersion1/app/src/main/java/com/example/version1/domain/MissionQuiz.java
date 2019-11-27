@@ -5,19 +5,21 @@ import java.util.ArrayList;
 
 public class MissionQuiz implements Serializable {
     int id;//구분하는 id값
-    int type;//기초 미션이면 1, 심화 미션이면 2, 포토존 미션이면 3
+    int type = 0;//그냥 미션이면 0, 포토존 미션이면1
     //미션이 발생할 위치
     Double latitude;
-    Double logitude;
+    Double longitude;
     int activated = 0;//미션이 활성화 되었을 경우 1, 아니면 0
     ArrayList<Quiz> quizArrayList;
     int rightAnswer = 0;
 
-    public MissionQuiz(int id, int type, Double latitude, Double logitude, int activated, ArrayList<Quiz> quizArrayList) {
+    public MissionQuiz() {
+    }
+
+    public MissionQuiz(int id, Double latitude, Double longitude, int activated, ArrayList<Quiz> quizArrayList) {
         this.id = id;
-        this.type = type;
         this.latitude = latitude;
-        this.logitude = logitude;
+        this.longitude = longitude;
         this.activated = activated;
         this.quizArrayList = quizArrayList;
     }
@@ -54,12 +56,12 @@ public class MissionQuiz implements Serializable {
         this.latitude = latitude;
     }
 
-    public Double getLogitude() {
-        return logitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLogitude(Double logitude) {
-        this.logitude = logitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public ArrayList<Quiz> getQuizArrayList() {
