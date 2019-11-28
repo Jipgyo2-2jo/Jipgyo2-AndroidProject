@@ -1,13 +1,13 @@
 package com.example.version1.domain;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class UniversityTourPolyline {
 
     String courseType;
     ArrayList<Double> latitudeArray;
     ArrayList<Double> logitudeArray;
+    int missionNum = 0;
 
     public UniversityTourPolyline() {
         this.latitudeArray = new ArrayList<Double>();
@@ -52,5 +52,13 @@ public class UniversityTourPolyline {
 
     public void addLogitudeArray(Double longitude) {
         this.logitudeArray.add(longitude);
+    }
+
+    public int getMissionNum() {
+        return missionNum;
+    }
+
+    public void setMissionNum(int missionNum) {
+        this.missionNum = missionNum;
     }
 }

@@ -22,14 +22,23 @@
         android:text="팔달관 기초 미션"
         android:textSize="30dp" />
 
-    <LinearLayout
-        android:id="@+id/con"
-        android:layout_width="291dp"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="470dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="120dp"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_marginTop="120dp">
+
+        <LinearLayout
+            android:id="@+id/con"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <Button
         android:id="@+id/backbutton"

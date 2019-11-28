@@ -3,7 +3,6 @@ package com.example.version1.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView current_task;
     ArrayList<DoAndSi> doAndSiarray = new ArrayList<>();
     ArrayList<Universities> Universitiesarray = new ArrayList<>();
     @Override
