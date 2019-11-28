@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +31,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.version1.R;
+import com.example.version1.database.UniversityMissionQuizDB;
 import com.example.version1.database.UniversityTourAccessDB;
 import com.example.version1.database.UniversityTourPolylineDB;
 import com.example.version1.domain.MissionQuiz;
-import com.example.version1.domain.Quiz;
 import com.example.version1.domain.UniversityTour;
 import com.example.version1.domain.UniversityTourPolyline;
 
@@ -53,6 +54,11 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     private static final String LOG_TAG = "Act_eachUniversitiesMap";
 
+    private Button finishbutton;
+    private Button handleButton;
+    private String tmpstr;
+    private String mi = "미션 목록";
+    private int missionNum = 0;
     private int courseselect = 0;
     private int playmode = 0;
     private int tracking = 0;
@@ -67,6 +73,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private FrameLayout missionFrameLayout;
     private ArrayList<UniversityTour> universityTourarray;
     private ArrayList<MissionQuiz> missionQuizs;
+    private ArrayList<MissionQuiz> missionQuizs2;
     private ArrayList<UniversityTourPolyline> universityTourPolylinearray;
     private CourseListFragment courseListFragment;
     private MissionListFragment missionListFragment;
@@ -113,42 +120,41 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         universityTourPolylinearray = universityTourPolylineDB.getUniversityTourPolylineFromDB(univName);
 
         //그리고 미션에 대한 정보를 모두 받는 메소드도 실행한다.
-        /*
-
-         */
-        //아래 것은 예시 - 미션
-        missionQuizs = new ArrayList<>();
-        ArrayList<Quiz> tempStrArray = new ArrayList<>();
-
-        ArrayList<String> quizs = new ArrayList<>();
-        quizs.add("1번답답");
-        quizs.add("2번답답");
-        tempStrArray.add(new Quiz("질문1?", quizs, 1));
-
-        ArrayList<String> quizs2 = new ArrayList<>();
-        quizs2.add("11번답");
-        quizs2.add("22번답");
-        quizs2.add("33번답");
-        tempStrArray.add(new Quiz("질문2?", quizs2, 2));
-
-        ArrayList<String> quizs3 = new ArrayList<>();
-        quizs3.add("111번답");
-        quizs3.add("222번답");
-        quizs3.add("333번답");
-        quizs3.add("444번답");
-        tempStrArray.add(new Quiz("질문3?", quizs3, 3));
-        missionQuizs.add(new MissionQuiz(1, 0, 37.2800030, 127.0436440, 0, tempStrArray));
-
+        UniversityMissionQuizDB universityMissionQuizDB = new UniversityMissionQuizDB();
+        missionQuizs = universityMissionQuizDB.getUniversityMissionQuizArrayFromDB(univName);
         //-------------------------------------------------------------
 
         setContentView(R.layout.activity_each_university_map);
 
+        handleButton = findViewById(R.id.handle);
+        finishbutton = findViewById(R.id.finishbutton);
         button1 = findViewById(R.id.button);
         button1.setOnClickListener(mClickListener);
         buttonCourseSelect = findViewById(R.id.buttonCourseSelect);
         buttonCourseSelect.setOnClickListener(buttonCourseSelectClickListener);
         courseFrameLayout = (FrameLayout) findViewById(R.id.courseFrameLayout);
         missionFrameLayout = (FrameLayout) findViewById(R.id.missionFrameLayout);
+//        RadioButton mapnormal = findViewById(R.id.mapnormal);
+//        RadioButton maphybrid = findViewById(R.id.maphybrid);
+//        RadioButton mapsatellite = findViewById(R.id.mapsatellite);
+        RadioGroup mapradiogroup = findViewById(R.id.mapradiogroup);
+
+        mapradiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.mapnormal:
+                        mMapView.setMapType(MapView.MapType.Standard);
+                        break;
+                    case R.id.maphybrid:
+                        mMapView.setMapType(MapView.MapType.Hybrid);
+                        break;
+                    case R.id.mapsatellite:
+                        mMapView.setMapType(MapView.MapType.Satellite);
+                        break;
+                }
+            }
+        });
 
         //어댑터를 이용해 코스 리스트 생성
         FragmentManager manager = getSupportFragmentManager();
@@ -174,8 +180,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mMapView.removeAllPOIItems();
         // 구현한 CalloutBalloonAdapter 등록
         mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-
-        mMapView.setCustomCurrentLocationMarkerImage(R.drawable.dest, new MapPOIItem.ImageOffset(0,0));
+        mMapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.player, new MapPOIItem.ImageOffset(38,0));
+        mMapView.setCustomCurrentLocationMarkerImage(R.drawable.player, new MapPOIItem.ImageOffset(38,0));
 
         for (int i = 0; i < universityTourarray.size(); i++) {
             createCustomMarker(mMapView, universityTourarray.get(i));
@@ -189,14 +195,36 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 mPolyline2Points[p] = MapPoint.mapPointWithGeoCoord(universityTourPolylinearray.get(ps).getLatitudeArraypoint(p),
                         universityTourPolylinearray.get(ps).getLogitudeArraypoint(p));
             }
+            double rand = Math.random();
+            rand = rand*6;
+            rand = Math.round(rand);
 
             //polyline생성 및 arraylist에 추가
             polyline2 = new MapPolyline(21);
             polyline2.setTag(2000);
-            polyline2.setLineColor(Color.argb(128, 0, 0, ps / universityTourPolylinearray.size() * 255));
+            if(rand == 0){
+                polyline2.setLineColor(Color.argb(128, 255, ps / universityTourPolylinearray.size() * 255, 0));
+            }
+            else if(rand == 1){
+                polyline2.setLineColor(Color.argb(128, 0, 255, ps / universityTourPolylinearray.size() * 255));
+            }
+            else if(rand == 2){
+                polyline2.setLineColor(Color.argb(128, ps / universityTourPolylinearray.size() * 255, 0, 255));
+            }
+            else if(rand == 3){
+                polyline2.setLineColor(Color.argb(128, 255, 0, ps / universityTourPolylinearray.size() * 255));
+            }
+            else if(rand == 4){
+                polyline2.setLineColor(Color.argb(128, ps / universityTourPolylinearray.size() * 255, 255, 0));
+            }
+            else if(rand == 5){
+                polyline2.setLineColor(Color.argb(128, 0, ps / universityTourPolylinearray.size() * 255, 255));
+            }
             polyline2.addPoints(mPolyline2Points);
             polylineArrayList.add(polyline2);
         }
+
+        finishbutton.setOnClickListener(fClickListener);
 
         if (!checkLocationServicesStatus()) {
 
@@ -213,14 +241,15 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         //일단 basic mission으로 이동
         Intent intent = new Intent(Activity_eachUniversityMap.this, Activity_basic_mission.class);
         intent.putExtra("missionQuiz", q);
-        startActivity(intent);
+        startActivityForResult(intent, 001);
     }
 
     //코스가 선택되면 경로를 지도상에 그려줌
     public void onCourseSelected(String courseName, int position) {
-        Toast.makeText(this, "선택: " + courseName, Toast.LENGTH_SHORT).show();
         mMapView.removeAllPolylines();//나머지 polyline다 지워주고
+        Toast.makeText(this, "선택: " + position, Toast.LENGTH_SHORT).show();
         mMapView.addPolyline(polylineArrayList.get(position));
+        missionNum = universityTourPolylinearray.get(position).getMissionNum();
         courseselect = 1;
     }
 
@@ -235,6 +264,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
             AlertDialog.Builder alBuilder = new AlertDialog.Builder(Activity_eachUniversityMap.this);
             alBuilder.setMessage("선택한 코스로 투어를 시작하시겠습니까?\n투어 중 다른 코스로 변경하면\n클리어한 미션이 초기화됩니다.");
+            alBuilder.setTitle("코스 결정");
 
             // "예" 버튼을 누르면 실행되는 리스너
             alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
@@ -286,6 +316,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                     });
 
                     playmode = 1;
+                    tmpstr = mi.concat("  "+ 0 +"/"+missionNum);
+                    handleButton.setText(tmpstr);
                     //커스텀 토스트 메세지
                     Context context = getApplicationContext();
                     CharSequence txt = "투어를 시작합니다.";
@@ -303,7 +335,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
                     courseFrameLayout.setVisibility(View.INVISIBLE);
                     missionFrameLayout.setVisibility(View.VISIBLE);
-
                 }
             });
             // "아니오" 버튼을 누르면 실행되는 리스너
@@ -328,6 +359,15 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
                 tracking = 0;
             }
+        }
+    };
+
+    //버튼을 누르면 투어종료 화면으로
+    Button.OnClickListener fClickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_tour_finish.class);
+            intent.putExtra("missionNum", missionNum);
+            startActivity(intent);
         }
     };
 
@@ -382,10 +422,13 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         mapPointGeo = currentLocation.getMapPointGeoCoord();
-        Log.i(LOG_TAG, String.format("MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)", mapPointGeo.latitude, mapPointGeo.longitude, accuracyInMeters));
 
-        //gps와 건물의 거리가 (40m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
-        activateMission(mapPointGeo);
+        //gps와 건물의 거리가 (50m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
+        if(playmode == 1){
+            activateMission(mapPointGeo);
+        }
+        else
+            return;
     }
 
     public void activateMission(MapPoint.GeoCoordinate mapPointGeo){
@@ -396,13 +439,12 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         Location gl = new Location("2");//미션이 발생하는 곳의 위치(유동적)
         for(int i = 0; i < missionQuizs.size(); i++){
             gl.setLatitude(missionQuizs.get(i).getLatitude());
-            gl.setLongitude(missionQuizs.get(i).getLogitude());
-            //40m보다 가까워질 경우 미션 활성화
-            if(cl.distanceTo(gl) < 40 && missionQuizs.get(i).getIsActivated() == 0){
+            gl.setLongitude(missionQuizs.get(i).getLongitude());
+            //50m보다 가까워질 경우 미션 활성화
+            if(cl.distanceTo(gl) < 50 && missionQuizs.get(i).getIsActivated() == 0){
                 missionQuizs.get(i).setIsActivated(1);
                 //슬라이드 드로어에 미션 추가
                 MapPOIItem tmppoiItem = mMapView.findPOIItemByTag(missionQuizs.get(i).getId());
-                Log.d("asdq", "" + missionQuizs.get(i).getTypeName() + "/" + missionQuizs.get(i).getQuizArrayList().size());
                 //이름을 미리 지정해서 넘겨준다.
                 missionListFragment.addMission(1, ""+tmppoiItem.getItemName()+ " " +missionQuizs.get(i).getTypeName(),
                         missionQuizs.get(i).getRightAnswer() + "/"+missionQuizs.get(i).getQuizArrayList().size(), missionQuizs.get(i));
@@ -653,6 +695,24 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         checkRunTimePermission();
                         return;
                     }
+                }
+                break;
+        }
+
+        switch (resultCode){
+            case 100:
+                int a = data.getIntExtra("correctNum", 0);
+                MissionQuiz m = (MissionQuiz) data.getSerializableExtra("missionQuiz");
+                Toast.makeText(this, "맞춘 정답 수: " + a, Toast.LENGTH_LONG).show();
+                missionListFragment.modifyMission(a, m);
+                int ansnum = missionListFragment.getanswers();
+                missionListFragment.adapter.notifyDataSetChanged();
+                tmpstr = mi.concat("  "+ ansnum +"/"+missionNum);
+                handleButton.setText(tmpstr);
+                //미션개수를 충족한 경우
+                if(ansnum >= missionNum){
+                    //투어종료버튼 활성화
+                    finishbutton.setVisibility(View.VISIBLE);
                 }
                 break;
         }

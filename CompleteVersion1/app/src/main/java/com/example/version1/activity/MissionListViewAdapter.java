@@ -80,8 +80,33 @@ public class MissionListViewAdapter extends BaseAdapter {
         item.setMissionType(missionType);
         item.setCorrectness(correctness);
         item.setQ(q);
+        missionlistViewItemList.add(0, item);
+    }
 
-        missionlistViewItemList.add(item);
+    public void modifyMission(int correctNum, MissionQuiz q) {
 
+        //q에 해당하는 미션 찾음. id를 이용한다.
+        for(int i = 0; i < missionlistViewItemList.size(); i++){
+            if(missionlistViewItemList.get(i).getQ().getId() == q.getId()){
+                if(missionlistViewItemList.get(i).getQ().getQuizArrayList().size() == correctNum){
+                    //모두 맞춘 경우 bulb를 이용하여 꺼짐으로 표시한다.
+                    missionlistViewItemList.get(i).setImageType(0);
+                }
+                else
+                    missionlistViewItemList.get(i).setImageType(1);
+                //맞춘 개수도 업데이트해준다.
+                missionlistViewItemList.get(i).setCorrectness(correctNum+"/"+missionlistViewItemList.get(i).getQ().getQuizArrayList().size());
+            }
+        }
+    }
+
+    public int getanswers() {
+        int j = 0;
+        for(int i = 0; i < missionlistViewItemList.size(); i++){
+            if(missionlistViewItemList.get(i).getImageType() == 0){
+               j++;
+            }
+        }
+        return j;
     }
 }
