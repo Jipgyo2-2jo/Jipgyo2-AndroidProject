@@ -56,8 +56,10 @@ public class UniversityTourPolylineDB {
                 UniversityTourPolyline universityTourPolyline = new UniversityTourPolyline();
                 universityTourPolyline.setCourseType(Object.getString("course"));
                 universityTourPolyline.setMissionNum(Object.getInt("mission_num"));
+                universityTourPolyline.setCourseTime(Object.getInt("time"));
+                universityTourPolyline.setCourseLength(Object.getDouble("distance"));
 
-                for (int j = 0; j < 100; j = j+2) {//100은 maxsize
+                for (int j = 0; j < 110; j = j+2) {//100은 maxsize
                     //null이 나올 때 까지 반복해서 읽음
                     tempString1 = Object.getString(j + "");
                     tempString2 = Object.getString(j + 1 + "");
@@ -73,11 +75,11 @@ public class UniversityTourPolylineDB {
                 }
 
                 integerArrayList = new ArrayList<>();
-                for (int k = 0; k < 100; k++) {//20은 maxsize
+                for (int k = 0; k < 20; k++) {//20은 maxsize
                     //null이 나올 때 까지 반복해서 읽음
                     tempString1 = Object.getString("mission" + k);
 
-                    if (!tempString1.equals("null")) {
+                    if (!tempString1.equals("0")) {
                         //짝수는 위도 홀수는 경도 set
                         integerArrayList.add(Integer.valueOf(tempString1));
                     }

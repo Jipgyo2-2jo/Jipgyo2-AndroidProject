@@ -162,7 +162,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         for (int c = 0; c < universityTourPolylinearray.size(); c++) {
             //length랑 courseTime 다시 설정해야함
             courseListFragment.addItem(universityTourPolylinearray.get(c).getCourseType(),
-                    "" + c, "00");
+                    universityTourPolylinearray.get(c).getCourseTime()+"분", universityTourPolylinearray.get(c).getCourseLength()+"km");
         }
 
         FragmentManager manager2 = getSupportFragmentManager();

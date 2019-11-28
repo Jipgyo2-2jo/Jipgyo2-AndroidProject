@@ -34,7 +34,6 @@ public class CustomListFragment extends ListFragment {
         adapter.addItem(ContextCompat.getDrawable(getActivity(), R.drawable.help),
                 "Ind", "Assignment Ind Black 36dp") ;
 
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

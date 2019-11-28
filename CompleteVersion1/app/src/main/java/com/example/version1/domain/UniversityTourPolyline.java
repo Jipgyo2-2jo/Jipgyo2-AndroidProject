@@ -9,6 +9,8 @@ public class UniversityTourPolyline {
     ArrayList<Double> logitudeArray;
     int missionNum = 0;
     ArrayList<Integer> missionsIDs;
+    int courseTime = 0;
+    Double courseLength = 0.0;
 
     public UniversityTourPolyline() {
         this.latitudeArray = new ArrayList<Double>();
@@ -69,5 +71,21 @@ public class UniversityTourPolyline {
 
     public void setMissionsIDs(ArrayList<Integer> missionsIDs) {
         this.missionsIDs = missionsIDs;
+    }
+
+    public int getCourseTime() {
+        return courseTime;
+    }
+
+    public void setCourseTime(int courseTime) {
+        this.courseTime = courseTime;
+    }
+
+    public Double getCourseLength() {
+        return courseLength;
+    }
+
+    public void setCourseLength(Double courseLength) {
+        this.courseLength = courseLength;
     }
 }
