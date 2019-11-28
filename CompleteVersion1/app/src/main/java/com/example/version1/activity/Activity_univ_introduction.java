@@ -36,8 +36,8 @@ public class Activity_univ_introduction extends AppCompatActivity {
         univName = intent.getStringExtra("univName");
 
         //db에서 univName에 해당하는 정보를 불러온다.
-        button1 = findViewById(R.id.button1);
-        button2 = findViewById(R.id.button2);
+        button1 = findViewById(R.id.to_tour);
+        button2 = findViewById(R.id.to_main);
 
         button1.setOnClickListener(ClickListener1);
         button2.setOnClickListener(ClickListener2);

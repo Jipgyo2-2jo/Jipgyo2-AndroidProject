@@ -68,6 +68,15 @@
         android:button="@null"
         android:background="@drawable/button_selector"/>
 
+    <Button
+        android:id="@+id/finish_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="finishClicked"
+        android:text="투어 종료"
+        android:textSize="12sp"
+        android:visibility="visible" />
+
     <FrameLayout
         android:id="@+id/courseFrameLayout"
         android:layout_width="330dp"
