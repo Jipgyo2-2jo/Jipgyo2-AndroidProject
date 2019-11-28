@@ -777,10 +777,4 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
-
-    public void finishClicked(View v){
-        Intent intent = new Intent(Activity_eachUniversityMap.this, Activity_tour_finish.class);
-
-        startActivity(intent);
-    }
 }
