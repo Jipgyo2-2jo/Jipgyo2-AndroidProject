@@ -54,10 +54,17 @@ public class UniversityTourAccessDB {
 
                 universityTour.setId_num(Object.getInt("id_num"));
                 universityTour.setLatitude(Object.getDouble("위도"));
-                universityTour.setLonitude(Object.getDouble("경도"));
+                universityTour.setLongitude(Object.getDouble("경도"));
                 universityTour.set시설(Object.getString("시설"));
                 universityTour.set기본_사항(Object.getString("기본_사항"));
                 universityTour.set한줄평(Object.getString("한줄평"));
+
+                int loctype = 0;
+                loctype = loctype + Object.getInt("식당") * 1;
+                loctype = loctype + Object.getInt("매점") * 10;
+                loctype = loctype + Object.getInt("카페") * 100;
+                loctype = loctype + Object.getInt("기숙사") * 1000;
+                universityTour.setLoctype(loctype);
 
                 universityTourarray.add(universityTour);
             }

@@ -34,6 +34,10 @@ public class Activity_basic_mission extends AppCompatActivity {
 
         Intent intent = getIntent(); //이 액티비티를 부른 인텐트를 받는다.
         missionQuiz = (MissionQuiz) intent.getSerializableExtra("missionQuiz");
+        String missionName = (String) intent.getStringExtra("missionName");
+
+        TextView textView = findViewById(R.id.Clear);
+        textView.setText(missionName);
 
         rgArray = new ArrayList<>();
         ansArray = new ArrayList<>();
@@ -88,6 +92,7 @@ public class Activity_basic_mission extends AppCompatActivity {
                     ansArray.get(i).setVisibility(View.VISIBLE);
                     ansArray.get(i).setText("오답!");
                     ansArray.get(i).setTextColor(Color.RED);
+                    lloutArray.get(i).setBackgroundResource(R.drawable.xmark);
                 }
             }
         }

@@ -57,8 +57,8 @@ public class UniversityMissionQuizDB {
 
                 //새로운 id인 경우 (db에서는 type)새로운 missionquiz를 생성한다.
                 MissionQuiz missionQuiz = new MissionQuiz();
-                missionQuiz.setId(Object.getInt("type"));
-                tmpId = Object.getInt("type");
+                missionQuiz.setId(Object.getInt("id_num"));
+                tmpId = Object.getInt("id_num");
                 missionQuiz.setLatitude(Object.getDouble("latitude"));
                 missionQuiz.setLongitude(Object.getDouble("longitude"));
                 quizArrayList = new ArrayList<>();
@@ -74,13 +74,14 @@ public class UniversityMissionQuizDB {
                         break;
                     }
                 }
+
                 Quiz quiz = new Quiz(Object.getString("퀴즈"), stary, Object.getInt("정답"));
                 quizArrayList.add(quiz);
 
                 //이미 들어간 id인 경우 같은 missionquiz에 새로운 quiz를 넣는다.
                 for (j = i + 1; j < Array.length(); j++) {
                     Object = Array.getJSONObject(j);
-                    if (tmpId == Object.getInt("type")) {
+                    if (tmpId == Object.getInt("id_num")) {
                         //나머지 quiz를 넣어준다.
                         stary = new ArrayList<>();
                         for (int k = 1; k < 6; k++) {
