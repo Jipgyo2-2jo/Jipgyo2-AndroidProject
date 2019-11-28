@@ -15,9 +15,9 @@ public class Activity_choose_location extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_location);
-        Button button1=(Button)findViewById(R.id.to_tour);
-        Button button2=(Button)findViewById(R.id.to_main);
-        Button button3=(Button)findViewById(R.id.finish);
+        Button button1=(Button)findViewById(R.id.button1);
+        Button button2=(Button)findViewById(R.id.button2);
+        Button button3=(Button)findViewById(R.id.button3);
         final EditText editText=(EditText)findViewById(R.id.edittext);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
