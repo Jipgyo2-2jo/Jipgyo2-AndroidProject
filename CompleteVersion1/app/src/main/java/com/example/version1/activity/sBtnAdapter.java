@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
@@ -20,25 +21,21 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
     // 필터링된 결과 데이터를 저장하기 위한 ArrayList. 최초에는 전체 리스트 보유.
     private ArrayList<sBtnItem> filteredItemList;
     private Filter listFilter;
-
-    // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의.
-    public interface ListBtnClickListener {
-//        void onListBtnClick(int position) ;
-    }
+    private AdapterView.OnItemClickListener listener;
 
     // 생성자로부터 전달된 resource id 값을 저장.
     int resourceId ;
     // 생성자로부터 전달된 ListBtnClickListener  저장.
-    private sBtnAdapter.ListBtnClickListener listBtnClickListener ;
+//    private sBtnAdapter.ListBtnClickListener listBtnClickListener ;
 
     // ListViewBtnAdapter 생성자. 마지막에 ListBtnClickListener 추가.
-    sBtnAdapter(Context context, int resource, ArrayList<sBtnItem> list, sBtnAdapter.ListBtnClickListener clickListener) {
+    sBtnAdapter(Context context, int resource, ArrayList<sBtnItem> list) {
         super(context, resource, list) ;
 
         // resource id 값 복사. (super로 전달된 resource를 참조할 방법이 없음.)
         this.resourceId = resource ;
 
-        this.listBtnClickListener = clickListener ;
+//        this.listBtnClickListener = clickListener ;
         listViewItemList = list;
         filteredItemList = listViewItemList ;
     }
@@ -69,10 +66,10 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
         Univnum.setText(listViewItem.getUnivnum());
 
         // button1 클릭 시 TextView(textView1)의 내용 변경.
-        Button button1 = (Button) convertView.findViewById(R.id.button1);
+/*        Button button1 = (Button) convertView.findViewById(R.id.button1);
         button1.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-/*                EatenMenu m = new EatenMenu();
+                EatenMenu m = new EatenMenu();
                 m.setCalorie(l.get(pos).getSpecificmenu().getCalorie());
                 m.setName(l.get(pos).getSpecificmenu().getName());
                 m.setRating(0f);
@@ -84,10 +81,10 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
                 RecordDietActivity.eatenmenu.add(m);
 
              //   Intent intent = new Intent(this, )
-                ((Activity)context).finish();*/
+                ((Activity)context).finish();
             }
 
-        });
+        });*/
 
         return convertView;
     }
