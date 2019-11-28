@@ -38,7 +38,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/to_tour"
+        android:id="@+id/button1"
         android:layout_width="346dp"
         android:layout_height="76dp"
         android:layout_centerHorizontal="true"
