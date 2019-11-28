@@ -49,6 +49,7 @@ public class UniversityTourPolylineDB {
 
             String tempString1;
             String tempString2;
+            ArrayList<Integer> integerArrayList;
             for(int i=0;i<Array.length();i++){
                 JSONObject Object = Array.getJSONObject(i);
 
@@ -71,6 +72,20 @@ public class UniversityTourPolylineDB {
                     }
                 }
 
+                integerArrayList = new ArrayList<>();
+                for (int k = 0; k < 100; k++) {//20은 maxsize
+                    //null이 나올 때 까지 반복해서 읽음
+                    tempString1 = Object.getString("mission" + k);
+
+                    if (!tempString1.equals("null")) {
+                        //짝수는 위도 홀수는 경도 set
+                        integerArrayList.add(Integer.valueOf(tempString1));
+                    }
+                    else {
+                        break;
+                    }
+                }
+                universityTourPolyline.setMissionsIDs(integerArrayList);
                 universityTourPolylineArray.add(universityTourPolyline);
             }
 

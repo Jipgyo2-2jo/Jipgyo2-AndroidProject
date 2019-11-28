@@ -73,8 +73,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private FrameLayout missionFrameLayout;
     private ArrayList<UniversityTour> universityTourarray;
     private ArrayList<MissionQuiz> missionQuizs;
-    private ArrayList<MissionQuiz> missionQuizs2;
+    private ArrayList<MissionQuiz> missionQuizsCourse;
     private ArrayList<UniversityTourPolyline> universityTourPolylinearray;
+    private UniversityTourPolyline universityTourPolyline;
     private CourseListFragment courseListFragment;
     private MissionListFragment missionListFragment;
     private MapPoint.GeoCoordinate mapPointGeo;
@@ -122,7 +123,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         //그리고 미션에 대한 정보를 모두 받는 메소드도 실행한다.
         UniversityMissionQuizDB universityMissionQuizDB = new UniversityMissionQuizDB();
         missionQuizs = universityMissionQuizDB.getUniversityMissionQuizArrayFromDB(univName);
-        //-------------------------------------------------------------
 
         setContentView(R.layout.activity_each_university_map);
 
@@ -237,10 +237,11 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     }
 
     //드로어의 미션을 선택하면 화면이 이동한다.
-    public void onMissionSelected(MissionQuiz q) {
+    public void onMissionSelected(MissionQuiz q, String missionName) {
         //일단 basic mission으로 이동
         Intent intent = new Intent(Activity_eachUniversityMap.this, Activity_basic_mission.class);
         intent.putExtra("missionQuiz", q);
+        intent.putExtra("missionName", missionName);
         startActivityForResult(intent, 001);
     }
 
@@ -249,7 +250,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mMapView.removeAllPolylines();//나머지 polyline다 지워주고
         Toast.makeText(this, "선택: " + position, Toast.LENGTH_SHORT).show();
         mMapView.addPolyline(polylineArrayList.get(position));
-        missionNum = universityTourPolylinearray.get(position).getMissionNum();
+        universityTourPolyline = universityTourPolylinearray.get(position);
+        missionNum = universityTourPolyline.getMissionNum();
         courseselect = 1;
     }
 
@@ -286,6 +288,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         return;
                     }
                     Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
                     final LocationListener gpsLocationListener = new LocationListener() {
                         public void onLocationChanged(Location location) {
                         }
@@ -306,35 +309,62 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                             1,
                             gpsLocationListener);
 
-                    mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude()),1)), 200, new CancelableCallback() {
-                        @Override
-                        public void onFinish() {
+                    //코스마다의 미션 퀴즈를 새로은 arraylist에 넣어준다. (코스선택 후)
+                    missionQuizsCourse = new ArrayList<>();
+                    ArrayList<Integer> tmpIntArr = universityTourPolyline.getMissionsIDs();
+                    for(int i = 0; i < missionQuizs.size(); i++){
+                        Log.d("11111", ""+i);
+                        if(tmpIntArr.contains(missionQuizs.get(i).getId())){
+                            Log.d("22222", ""+missionQuizs.get(i).getId());
+                            missionQuizsCourse.add(missionQuizs.get(i));
+                            //미션들은 다른 마커 이미지로 표시한다.
+                            MapPOIItem aa = mMapView.findPOIItemByTag(missionQuizs.get(i).getId());
+                            aa.setCustomImageResourceId(R.drawable.omap);
+                            mMapView.addPOIItem(aa);
                         }
-                        @Override
-                        public void onCancel() {
-                        }
-                    });
+                    }
 
-                    playmode = 1;
-                    tmpstr = mi.concat("  "+ 0 +"/"+missionNum);
-                    handleButton.setText(tmpstr);
-                    //커스텀 토스트 메세지
-                    Context context = getApplicationContext();
-                    CharSequence txt = "투어를 시작합니다.";
-                    int time = Toast.LENGTH_LONG;
-                    Toast.makeText(context, txt, time).show();
-                    Toast toast = Toast.makeText(context, txt, time);
-                    LayoutInflater inflater = getLayoutInflater();
-                    View view =
-                            inflater.inflate(R.layout.custom_toastview,
-                                    (ViewGroup)findViewById(R.id.containers));
-                    TextView txtView = view.findViewById(R.id.txtview);
-                    txtView.setText(txt);
-                    toast.setView(view);
-                    toast.show();
+                    try{
+                        mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(mapPointGeo.latitude, mapPointGeo.longitude),1)), 200, new CancelableCallback() {
+                            @Override
+                            public void onFinish() {
+                            }
+                            @Override
+                            public void onCancel() {
+                            }
+                        });
+                    }catch (Exception e){
+                        mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(universityTourarray.get(0).getLatitude(), universityTourarray.get(0).getLongitude()),1)), 200, new CancelableCallback() {
+                            @Override
+                            public void onFinish() {
+                            }
+                            @Override
+                            public void onCancel() {
+                            }
+                        });
+                    }finally{
+                        tmpstr = mi.concat("  "+ 0 +"/"+missionNum);
+                        handleButton.setText(tmpstr);
+                        //커스텀 토스트 메세지
+                        Context context = getApplicationContext();
+                        CharSequence txt = "투어를 시작합니다.";
+                        int time = Toast.LENGTH_LONG;
+                        Toast.makeText(context, txt, time).show();
+                        Toast toast = Toast.makeText(context, txt, time);
+                        LayoutInflater inflater = getLayoutInflater();
+                        View view =
+                                inflater.inflate(R.layout.custom_toastview,
+                                        (ViewGroup)findViewById(R.id.containers));
+                        TextView txtView = view.findViewById(R.id.txtview);
+                        txtView.setText(txt);
+                        toast.setView(view);
+                        toast.show();
 
-                    courseFrameLayout.setVisibility(View.INVISIBLE);
-                    missionFrameLayout.setVisibility(View.VISIBLE);
+                        courseFrameLayout.setVisibility(View.INVISIBLE);
+                        missionFrameLayout.setVisibility(View.VISIBLE);
+
+                        playmode = 1;
+                    }
                 }
             });
             // "아니오" 버튼을 누르면 실행되는 리스너
@@ -404,15 +434,27 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         courseselect = 0;
     }
 
-    private void createCustomMarker(MapView mapView, UniversityTour universityTourSculpture) {
+    private void createCustomMarker(MapView mapView, UniversityTour universityTour) {
         mCustomMarker = new MapPOIItem();
-        mCustomMarker.setItemName(universityTourSculpture.get시설());//이름
-        mCustomMarker.setTag(universityTourSculpture.getId_num());//구조물 아이디
+        mCustomMarker.setItemName(universityTour.get시설());//이름
+        mCustomMarker.setTag(universityTour.getId_num());//구조물 아이디
+        mCustomMarker.setUserObject(universityTour);
         //구조물 위치
-        mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(universityTourSculpture.getLatitude(), universityTourSculpture.getLonitude()));
+        mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(universityTour.getLatitude(), universityTour.getLongitude()));
         mCustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-
-        mCustomMarker.setCustomImageResourceId(R.drawable.custom_map_present);//이미지(png파일로 하자)
+        if(universityTour.getLoctype() == 1){//식당
+            mCustomMarker.setCustomImageResourceId(R.drawable.xmapres);//이미지(png파일로 하자)
+        }else if(universityTour.getLoctype() == 10){//매점
+            mCustomMarker.setCustomImageResourceId(R.drawable.xmapmar);//이미지(png파일로 하자)
+        }else if(universityTour.getLoctype() == 100){//카페
+            mCustomMarker.setCustomImageResourceId(R.drawable.xmapcafe);//이미지(png파일로 하자)
+        }else if(universityTour.getLoctype() == 1000){//기숙사
+            mCustomMarker.setCustomImageResourceId(R.drawable.xmapdor);//이미지(png파일로 하자)
+        }else if(universityTour.getLoctype() == 11){//식당 + 매점
+            mCustomMarker.setCustomImageResourceId(R.drawable.xmapdou);//이미지(png파일로 하자)
+        }else{
+            mCustomMarker.setCustomImageResourceId(R.drawable.xmap);//이미지(png파일로 하자)
+        }
         mCustomMarker.setCustomImageAutoscale(false);
         mCustomMarker.setCustomImageAnchor(0.5f, 1.0f);
 
@@ -422,7 +464,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         mapPointGeo = currentLocation.getMapPointGeoCoord();
-
+        Log.d("onCurrentLocationUpdate", ""+mapPointGeo.latitude +"///"+mapPointGeo.longitude);
         //gps와 건물의 거리가 (50m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
         if(playmode == 1){
             activateMission(mapPointGeo);
@@ -437,30 +479,43 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         cl.setLongitude(mapPointGeo.longitude);
 
         Location gl = new Location("2");//미션이 발생하는 곳의 위치(유동적)
-        for(int i = 0; i < missionQuizs.size(); i++){
-            gl.setLatitude(missionQuizs.get(i).getLatitude());
-            gl.setLongitude(missionQuizs.get(i).getLongitude());
+        for(int i = 0; i < missionQuizsCourse.size(); i++){
+            gl.setLatitude(missionQuizsCourse.get(i).getLatitude());
+            gl.setLongitude(missionQuizsCourse.get(i).getLongitude());
             //50m보다 가까워질 경우 미션 활성화
-            if(cl.distanceTo(gl) < 50 && missionQuizs.get(i).getIsActivated() == 0){
-                missionQuizs.get(i).setIsActivated(1);
+            if(cl.distanceTo(gl) < 50 && missionQuizsCourse.get(i).getIsActivated() == 0){
+                missionQuizsCourse.get(i).setIsActivated(1);
                 //슬라이드 드로어에 미션 추가
-                MapPOIItem tmppoiItem = mMapView.findPOIItemByTag(missionQuizs.get(i).getId());
+                MapPOIItem tmppoiItem = mMapView.findPOIItemByTag(missionQuizsCourse.get(i).getId());
                 //이름을 미리 지정해서 넘겨준다.
-                missionListFragment.addMission(1, ""+tmppoiItem.getItemName()+ " " +missionQuizs.get(i).getTypeName(),
-                        missionQuizs.get(i).getRightAnswer() + "/"+missionQuizs.get(i).getQuizArrayList().size(), missionQuizs.get(i));
+                missionListFragment.addMission(1, ""+tmppoiItem.getItemName()+ " " +missionQuizsCourse.get(i).getTypeName(),
+                        missionQuizsCourse.get(i).getRightAnswer() + "/"+missionQuizsCourse.get(i).getQuizArrayList().size(), missionQuizsCourse.get(i));
                 missionListFragment.adapter.notifyDataSetChanged();
                 //테스트용 토스트 메세지
                 Toast.makeText(this, "미션 활성화", Toast.LENGTH_SHORT).show();
                 //퀴즈 미션의 id와 건물(장소)의 id를 같도록 설정한다고 가정
                 //tag로 marker를 가져옴
                 //마커의 색 변화
-                tmppoiItem.setCustomImageResourceId(R.drawable.custom_map_present2);
+                UniversityTour tmptour = (UniversityTour) tmppoiItem.getUserObject();
+                if(tmptour.getLoctype() == 1){//식당
+                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapres);
+                }else if(tmptour.getLoctype() == 10){//매점
+                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapmar);
+                }else if(tmptour.getLoctype() == 100){//카페
+                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapcafe);
+                }else if(tmptour.getLoctype() == 1000){//기숙사
+                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapdor);
+                }else if(tmptour.getLoctype() == 11){//식당 + 매점
+                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapdou);
+                }else{
+                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapres);
+                }
                 mMapView.addPOIItem(tmppoiItem);
                 final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
                 vibrator.vibrate(1000);
             }
         }
-        //missionQuizs
+        //missionQuizsCourse
         //미션이 활성화 될 건물이 있는지 확인
     }
 
@@ -561,8 +616,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private void onFinishReverseGeoCoding(String result) {
 //        Toast.makeText(LocationDemoActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
     }
-
-
 
     //ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.
     @Override

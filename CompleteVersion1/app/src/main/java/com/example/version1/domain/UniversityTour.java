@@ -3,10 +3,11 @@ package com.example.version1.domain;
 public class UniversityTour {
     private int id_num;
     private Double latitude;
-    private Double lonitude;
+    private Double longitude;
     private String 시설;
     private String 기본_사항;
     private String 한줄평;
+    private int loctype;
 
     public int getId_num() {
         return id_num;
@@ -40,12 +41,12 @@ public class UniversityTour {
         this.latitude = latitude;
     }
 
-    public Double getLonitude() {
-        return lonitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLonitude(Double lonitude) {
-        this.lonitude = lonitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String get한줄평() {
@@ -54,5 +55,13 @@ public class UniversityTour {
 
     public void set한줄평(String 한줄평) {
         this.한줄평 = 한줄평;
+    }
+
+    public int getLoctype() {
+        return loctype;
+    }
+
+    public void setLoctype(int loctype) {
+        this.loctype = loctype;
     }
 }

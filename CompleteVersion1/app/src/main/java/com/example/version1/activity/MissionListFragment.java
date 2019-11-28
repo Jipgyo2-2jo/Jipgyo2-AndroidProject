@@ -36,7 +36,7 @@ public class MissionListFragment extends ListFragment{
 
         // MissionQuiz를 이용하여 intent를 이용하여 mission을 띄울 수 있도록 한다.
         Activity_eachUniversityMap activity = (Activity_eachUniversityMap) getActivity();
-        activity.onMissionSelected(q);
+        activity.onMissionSelected(q, missionType);
     }
 
     public void addMission(int bulb, String missionType, String correctness, MissionQuiz q) {

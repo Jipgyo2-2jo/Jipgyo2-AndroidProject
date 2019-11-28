@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MissionQuiz implements Serializable {
-    int id;//구분하는 id값
+    int id;//장소의 id값
     int type = 0;//그냥 미션이면 0, 포토존 미션이면1
     //미션이 발생할 위치
     Double latitude;
     Double longitude;
-    int activated = 0;//미션이 활성화 되었을 경우 1, 아니면 0
+    int activated = 0;//미션이 활성화 되었을 경우 1, 아니면 0, 코스에 맞는 미션이면 2, 미션이 클리어되면 3
     ArrayList<Quiz> quizArrayList;
     int rightAnswer = 0;
 

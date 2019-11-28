@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         doAndSiarray.add(new DoAndSi("강원", 37.8304115, 128.2260705, 9, R.drawable.kwon));
         doAndSiarray.add(new DoAndSi("충북", 36.991615, 127.717028, 9, R.drawable.cbuk));
         doAndSiarray.add(new DoAndSi("충남", 36.547203, 126.954132, 9, R.drawable.cnam));
-        doAndSiarray.add(new DoAndSi("대전", 36.342518, 127.395548, 8, R.drawable.djun));
+        doAndSiarray.add(new DoAndSi("대전", 36.342518, 127.395548, 8, R.drawable.djeon));
         doAndSiarray.add(new DoAndSi("전북", 35.594455, 127.170825, 9, R.drawable.jbuk));
         doAndSiarray.add(new DoAndSi("전남", 34.929944, 127.001457, 9, R.drawable.jnam));
         doAndSiarray.add(new DoAndSi("광주", 35.145689, 126.839936, 8, R.drawable.gwju));

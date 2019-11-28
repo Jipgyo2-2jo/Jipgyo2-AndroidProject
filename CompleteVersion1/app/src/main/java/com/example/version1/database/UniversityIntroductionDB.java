@@ -54,7 +54,7 @@ public class UniversityIntroductionDB {
 
                 /*universityIntroduction.setId_num(Object.getInt("id_num"));
                 universityIntroduction.setLatitude(Object.getDouble("위도"));
-                universityIntroduction.setLonitude(Object.getDouble("경도"));
+                universityIntroduction.setLongitude(Object.getDouble("경도"));
                 universityIntroduction.set시설(Object.getString("시설"));
                 universityIntroduction.set기본_사항(Object.getString("기본_사항"));
                 universityIntroduction.set한줄평(Object.getString("한줄평"));*/
