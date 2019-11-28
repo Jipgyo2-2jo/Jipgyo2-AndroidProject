@@ -86,6 +86,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         @Override//디폴트 값
         public View getCalloutBalloon(MapPOIItem poiItem) {
+            if(poiItem.getUserObject().getClass().equals(DoAndSi.class))
+                return null;
             ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
             Universities a;
             a = (Universities) poiItem.getUserObject();
