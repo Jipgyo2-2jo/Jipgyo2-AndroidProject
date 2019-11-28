@@ -75,7 +75,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private ListView listview ;
     Queue<Universities> searchedUniv = new LinkedList<Universities>();
     sBtnAdapter adapter;
-    private int calloutBalloon = 0;
 
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
@@ -91,7 +90,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             Universities a;
             a = (Universities) poiItem.getUserObject();
             ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(a.get학교명영문());
-            calloutBalloon = 0;
             return mCalloutBalloon;
         }
 
