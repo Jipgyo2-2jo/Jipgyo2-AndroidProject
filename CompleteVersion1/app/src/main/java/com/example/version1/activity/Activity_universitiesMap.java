@@ -521,8 +521,20 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             buttonback.setVisibility(View.VISIBLE);
             mapView.removePOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
         }
-        else if(mapPOIItem.getUserObject().getClass().equals(Universities.class))
+        else if(mapPOIItem.getUserObject().getClass().equals(Universities.class)) {
             Log.d(mapPOIItem.getItemName(), "University Selected");
+            mapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
+            mapView.removePOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
+
+            for (int j = 0; j < Universitiesarray.size(); j++) {
+                //시, 도가 일치하는 마커만 보여줌
+                if (Universitiesarray.get(j).get시도().equals(((Universities)mapPOIItem.getUserObject()).get시도())) {
+                    Log.d("" + mapPOIItem.getItemName(), "add: " + j);
+                    mapView.addPOIItem(mapPOIItemsUniv.get(j));
+                }
+            }
+            buttonback.setVisibility(View.VISIBLE);
+        }
         //카메라 확대
         mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), mapPOIItem.getTag())), 200, new CancelableCallback() {
             @Override
