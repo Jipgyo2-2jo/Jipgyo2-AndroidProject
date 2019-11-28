@@ -25,9 +25,7 @@ public class Activity_basic_mission extends AppCompatActivity {
     private ArrayList<LinearLayout> lloutArray;
     Button ansbutton;
     Button backbutton;
-
     int correctNum = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +83,6 @@ public class Activity_basic_mission extends AppCompatActivity {
                     ansArray.get(i).setTextColor(Color.GREEN);
                     lloutArray.get(i).setBackgroundResource(R.drawable.circle);
                     correctNum++;
-
                 }
                 else{
                     ansArray.get(i).setVisibility(View.VISIBLE);
@@ -99,7 +96,6 @@ public class Activity_basic_mission extends AppCompatActivity {
     //지도로 돌아간다.
     Button.OnClickListener clickListener2 = new View.OnClickListener() {
         public void onClick(View v) {
-
             Intent intent = new Intent();
             intent.putExtra("correctNum", correctNum);
             intent.putExtra("missionQuiz", missionQuiz);

@@ -22,7 +22,6 @@
         android:text="팔달관 기초 미션"
         android:textSize="30dp" />
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="470dp"
