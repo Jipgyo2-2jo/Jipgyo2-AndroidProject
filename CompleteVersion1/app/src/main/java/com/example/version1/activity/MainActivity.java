@@ -34,12 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(), "Mainactivity 실행", Toast.LENGTH_LONG).show();
 
-        try{
-            Thread.sleep(1000);
-        }catch(InterruptedException e){
-            e.printStackTrace();
-        }
-
         Intent intent = new Intent(this, Activity_universitiesMap.class);
 
         intent.putExtra("Universitiesarray", Universitiesarray);

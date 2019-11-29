@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f3d4e2f0-0bcc-464c-b3ad-a319945201c4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/CompleteVersion1/app/src/main/res/drawable/hayeong.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CompleteVersion1/app/src/main/res/drawable/hayeong2.PNG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CompleteVersion1/app/src/main/res/drawable/jueun.PNG" beforeDir="false" />
-    </list>
+    <list default="true" id="f3d4e2f0-0bcc-464c-b3ad-a319945201c4" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,12 +9,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CompleteVersion1/app/src/main/java/com/example/version1/activity/Activity_tour_finish.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="114">
-              <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+              <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -38,7 +34,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -131,6 +126,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -187,7 +183,7 @@
     <entry file="file://$PROJECT_DIR$/CompleteVersion1/app/src/main/java/com/example/version1/activity/Activity_tour_finish.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
-          <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
         </state>
       </provider>
     </entry>
