@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         UniversitiesAccessDB universitiesAccessDB = new UniversitiesAccessDB();
         Universitiesarray = universitiesAccessDB.getUniversitiesFromDB();
 
+        Toast.makeText(getApplicationContext(), "Mainactivity 실행", Toast.LENGTH_LONG).show();
+
         Intent intent = new Intent(this, Activity_universitiesMap.class);
 
         intent.putExtra("Universitiesarray", Universitiesarray);
