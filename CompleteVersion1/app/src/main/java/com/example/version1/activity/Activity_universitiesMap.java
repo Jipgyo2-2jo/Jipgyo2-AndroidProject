@@ -55,6 +55,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     ArrayList<MapPOIItem> mapPOIItemsDoAndSi = new ArrayList<>();
     ArrayList<MapPOIItem> mapPOIItemsUniv = new ArrayList<>();
 
+    ArrayList<MapPOIItem> currentPOIs = new ArrayList<>();
+    ArrayList<MapPOIItem> changedPOIs = new ArrayList<>();
+
     private MapView mMapView;
     private MapPOIItem mCustomMarker;
     private Button buttonschool;
@@ -159,7 +162,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_universitiesmap);
 
-
         Intent intent = getIntent();
         //MainActivity에서 시도정보와 학교정보 받아옴
         doAndSiarray = (ArrayList<DoAndSi>) intent.getSerializableExtra("doAndSiarray");
@@ -200,18 +202,16 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         slidingDrawer = (SlidingDrawer) findViewById(R.id.slidingdrawer);
         listview = (ListView) findViewById(R.id.slistView);
 
-//        if(recent_location == null) {
-            Log.d("recent location", "null");
-            for (int i = 0; i < doAndSiarray.size(); i++) {
-                createCustomMarkerDoAndSi(mMapView, doAndSiarray.get(i));
-            }
-            // 구현한 CalloutBalloonAdapter 등록
-            mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-            for (int j = 0; j < Universitiesarray.size(); j++) {
-                Log.d("0123", "onCreate: " + j);
-                createCustomMarkerUniversities(mMapView, Universitiesarray.get(j));
-            }
-//        }
+        Log.d("recent location", "null");
+        for (int i = 0; i < doAndSiarray.size(); i++) {
+            createCustomMarkerDoAndSi(mMapView, doAndSiarray.get(i));
+        }
+        // 구현한 CalloutBalloonAdapter 등록
+        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+        for (int j = 0; j < Universitiesarray.size(); j++) {
+            Log.d("0123", "onCreate: " + j);
+            createCustomMarkerUniversities(mMapView, Universitiesarray.get(j));
+        }
 
         if(cameback){
             moveToPOIItem(mMapView, recent_location);
@@ -248,33 +248,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 Log.d("Item", i + "Clicked");
                 for (final MapPOIItem item : mapPOIItemsUniv) {
                     if (item.getUserObject().equals(((sBtnItem) listview.getAdapter().getItem(i)).getUniversities())) {
-                        mMapView.selectPOIItem(item, true);
                         calledSelected = 0;
                         moveToPOIItem(mMapView, item);
-/*                        Log.d("Item", i + "Found");
-                        mMapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
-                        for (int j = 0; j < Universitiesarray.size(); j++) {
-                            //시, 도가 일치하는 마커만 보여줌
-                            if (Universitiesarray.get(j).get시도().equals(((Universities)item.getUserObject()).get시도())) {
-                                Log.d("" + item.getItemName(), "add: " + j);
-                                mMapView.addPOIItem(mapPOIItemsUniv.get(j));
-                            }
-                        }
-
-                        buttonback.setVisibility(View.VISIBLE);
-                        mMapView.removePOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
-                        //카메라 확대
-                        mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(item.getMapPoint(), item.getTag())), 200, new CancelableCallback() {
-                            @Override
-                            public void onFinish() {
-                                Toast.makeText(getBaseContext(), "Animation to " + item.getItemName() + " complete", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onCancel() {
-
-                            }
-                        });*/
 
                         slidingDrawer.close();
                         return;
@@ -440,6 +415,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mCustomMarker.setUserObject(doAndSi);
         mapView.addPOIItem(mCustomMarker);
         mapPOIItemsDoAndSi.add(mCustomMarker);
+        currentPOIs = mapPOIItemsDoAndSi;
     }
 
     private void createCustomMarkerUniversities(MapView mapView, Universities university) {
@@ -482,36 +458,40 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         String siDo;
         int zoomLevel;
-        if(calledSelected != 0){
-            Log.d("calledSelected", "이미 실행됨");
-            calledSelected = 0;
-            return;
-        }
 
-        if (mapPOIItem.getUserObject().getClass().equals(Universities.class)){
-            Log.d(mapPOIItem.getItemName(), "onPOIItemSelected: ");
+        if (mapPOIItem.getUserObject().getClass().equals(Universities.class)){ //선택된게 학교 poiItem
+            Log.d(mapPOIItem.getItemName(), "학교 POIItemSelected: ");
             siDo = ((Universities)mapPOIItem.getUserObject()).get시도();
             zoomLevel = 3;
+
+            selectedSchoolName = String.valueOf(mapPOIItem.getItemName());
+            buttonschool.setVisibility(View.VISIBLE);
         }
 
-        else {
-            Log.d(mapPOIItem.getItemName(), "onPOIItemSelected: ");
+        else { //선택된게 시도 poiItem
+            Log.d(mapPOIItem.getItemName(), "시도 POIItemSelected: ");
             siDo = mapPOIItem.getItemName();
             zoomLevel = 9;
+
         }
-        mapView.removeAllPOIItems();
 
         ArrayList<MapPOIItem> poiitems = new ArrayList<>();
 
         for(MapPOIItem poiItem: mapPOIItemsUniv) {
             if(((Universities)poiItem.getUserObject()).get시도().equals(siDo)){
                 Log.d("add", poiItem.getItemName());
+                currentPOIs.remove(poiItem);
                 poiitems.add(poiItem);
             }
         }
 
+//        calledSelected++;
+        Log.d("addPOIItems", "실행전");
         mapView.addPOIItems(poiitems.toArray(new MapPOIItem[poiitems.size()]));
-        calledSelected++;
+        mapView.removePOIItems(currentPOIs.toArray(new MapPOIItem[currentPOIs.size()]));
+        currentPOIs = poiitems;
+        Log.d("addPOIItems", "실행후");
+
         buttonback.setVisibility(View.VISIBLE);
         //카메라 확대
         mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), zoomLevel)), 200, new CancelableCallback() {
@@ -530,25 +510,26 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     @Override//전국 지도 화면에서 예를 들어 경기도를 누르면 경기도를 카메라 확대를 하고 다른 마커들도 보이도록 한다.
     public void onPOIItemSelected(MapView mapView, final MapPOIItem mapPOIItem) {
         recent_location = mapPOIItem;
+//        calledSelected = 0;
         moveToPOIItem(mapView, mapPOIItem);
-        calledSelected = 0;
     }
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
+        Log.d("CalloutBalloons", "touched");
         Toast.makeText(this, "Clicked " + mapPOIItem.getItemName(), Toast.LENGTH_SHORT).show();
         selectedSchoolName = String.valueOf(mapPOIItem.getItemName());
+        //버튼 생김
+        buttonschool.setVisibility(View.VISIBLE);
         //카메라 확대
-        mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), 3)), 200, new CancelableCallback() {
+/*        mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), 3)), 200, new CancelableCallback() {
             @Override
             public void onFinish() {
             }
             @Override
             public void onCancel() {
             }
-        });
-        //버튼 생김
-        buttonschool.setVisibility(View.VISIBLE);
+        });*/
     }
 
     Button.OnClickListener buttonSchoolClickListener = new View.OnClickListener() {
@@ -562,8 +543,11 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     Button.OnClickListener buttonbackClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             buttonback.setVisibility(View.INVISIBLE);
+//            mMapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
+//            mMapView.removeAllPOIItems();
             mMapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
             mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
+            currentPOIs = mapPOIItemsDoAndSi;
             mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11)), 200, new CancelableCallback() {
                 @Override
                 public void onFinish() {
@@ -577,6 +561,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+        Log.d("CalloutBalloons", "wrong touched");
 
     }
 
