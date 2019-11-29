@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="XXXX 미션"
+            android:fontFamily="@font/hoonwhitecatr"
             android:textColor="#1e90ff"
             android:textSize="30dp"
             android:textStyle="bold" />

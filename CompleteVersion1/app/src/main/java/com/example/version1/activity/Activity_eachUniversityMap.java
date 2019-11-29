@@ -1,12 +1,14 @@
 package com.example.version1.activity;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +97,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         @Override//디폴트 값
         public View getCalloutBalloon(MapPOIItem poiItem) {
+            mCalloutBalloon.findViewById(R.id.ballonlayout).setBackgroundResource(R.drawable.ballon);
             ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
             ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(universityTourarray.get(poiItem.getTag() - 1).get한줄평());
             return mCalloutBalloon;
@@ -101,6 +105,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         @Override
         public View getPressedCalloutBalloon(MapPOIItem poiItem) {
+            mCalloutBalloon.findViewById(R.id.ballonlayout).setBackgroundResource(R.drawable.icon2);
             return null;
         }
     }
@@ -270,6 +275,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
             // "예" 버튼을 누르면 실행되는 리스너
             alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.O)
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     courseFrameLayout.setVisibility(View.INVISIBLE);
@@ -319,8 +325,11 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                             missionQuizsCourse.add(missionQuizs.get(i));
                             //미션들은 다른 마커 이미지로 표시한다.
                             MapPOIItem aa = mMapView.findPOIItemByTag(missionQuizs.get(i).getId());
-                            aa.setCustomImageResourceId(R.drawable.omap);
-                            mMapView.addPOIItem(aa);
+                            MapPOIItem aa1;
+                            aa1 = aa;
+                            mMapView.removePOIItem(aa);
+                            aa1.setCustomImageResourceId(R.drawable.omap);
+                            mMapView.addPOIItem(aa1);
                         }
                     }
 
@@ -347,18 +356,18 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         handleButton.setText(tmpstr);
                         //커스텀 토스트 메세지
                         Context context = getApplicationContext();
-                        CharSequence txt = "투어를 시작합니다.";
+                        Typeface typeface = getResources().getFont(R.font.hoonwhitecatr);
                         int time = Toast.LENGTH_LONG;
-                        Toast.makeText(context, txt, time).show();
-                        Toast toast = Toast.makeText(context, txt, time);
                         LayoutInflater inflater = getLayoutInflater();
-                        View view =
-                                inflater.inflate(R.layout.custom_toastview,
+                        View view = inflater.inflate(R.layout.custom_toastview,
                                         (ViewGroup)findViewById(R.id.containers));
                         TextView txtView = view.findViewById(R.id.txtview);
-                        txtView.setText(txt);
+                        txtView.setTypeface(typeface);
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setGravity(Gravity.CENTER, 0, -50);
                         toast.setView(view);
                         toast.show();
+
 
                         courseFrameLayout.setVisibility(View.INVISIBLE);
                         missionFrameLayout.setVisibility(View.VISIBLE);
@@ -386,7 +395,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 tracking = 1;
             }
             else{
-                mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+                mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
                 tracking = 0;
             }
         }
@@ -428,7 +437,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+        mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
         mMapView.setShowCurrentLocationMarker(false);
         playmode = 0;
         courseselect = 0;
@@ -465,7 +474,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         mapPointGeo = currentLocation.getMapPointGeoCoord();
         Log.d("onCurrentLocationUpdate", ""+mapPointGeo.latitude +"///"+mapPointGeo.longitude);
-        //gps와 건물의 거리가 (50m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
+        //gps와 건물의 거리가 (40m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
         if(playmode == 1){
             activateMission(mapPointGeo);
         }
@@ -473,6 +482,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             return;
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     public void activateMission(MapPoint.GeoCoordinate mapPointGeo){
         Location cl = new Location("1");//현재 위치
         cl.setLatitude(mapPointGeo.latitude);
@@ -482,17 +492,35 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         for(int i = 0; i < missionQuizsCourse.size(); i++){
             gl.setLatitude(missionQuizsCourse.get(i).getLatitude());
             gl.setLongitude(missionQuizsCourse.get(i).getLongitude());
-            //50m보다 가까워질 경우 미션 활성화
-            if(cl.distanceTo(gl) < 50 && missionQuizsCourse.get(i).getIsActivated() == 0){
+            //40m보다 가까워질 경우 미션 활성화
+            if(cl.distanceTo(gl) < 40 && missionQuizsCourse.get(i).getIsActivated() == 0){
                 missionQuizsCourse.get(i).setIsActivated(1);
                 //슬라이드 드로어에 미션 추가
                 MapPOIItem tmppoiItem = mMapView.findPOIItemByTag(missionQuizsCourse.get(i).getId());
+                MapPOIItem aa1;
+                aa1 = tmppoiItem;
+                mMapView.removePOIItem(tmppoiItem);
                 //이름을 미리 지정해서 넘겨준다.
                 missionListFragment.addMission(1, ""+tmppoiItem.getItemName()+ " " +missionQuizsCourse.get(i).getTypeName(),
                         missionQuizsCourse.get(i).getRightAnswer() + "/"+missionQuizsCourse.get(i).getQuizArrayList().size(), missionQuizsCourse.get(i));
                 missionListFragment.adapter.notifyDataSetChanged();
-                //테스트용 토스트 메세지
-                Toast.makeText(this, "미션 활성화", Toast.LENGTH_SHORT).show();
+                //커스텀 토스트 메세지
+                Context context = getApplicationContext();
+                CharSequence txt = "미션 활성화!";
+                Typeface typeface = getResources().getFont(R.font.hoonwhitecatr);
+                int time = Toast.LENGTH_LONG;
+                Toast.makeText(context, txt, time).show();
+                Toast toast = Toast.makeText(context, txt, time);
+                LayoutInflater inflater = getLayoutInflater();
+                View view =
+                        inflater.inflate(R.layout.custom_toastview,
+                                (ViewGroup) findViewById(R.id.containers));
+                TextView txtView = view.findViewById(R.id.txtview);
+                txtView.setTypeface(typeface);
+                txtView.setText(txt);
+                toast.setGravity(Gravity.CENTER, 0, -75);
+                toast.setView(view);
+                toast.show();
                 //퀴즈 미션의 id와 건물(장소)의 id를 같도록 설정한다고 가정
                 //tag로 marker를 가져옴
                 //마커의 색 변화
@@ -508,9 +536,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 }else if(tmptour.getLoctype() == 11){//식당 + 매점
                     tmppoiItem.setCustomImageResourceId(R.drawable.bmapdou);
                 }else{
-                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapres);
+                    tmppoiItem.setCustomImageResourceId(R.drawable.bmap);
                 }
-                mMapView.addPOIItem(tmppoiItem);
+                mMapView.addPOIItem(aa1);
                 final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
                 vibrator.vibrate(1000);
             }

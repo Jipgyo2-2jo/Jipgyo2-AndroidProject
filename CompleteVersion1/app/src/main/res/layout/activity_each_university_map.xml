@@ -20,37 +20,48 @@
 
         <Button
             android:id="@+id/finishbutton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="투어 종료"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:layout_weight="1"/>
 
         <RadioGroup
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/mapradiogroup">
+            android:id="@+id/mapradiogroup"
+            android:layout_weight="3"
+            android:gravity="right">
 
             <RadioButton
                 android:id="@+id/mapnormal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="노말 맵"
-                android:checked="true"/>
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:button="@android:color/transparent"
+                android:background="@drawable/mapnormalselector"
+                android:layout_marginRight="15dp"
+                android:checked="true" />
 
             <RadioButton
                 android:id="@+id/maphybrid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="하이브리드 맵"
-                android:checked="false"/>
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:button="@android:color/transparent"
+                android:background="@drawable/maphybridselector"
+                android:layout_marginRight="15dp"
+                android:checked="false"
+                android:layout_marginEnd="15dp" />
 
             <RadioButton
                 android:id="@+id/mapsatellite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="인공위성 맵"
-                android:checked="false"/>
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/mapsatelliteselector"
+                android:button="@android:color/transparent"
+                android:layout_marginRight="15dp"
+                android:checked="false"
+                android:layout_marginEnd="15dp" />
 
         </RadioGroup>
 

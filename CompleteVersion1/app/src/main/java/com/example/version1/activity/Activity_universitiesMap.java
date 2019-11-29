@@ -45,7 +45,6 @@ import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 public class Activity_universitiesMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener{
@@ -91,6 +90,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         @Override//디폴트 값
         public View getCalloutBalloon(MapPOIItem poiItem) {
+            mCalloutBalloon.findViewById(R.id.ballonlayout).setBackgroundResource(R.drawable.ballon);
             if(poiItem.getUserObject().getClass().equals(DoAndSi.class))
                 return null;
             ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
@@ -102,6 +102,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         @Override
         public View getPressedCalloutBalloon(MapPOIItem poiItem) {
+            mCalloutBalloon.findViewById(R.id.ballonlayout).setBackgroundResource(R.drawable.icon2);
             return null;
         }
     }
