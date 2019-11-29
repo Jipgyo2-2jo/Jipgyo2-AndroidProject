@@ -1,6 +1,7 @@
 package com.example.version1.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +28,8 @@ public class Activity_basic_mission extends AppCompatActivity {
     Button ansbutton;
     Button backbutton;
     int correctNum = 0;
+    String missionName;
+    int ansnumbers = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,7 @@ public class Activity_basic_mission extends AppCompatActivity {
 
         Intent intent = getIntent(); //이 액티비티를 부른 인텐트를 받는다.
         missionQuiz = (MissionQuiz) intent.getSerializableExtra("missionQuiz");
-        String missionName = (String) intent.getStringExtra("missionName");
+        missionName = (String) intent.getStringExtra("missionName");
 
         TextView textView = findViewById(R.id.Clear);
         textView.setText(missionName);
@@ -73,13 +77,26 @@ public class Activity_basic_mission extends AppCompatActivity {
         ansbutton.setOnClickListener(clickListener);
         backbutton = findViewById(R.id.backbutton);
         backbutton.setOnClickListener(clickListener2);
+
+        //***********************************************************
+        SharedPreferences sf = getSharedPreferences(missionName+"File",MODE_PRIVATE);
+        ansnumbers = sf.getInt("ansnumbers", 0);
+        Toast.makeText(this, "정답 배열: "+ansnumbers, Toast.LENGTH_SHORT).show();
+        //정답 여부를 표시한다.
+        for (int i = 0; i < ansArray.size(); i++) {
+            rgArray.get(i).check(ansnumbers % 10);
+            ansnumbers = ansnumbers / 10;
+        }
+        //***********************************************************
     }
 
     //정답 여부를 표시한다.
     Button.OnClickListener clickListener = new View.OnClickListener() {
         public void onClick(View v) {
             correctNum = 0;
+            ansnumbers = 0;
             for(int i = 0; i < ansArray.size(); i++) {
+                ansnumbers = ansnumbers + rgArray.get(i).getCheckedRadioButtonId()*(int)Math.pow(10,i);
                 //정답인경우
                 if(rgArray.get(i).getCheckedRadioButtonId() == missionQuiz.getQuizArrayList().get(i).getRightAnswerone()){
                     ansArray.get(i).setVisibility(View.VISIBLE);
@@ -111,4 +128,17 @@ public class Activity_basic_mission extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        SharedPreferences sharedPreferences = getSharedPreferences(missionName+"File", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int ansnumbers1 = ansnumbers;
+        editor.putInt("ansnumbers",ansnumbers1);
+
+        editor.commit();
+    }
 }
+
+
