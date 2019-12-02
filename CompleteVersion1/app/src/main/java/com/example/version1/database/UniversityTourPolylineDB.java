@@ -59,7 +59,7 @@ public class UniversityTourPolylineDB {
                 universityTourPolyline.setCourseTime(Object.getInt("time"));
                 universityTourPolyline.setCourseLength(Object.getDouble("distance"));
 
-                for (int j = 0; j < 110; j = j+2) {//100은 maxsize
+                for (int j = 0; j < 200; j = j+2) {//200은 maxsize
                     //null이 나올 때 까지 반복해서 읽음
                     tempString1 = Object.getString(j + "");
                     tempString2 = Object.getString(j + 1 + "");

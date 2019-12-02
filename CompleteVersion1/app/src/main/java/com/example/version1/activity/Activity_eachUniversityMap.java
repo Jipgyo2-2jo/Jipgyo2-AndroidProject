@@ -58,6 +58,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     private static final String LOG_TAG = "Act_eachUniversitiesMap";
 
+    private String univName;
     private Button finishbutton;
     private Button handleButton;
     private String tmpstr;
@@ -117,7 +118,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent(); //이 액티비티를 부른 인텐트를 받는다.
-        String univName = intent.getStringExtra("univName");
+        univName = intent.getStringExtra("univName");
 
         //일단 DB에서 해당 학교의 장소 위치를 모두 받는 메소드를 실행한다.
         UniversityTourAccessDB universityTourAccessDB = new UniversityTourAccessDB();
@@ -585,7 +586,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
         Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_loc_information.class);
-        intent.putExtra("locationName", mapPOIItem.getItemName());
+        UniversityTour universityTour = (UniversityTour) mapPOIItem.getUserObject();
+        intent.putExtra("locationDesc", universityTour);
+        intent.putExtra("univName", univName);
 
         startActivity(intent);
     }
