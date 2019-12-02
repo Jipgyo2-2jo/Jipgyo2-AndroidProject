@@ -2,5 +2,24 @@ package com.example.version1.domain;
 
 public class UniversityIntroduction {
 
+    String univ_name;
+    String explain;
+
+    public String getUniv_name() {
+        return univ_name;
+    }
+
+    public void setUniv_name(String univ_name) {
+        this.univ_name = univ_name;
+    }
+
+    public String getExplain() {
+        return explain;
+    }
+
+    public void setExplain(String explain) {
+        this.explain = explain;
+    }
+
     //사진은 주소를 통해서 가져온다.
 }
