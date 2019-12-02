@@ -1,6 +1,7 @@
 package com.example.version1.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -65,6 +66,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private int courseselect = 0;
     private int playmode = 0;
     private int tracking = 0;
+    private int finishActivated = 0;
     private MapPolyline polyline2;
     private MapPoint[] mPolyline2Points;
     private ArrayList<MapPolyline> polylineArrayList;
@@ -208,22 +210,22 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             polyline2 = new MapPolyline(21);
             polyline2.setTag(2000);
             if(rand == 0){
-                polyline2.setLineColor(Color.argb(128, 255, ps / universityTourPolylinearray.size() * 255, 0));
+                polyline2.setLineColor(Color.argb(196, 255, ps / universityTourPolylinearray.size() * 64, 0));
             }
             else if(rand == 1){
-                polyline2.setLineColor(Color.argb(128, 0, 255, ps / universityTourPolylinearray.size() * 255));
+                polyline2.setLineColor(Color.argb(196, 128, 64, ps / universityTourPolylinearray.size() * 255));
             }
             else if(rand == 2){
-                polyline2.setLineColor(Color.argb(128, ps / universityTourPolylinearray.size() * 255, 0, 255));
+                polyline2.setLineColor(Color.argb(196, ps / universityTourPolylinearray.size() * 255, 0, 255));
             }
             else if(rand == 3){
-                polyline2.setLineColor(Color.argb(128, 255, 0, ps / universityTourPolylinearray.size() * 255));
+                polyline2.setLineColor(Color.argb(196, 255, 0, ps / universityTourPolylinearray.size() * 255));
             }
             else if(rand == 4){
-                polyline2.setLineColor(Color.argb(128, ps / universityTourPolylinearray.size() * 255, 255, 0));
+                polyline2.setLineColor(Color.argb(196, ps / universityTourPolylinearray.size() * 255, 64, 128));
             }
             else if(rand == 5){
-                polyline2.setLineColor(Color.argb(128, 0, ps / universityTourPolylinearray.size() * 255, 255));
+                polyline2.setLineColor(Color.argb(196, 0, ps / universityTourPolylinearray.size() * 64, 255));
             }
             polyline2.addPoints(mPolyline2Points);
             polylineArrayList.add(polyline2);
@@ -404,9 +406,18 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     //버튼을 누르면 투어종료 화면으로
     Button.OnClickListener fClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_tour_finish.class);
-            intent.putExtra("missionNum", missionNum);
-            startActivity(intent);
+
+            //미션을 모두 완료한 경우.
+            if(finishActivated == 1){
+                Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_tour_finish.class);
+                intent.putExtra("missionNum", missionNum);
+                startActivity(intent);
+            }
+            //미션을 모두 완료하지 못한 경우
+            else{
+                Toast.makeText(getApplicationContext(), "미션을 모두 완수하면 버튼이 활성화됩니다.", Toast.LENGTH_SHORT).show();
+            }
+
         }
     };
 
@@ -656,8 +667,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             // 요청 코드가 PERMISSIONS_REQUEST_CODE 이고, 요청한 퍼미션 개수만큼 수신되었다면
 
             boolean check_result = true;
-
-
             // 모든 퍼미션을 허용했는지 체크합니다.
 
             for (int result : grandResults) {
@@ -666,7 +675,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                     break;
                 }
             }
-
 
             if ( check_result ) {
                 Log.d("@@@", "start");
@@ -760,6 +768,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     }
 
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -793,8 +802,36 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 //미션개수를 충족한 경우
                 if(ansnum >= missionNum){
                     //투어종료버튼 활성화
-                    finishbutton.setVisibility(View.VISIBLE);
+                    finishActivated = 1;
+                    finishbutton.setBackgroundResource(R.drawable.ellipse2);
+                    finishbutton.setTextColor(R.color.colorPrimaryDark);
                 }
+                //***마커의 색도 바뀜. (답이 모두 맞는 경우)
+                MapPOIItem aa = new MapPOIItem();
+                aa = mMapView.findPOIItemByTag(m.getId());
+                MapPOIItem aa1 = aa;
+                mMapView.removePOIItem(aa);
+                UniversityTour tmptour = (UniversityTour) aa1.getUserObject();
+                //구조물 위치
+                aa1.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+                if(tmptour.getLoctype() == 1){//식당
+                    aa1.setCustomImageResourceId(R.drawable.gmapres);//이미지(png파일로 하자)
+                }else if(tmptour.getLoctype() == 10){//매점
+                    aa1.setCustomImageResourceId(R.drawable.gmapmar);//이미지(png파일로 하자)
+                }else if(tmptour.getLoctype() == 100){//카페
+                    aa1.setCustomImageResourceId(R.drawable.gmapcafe);//이미지(png파일로 하자)
+                }else if(tmptour.getLoctype() == 1000){//기숙사
+                    aa1.setCustomImageResourceId(R.drawable.gmapdor);//이미지(png파일로 하자)
+                }else if(tmptour.getLoctype() == 11){//식당 + 매점
+                    aa1.setCustomImageResourceId(R.drawable.gmapdou);//이미지(png파일로 하자)
+                }else{
+                    aa1.setCustomImageResourceId(R.drawable.gmap);//이미지(png파일로 하자)
+                }
+                aa1.setCustomImageAutoscale(false);
+                aa1.setCustomImageAnchor(0.5f, 1.0f);
+
+                mMapView.addPOIItem(aa1);
+                ////************************************
                 break;
         }
     }

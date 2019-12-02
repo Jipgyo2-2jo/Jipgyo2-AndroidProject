@@ -30,6 +30,7 @@ public class Activity_basic_mission extends AppCompatActivity {
     int correctNum = 0;
     String missionName;
     int ansnumbers = 0;
+    int ansnumbers1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +82,31 @@ public class Activity_basic_mission extends AppCompatActivity {
         //***********************************************************
         SharedPreferences sf = getSharedPreferences(missionName+"File",MODE_PRIVATE);
         ansnumbers = sf.getInt("ansnumbers", 0);
+        ansnumbers1 = ansnumbers;
         Toast.makeText(this, "정답 배열: "+ansnumbers, Toast.LENGTH_SHORT).show();
         //정답 여부를 표시한다.
         for (int i = 0; i < ansArray.size(); i++) {
             rgArray.get(i).check(ansnumbers % 10);
             ansnumbers = ansnumbers / 10;
+        }
+        if(ansnumbers1 != 0){
+            for(int i = 0; i < ansArray.size(); i++) {
+                //정답인경우
+                if(rgArray.get(i).getCheckedRadioButtonId() == missionQuiz.getQuizArrayList().get(i).getRightAnswerone()){
+                    ansArray.get(i).setVisibility(View.VISIBLE);
+                    ansArray.get(i).setText("정답!");
+                    ansArray.get(i).setTextColor(Color.GREEN);
+                    lloutArray.get(i).setBackgroundResource(R.drawable.circle);
+                    correctNum++;
+                }
+                else{
+                    ansArray.get(i).setVisibility(View.VISIBLE);
+                    ansArray.get(i).setText("오답!");
+                    ansArray.get(i).setTextColor(Color.RED);
+                    lloutArray.get(i).setBackgroundResource(R.drawable.xmark);
+                }
+            }
+            ansnumbers = ansnumbers1;
         }
         //***********************************************************
     }
@@ -134,7 +155,7 @@ public class Activity_basic_mission extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences(missionName+"File", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        int ansnumbers1 = ansnumbers;
+        ansnumbers1 = ansnumbers;
         editor.putInt("ansnumbers",ansnumbers1);
 
         editor.commit();
