@@ -362,46 +362,16 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
 
         //1개인경우
-        else if (count == 1) {/*
+        else {
+            Toast.makeText(getApplicationContext(), count + "개 대학", Toast.LENGTH_LONG).show();
             Universities searched = searchedUniv.poll();
             for (final MapPOIItem item : mapPOIItemsUniv) {
                 if (item.getUserObject().equals(searched)) {
-                    mMapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
-                    for (int j = 0; j < Universitiesarray.size(); j++) {
-                        //시, 도가 일치하는 마커만 보여줌
-                        if (searched.get시도().equals(((Universities)item.getUserObject()).get시도())) {
-                            Log.d("" + item.getItemName(), "add: " + j);
-                            mMapView.addPOIItem(mapPOIItemsUniv.get(j));
-                        }
-                    }
-
-                    buttonback.setVisibility(View.VISIBLE);
-                    mMapView.removePOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
-                    //카메라 확대
-                    mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(item.getMapPoint(), item.getTag())), 200, new CancelableCallback() {
-                        @Override
-                        public void onFinish() {
-                            Toast.makeText(getBaseContext(), "Animation to " + item.getItemName() + " complete", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-                        }
-                    });
-
-                    slidingDrawer.close();
+                    moveToPOIItem(mapView, item);
                     return;
                 }
-
-            }*/
+            }
         }
-
-        //여러개인경우
-        else{
-            Toast.makeText(getApplicationContext(), count + "개 대학", Toast.LENGTH_LONG).show();
-        }
-
     }
 
     private void createCustomMarkerDoAndSi(MapView mapView, DoAndSi doAndSi) {
@@ -475,6 +445,16 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
             selectedSchoolName = String.valueOf(mapPOIItem.getItemName());
             buttonschool.setVisibility(View.VISIBLE);
+
+            //카메라 확대
+            mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), zoomLevel)), 200, new CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    Toast.makeText(getBaseContext(), "Animation to " + mapPOIItem.getItemName() + " complete", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onCancel() {            }
+            });
         }
 
         ArrayList<MapPOIItem> poiitems = new ArrayList<>();
@@ -493,20 +473,10 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         currentPOIs = poiitems;
         Log.d("addPOIItems", "실행후");
 
+        if (mapPOIItem.getUserObject().getClass().equals(DoAndSi.class)) //선택된게 시도 poiItem
+            mapView.fitMapViewAreaToShowAllPOIItems();
+
         buttonback.setVisibility(View.VISIBLE);
-        //카메라 확대
-/*        mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), zoomLevel)), 200, new CancelableCallback() {
-            @Override
-            public void onFinish() {
-                Toast.makeText(getBaseContext(), "Animation to " + mapPOIItem.getItemName() + " complete", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });*/
-        mapView.fitMapViewAreaToShowAllPOIItems();
     }
 
     @Override//전국 지도 화면에서 예를 들어 경기도를 누르면 경기도를 카메라 확대를 하고 다른 마커들도 보이도록 한다.
