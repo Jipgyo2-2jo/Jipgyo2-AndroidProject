@@ -57,7 +57,7 @@
             android:background="@drawable/slidetop"
             android:gravity="bottom|center"
             android:text="목록보기"
-            android:textSize="10sp" />
+            android:textSize="20sp" />
 
         <LinearLayout
             android:id="@+id/content"
