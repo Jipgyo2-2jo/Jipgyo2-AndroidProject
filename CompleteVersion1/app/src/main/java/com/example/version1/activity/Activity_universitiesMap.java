@@ -44,6 +44,7 @@ import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -77,7 +78,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private ListView listview ;
     Queue<Universities> searchedUniv = new LinkedList<Universities>();
     sBtnAdapter adapter;
-    private int calledSelected = 0;
     private boolean cameback = false;
 
     //다른 액티비티에서 돌아왔을때 현재 상태 저장
@@ -193,9 +193,11 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         buttonback.setOnClickListener(buttonbackClickListener);
 
         //기본 환경 설정
+        mMapView.setMapType(MapView.MapType.Satellite);
         mMapView.setMapViewEventListener(this);
         mMapView.setPOIItemEventListener(this);
         mMapView.setCurrentLocationEventListener(this);
+        mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
         // 중심점 변경 + 줌 레벨 변경
         mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(36, 127.80), 11, false);
 
@@ -248,7 +250,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 Log.d("Item", i + "Clicked");
                 for (final MapPOIItem item : mapPOIItemsUniv) {
                     if (item.getUserObject().equals(((sBtnItem) listview.getAdapter().getItem(i)).getUniversities())) {
-                        calledSelected = 0;
                         moveToPOIItem(mMapView, item);
 
                         slidingDrawer.close();
@@ -459,20 +460,21 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         String siDo;
         int zoomLevel;
 
-        if (mapPOIItem.getUserObject().getClass().equals(Universities.class)){ //선택된게 학교 poiItem
+        if (mapPOIItem.getUserObject().getClass().equals(DoAndSi.class)){ //선택된게 시도 poiItem
+            mapView.setMapType(MapView.MapType.Hybrid);
+            Log.d(mapPOIItem.getItemName(), "시도 POIItemSelected: ");
+            siDo = mapPOIItem.getItemName();
+            zoomLevel = 9;
+        }
+
+        else { //선택된게 학교 poiItem
+            mapView.setMapType(MapView.MapType.Standard);
             Log.d(mapPOIItem.getItemName(), "학교 POIItemSelected: ");
             siDo = ((Universities)mapPOIItem.getUserObject()).get시도();
             zoomLevel = 3;
 
             selectedSchoolName = String.valueOf(mapPOIItem.getItemName());
             buttonschool.setVisibility(View.VISIBLE);
-        }
-
-        else { //선택된게 시도 poiItem
-            Log.d(mapPOIItem.getItemName(), "시도 POIItemSelected: ");
-            siDo = mapPOIItem.getItemName();
-            zoomLevel = 9;
-
         }
 
         ArrayList<MapPOIItem> poiitems = new ArrayList<>();
@@ -485,7 +487,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             }
         }
 
-//        calledSelected++;
         Log.d("addPOIItems", "실행전");
         mapView.addPOIItems(poiitems.toArray(new MapPOIItem[poiitems.size()]));
         mapView.removePOIItems(currentPOIs.toArray(new MapPOIItem[currentPOIs.size()]));
@@ -494,7 +495,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         buttonback.setVisibility(View.VISIBLE);
         //카메라 확대
-        mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), zoomLevel)), 200, new CancelableCallback() {
+/*        mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), zoomLevel)), 200, new CancelableCallback() {
             @Override
             public void onFinish() {
                 Toast.makeText(getBaseContext(), "Animation to " + mapPOIItem.getItemName() + " complete", Toast.LENGTH_SHORT).show();
@@ -504,13 +505,13 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             public void onCancel() {
 
             }
-        });
+        });*/
+        mapView.fitMapViewAreaToShowAllPOIItems();
     }
 
     @Override//전국 지도 화면에서 예를 들어 경기도를 누르면 경기도를 카메라 확대를 하고 다른 마커들도 보이도록 한다.
     public void onPOIItemSelected(MapView mapView, final MapPOIItem mapPOIItem) {
         recent_location = mapPOIItem;
-//        calledSelected = 0;
         moveToPOIItem(mapView, mapPOIItem);
     }
 
@@ -543,9 +544,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     Button.OnClickListener buttonbackClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             buttonback.setVisibility(View.INVISIBLE);
-//            mMapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
-//            mMapView.removeAllPOIItems();
-            mMapView.removePOIItems(mapPOIItemsUniv.toArray(new MapPOIItem[mapPOIItemsUniv.size()]));
+            buttonschool.setVisibility(View.INVISIBLE);
+            mMapView.setMapType(MapView.MapType.Satellite);
+            mMapView.removeAllPOIItems();
             mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
             currentPOIs = mapPOIItemsDoAndSi;
             mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11)), 200, new CancelableCallback() {
@@ -659,7 +660,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 //위치 값을 가져올 수 있음
                 Log.d("MapRotation", Float.toString(mMapView.getMapRotationAngle()));
                 mMapView.setMapRotationAngle(0, false);
-                mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
+//                mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
             }
             else {
                 // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료합니다.2 가지 경우가 있습니다.
@@ -696,7 +697,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             // 3.  위치 값을 가져올 수 있음, 위치에 따른 맵 뷰 설정도 가능하다.
             Log.d("MapRotation", Float.toString(mMapView.getMapRotationAngle()));
             mMapView.setMapRotationAngle(0, false);
-            mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
+//            mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
 
         } else {  //2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요합니다. 2가지 경우(3-1, 4-1)가 있습니다.
 
