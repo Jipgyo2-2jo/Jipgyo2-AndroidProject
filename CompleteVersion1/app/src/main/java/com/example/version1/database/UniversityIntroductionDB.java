@@ -3,7 +3,6 @@ package com.example.version1.database;
 import android.util.Log;
 
 import com.example.version1.domain.UniversityIntroduction;
-import com.example.version1.domain.UniversityTour;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -52,24 +51,20 @@ public class UniversityIntroductionDB {
 
                 UniversityIntroduction universityIntroduction = new UniversityIntroduction();
 
-                /*universityIntroduction.setId_num(Object.getInt("id_num"));
-                universityIntroduction.setLatitude(Object.getDouble("위도"));
-                universityIntroduction.setLongitude(Object.getDouble("경도"));
-                universityIntroduction.set시설(Object.getString("시설"));
-                universityIntroduction.set기본_사항(Object.getString("기본_사항"));
-                universityIntroduction.set한줄평(Object.getString("한줄평"));*/
+                universityIntroduction.setUniv_name(Object.getString("ID"));
+                universityIntroduction.setExplain(Object.getString("ex2"));
 
                 universityIntroductionarray.add(universityIntroduction);
             }
 
         } catch (Exception ex) {
-            Log.d("UniversityIntroductionAccessDB", "예외 발생함 : " + ex.toString());
+            Log.d("UnivIntroAccessDB", "예외 발생함 : " + ex.toString());
         }
     }
 
-    public ArrayList<UniversityIntroduction> getUniversityIntroductionFromDB(String univName){
+    public ArrayList<UniversityIntroduction> getUniversityIntroductionFromDB(){
         //임시로 대학 이름을 test로 설정
-        final String urlStr = "http://3.114.244.9/" + univName + ".php";
+        final String urlStr = "http://3.114.244.9/school_explain.php";
 
         Thread thread = new Thread(new Runnable() {
             @Override

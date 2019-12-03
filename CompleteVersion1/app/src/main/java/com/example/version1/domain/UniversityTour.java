@@ -10,6 +10,8 @@ public class UniversityTour implements Serializable {
     private String 기본_사항;
     private String 한줄평;
     private int loctype;
+    private String 주요학과;
+    private String 특징;
 
     public int getId_num() {
         return id_num;
@@ -65,5 +67,21 @@ public class UniversityTour implements Serializable {
 
     public void setLoctype(int loctype) {
         this.loctype = loctype;
+    }
+
+    public String get주요학과() {
+        return 주요학과;
+    }
+
+    public void set주요학과(String 주요학과) {
+        this.주요학과 = 주요학과;
+    }
+
+    public String get특징() {
+        return 특징;
+    }
+
+    public void set특징(String 특징) {
+        this.특징 = 특징;
     }
 }

@@ -58,6 +58,8 @@ public class UniversityTourAccessDB {
                 universityTour.set시설(Object.getString("시설"));
                 universityTour.set기본_사항(Object.getString("기본_사항"));
                 universityTour.set한줄평(Object.getString("한줄평"));
+                universityTour.set주요학과(Object.getString("주요학과"));
+                universityTour.set특징(Object.getString("특징"));
 
                 int loctype = 0;
                 loctype = loctype + Object.getInt("식당") * 1;
