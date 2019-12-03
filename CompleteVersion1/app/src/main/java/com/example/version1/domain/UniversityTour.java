@@ -1,6 +1,8 @@
 package com.example.version1.domain;
 
-public class UniversityTour {
+import java.io.Serializable;
+
+public class UniversityTour implements Serializable {
     private int id_num;
     private Double latitude;
     private Double longitude;
