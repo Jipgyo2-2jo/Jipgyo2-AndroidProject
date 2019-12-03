@@ -44,7 +44,6 @@ import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -57,7 +56,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     ArrayList<MapPOIItem> mapPOIItemsUniv = new ArrayList<>();
 
     ArrayList<MapPOIItem> currentPOIs = new ArrayList<>();
-    ArrayList<MapPOIItem> changedPOIs = new ArrayList<>();
 
     private MapView mMapView;
     private MapPOIItem mCustomMarker;

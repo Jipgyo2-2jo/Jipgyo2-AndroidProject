@@ -4,9 +4,13 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -15,6 +19,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
@@ -90,6 +95,25 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
+    //Binding 서비스용
+    public static final String CHANNEL_ID = "tourGPSServiceChannel";
+    tourGPSService ts;
+    boolean isService = false;
+    ServiceConnection conn = new ServiceConnection() {
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            // 서비스와 연결되었을 때 호출되는 메서드
+            tourGPSService.tourBinder tb = (tourGPSService.tourBinder) service;
+            ts = tb.getService();
+            isService = true; // 실행 여부를 판단
+        }
+        public void onServiceDisconnected(ComponentName name) {
+            // 서비스와 연결이 끊기거나 종료되었을 때
+            isService = false;
+        }
+    };
+
+
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
         private final View mCalloutBalloon;
@@ -110,6 +134,19 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         public View getPressedCalloutBalloon(MapPOIItem poiItem) {
             mCalloutBalloon.findViewById(R.id.ballonlayout).setBackgroundResource(R.drawable.icon2);
             return null;
+        }
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Example Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
         }
     }
 
@@ -244,6 +281,20 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        Log.d("Tour", "Paused");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        Log.d("Tour", "Resumed");
+    }
+
     //드로어의 미션을 선택하면 화면이 이동한다.
     public void onMissionSelected(MissionQuiz q, String missionName) {
         //일단 basic mission으로 이동
@@ -275,6 +326,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             AlertDialog.Builder alBuilder = new AlertDialog.Builder(Activity_eachUniversityMap.this);
             alBuilder.setMessage("선택한 코스로 투어를 시작하시겠습니까?\n투어 중 다른 코스로 변경하면\n클리어한 미션이 초기화됩니다.");
             alBuilder.setTitle("코스 결정");
+
+            final ArrayList<UniversityTour> universities = universityTourarray;
 
             // "예" 버튼을 누르면 실행되는 리스너
             alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
@@ -371,6 +424,14 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         toast.setView(view);
                         toast.show();
 
+                        //백그라운드 서비스 동작용 Notification Channel 생성
+                        createNotificationChannel();
+
+                        //백그라운드에서 실행할 서비스 시작
+                        Intent serviceIntent = new Intent(getApplicationContext(), tourGPSService.class);
+                        serviceIntent.putExtra("Missions", missionQuizsCourse);
+                        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
+                        bindService(serviceIntent, conn, BIND_DEBUG_UNBIND);
 
                         courseFrameLayout.setVisibility(View.INVISIBLE);
                         missionFrameLayout.setVisibility(View.VISIBLE);
@@ -424,6 +485,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     @Override
     public void onBackPressed() {
+        //Service Unibind
+        unbindService(conn);
+
         // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setMessage("투어를 종료하시겠습니까?\n클리어한 미션이 저장되지 않습니다.");
@@ -453,6 +517,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mMapView.setShowCurrentLocationMarker(false);
         playmode = 0;
         courseselect = 0;
+        Intent serviceIntent = new Intent(this, tourGPSService.class);
+        stopService(serviceIntent);
     }
 
     private void createCustomMarker(MapView mapView, UniversityTour universityTour) {
