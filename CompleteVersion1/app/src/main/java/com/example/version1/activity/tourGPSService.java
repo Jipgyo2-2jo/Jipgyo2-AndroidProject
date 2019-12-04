@@ -3,6 +3,7 @@ package com.example.version1.activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -19,7 +20,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -36,10 +36,11 @@ import static com.example.version1.activity.Activity_eachUniversityMap.CHANNEL_I
 public class tourGPSService extends Service {
     private ArrayList<MissionQuiz> missionQuizs;
     private Messenger mClient = null;
+    private PendingIntent pendingIntent;
 
     public static final int MSG_REGISTER_CLIENT = 1;
-    //public static final int MSG_UNREGISTER_CLIENT = 2;
-    public static final int MSG_SEND_TO_SERVICE = 3;
+//    public static final int MSG_UNREGISTER_CLIENT = 2;
+//    public static final int MSG_SEND_TO_SERVICE = 3;
     public static final int MSG_SEND_TO_ACTIVITY = 4;
 
     public tourGPSService() {
@@ -108,13 +109,16 @@ public class tourGPSService extends Service {
         }
 
         Intent notificationIntent = new Intent(this, Activity_eachUniversityMap.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
+        long[] vibe = new long[0];
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("이학내학 실행중")
                 .setContentText("투어가 진행중입니다")
                 .setSmallIcon(R.drawable.schoolicon)
                 .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setVibrate(new long[] { -1 })
                 .build();
 
         startForeground(1, notification);
@@ -180,8 +184,17 @@ public class tourGPSService extends Service {
                 point.setIsActivated(1);
                 foundQuizs.add(point);
 
-                final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                vibrator.vibrate(700);
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle("이학내학 실행중")
+                        .setContentText(foundQuizs.size() + "개의 새로운 미션이 있습니다.")
+                        .setSmallIcon(R.drawable.schoolicon)
+                        .setContentIntent(pendingIntent)
+                        .setDefaults(Notification.DEFAULT_VIBRATE)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setAutoCancel(true);
+
+                NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                mNotificationManager.notify(0, mBuilder.build());
             }
         }
     }
@@ -189,5 +202,7 @@ public class tourGPSService extends Service {
     @Override
     public void onDestroy(){
         Log.d("Service", "Destroy");
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(0);
     }
 }
