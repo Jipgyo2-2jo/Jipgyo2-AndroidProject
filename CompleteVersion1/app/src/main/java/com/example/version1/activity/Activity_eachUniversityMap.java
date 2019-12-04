@@ -19,7 +19,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
@@ -57,6 +61,7 @@ import net.daum.mf.map.api.MapPolyline;
 import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Activity_eachUniversityMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener {
@@ -99,13 +104,22 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     public static final String CHANNEL_ID = "tourGPSServiceChannel";
     tourGPSService ts;
     boolean isService = false;
+    private Messenger mServiceMessenger = null;
+
     ServiceConnection conn = new ServiceConnection() {
-        public void onServiceConnected(ComponentName name,
-                                       IBinder service) {
+        public void onServiceConnected(ComponentName name, IBinder service) {
             // 서비스와 연결되었을 때 호출되는 메서드
-            tourGPSService.tourBinder tb = (tourGPSService.tourBinder) service;
-            ts = tb.getService();
+
             isService = true; // 실행 여부를 판단
+            mServiceMessenger = new Messenger(service);
+            try {
+                Message msg = Message.obtain(null, tourGPSService.MSG_REGISTER_CLIENT);
+                msg.replyTo = mMessenger;
+                mServiceMessenger.send(msg);
+                Log.d("Message from Activity", "First Send");
+            }
+            catch (RemoteException e) {
+            }
         }
         public void onServiceDisconnected(ComponentName name) {
             // 서비스와 연결이 끊기거나 종료되었을 때
@@ -113,6 +127,33 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         }
     };
 
+    ArrayList<MissionQuiz> foundQuizs = new ArrayList<>();
+    //Service 와 메세지 전송
+    private final Messenger mMessenger = new Messenger(new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(@NonNull Message msg) {
+            Log.i("test","act : what "+msg.what);
+            switch (msg.what) {
+                case tourGPSService.MSG_SEND_TO_ACTIVITY:
+                    int value1 = msg.getData().getInt("fromService");
+                    Log.i("찾은 미션수"," " + value1);
+                    foundQuizs = (ArrayList<MissionQuiz>)msg.getData().getSerializable("foundQuizs");
+                    Log.i("미션 size"," " + foundQuizs.size());
+
+                    if(foundQuizs != null) {
+                        for (MissionQuiz quiz : foundQuizs) {
+                            quiz.setIsActivated(1);
+                            Log.i("test", "act : foundquizs " + quiz.getId());
+                            onMissionFind(quiz);
+                        }
+                    }
+
+                    foundQuizs.clear();
+                    break;
+            }
+            return false;
+        }
+    }));
 
     // CalloutBalloonAdapter 인터페이스 구현
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
@@ -282,17 +323,25 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     }
 
     @Override
-    public void onPause(){
-        super.onPause();
-
+    public void onStop(){
+        super.onStop();
         Log.d("Tour", "Paused");
+
+        //백그라운드에서 실행할 서비스 시작
+        Intent serviceIntent = new Intent(getApplicationContext(), tourGPSService.class);
+        serviceIntent.putExtra("Missions", missionQuizsCourse);
+        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
+        bindService(serviceIntent, conn, BIND_DEBUG_UNBIND);
     }
 
     @Override
-    public void onResume(){
-        super.onResume();
+    public void onRestart(){
+        super.onRestart();
 
         Log.d("Tour", "Resumed");
+
+        Intent serviceIntent = new Intent(this, tourGPSService.class);
+        stopService(serviceIntent);
     }
 
     //드로어의 미션을 선택하면 화면이 이동한다.
@@ -427,12 +476,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         //백그라운드 서비스 동작용 Notification Channel 생성
                         createNotificationChannel();
 
-                        //백그라운드에서 실행할 서비스 시작
-                        Intent serviceIntent = new Intent(getApplicationContext(), tourGPSService.class);
-                        serviceIntent.putExtra("Missions", missionQuizsCourse);
-                        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
-                        bindService(serviceIntent, conn, BIND_DEBUG_UNBIND);
-
                         courseFrameLayout.setVisibility(View.INVISIBLE);
                         missionFrameLayout.setVisibility(View.VISIBLE);
 
@@ -517,8 +560,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mMapView.setShowCurrentLocationMarker(false);
         playmode = 0;
         courseselect = 0;
-        Intent serviceIntent = new Intent(this, tourGPSService.class);
-        stopService(serviceIntent);
     }
 
     private void createCustomMarker(MapView mapView, UniversityTour universityTour) {
@@ -560,6 +601,37 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             return;
     }
 
+    public void onMissionFind(MissionQuiz found){
+        //슬라이드 드로어에 미션 추가
+        MapPOIItem tmppoiItem = mMapView.findPOIItemByTag(found.getId());
+        MapPOIItem aa1;
+        aa1 = tmppoiItem;
+        mMapView.removePOIItem(tmppoiItem);
+        //이름을 미리 지정해서 넘겨준다.
+        missionListFragment.addMission(1, ""+tmppoiItem.getItemName()+ " " +found.getTypeName(),
+                found.getRightAnswer() + "/"+found.getQuizArrayList().size(), found);
+        missionListFragment.adapter.notifyDataSetChanged();
+
+        //퀴즈 미션의 id와 건물(장소)의 id를 같도록 설정한다고 가정
+        //tag로 marker를 가져옴
+        //마커의 색 변화
+        UniversityTour tmptour = (UniversityTour) tmppoiItem.getUserObject();
+        if(tmptour.getLoctype() == 1){//식당
+            tmppoiItem.setCustomImageResourceId(R.drawable.bmapres);
+        }else if(tmptour.getLoctype() == 10){//매점
+            tmppoiItem.setCustomImageResourceId(R.drawable.bmapmar);
+        }else if(tmptour.getLoctype() == 100){//카페
+            tmppoiItem.setCustomImageResourceId(R.drawable.bmapcafe);
+        }else if(tmptour.getLoctype() == 1000){//기숙사
+            tmppoiItem.setCustomImageResourceId(R.drawable.bmapdor);
+        }else if(tmptour.getLoctype() == 11){//식당 + 매점
+            tmppoiItem.setCustomImageResourceId(R.drawable.bmapdou);
+        }else{
+            tmppoiItem.setCustomImageResourceId(R.drawable.bmap);
+        }
+        mMapView.addPOIItem(aa1);
+    }
+
     @TargetApi(Build.VERSION_CODES.O)
     public void activateMission(MapPoint.GeoCoordinate mapPointGeo){
         Location cl = new Location("1");//현재 위치
@@ -573,6 +645,28 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             //40m보다 가까워질 경우 미션 활성화
             if(cl.distanceTo(gl) < 40 && missionQuizsCourse.get(i).getIsActivated() == 0){
                 missionQuizsCourse.get(i).setIsActivated(1);
+                onMissionFind(missionQuizsCourse.get(i));
+
+                //커스텀 토스트 메세지
+                Context context = getApplicationContext();
+                CharSequence txt = "미션 활성화!";
+                Typeface typeface = getResources().getFont(R.font.hoonwhitecatr);
+                int time = Toast.LENGTH_LONG;
+                Toast.makeText(context, txt, time).show();
+                Toast toast = Toast.makeText(context, txt, time);
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.custom_toastview, (ViewGroup) findViewById(R.id.containers));
+                TextView txtView = view.findViewById(R.id.txtview);
+                txtView.setTypeface(typeface);
+                txtView.setText(txt);
+                toast.setGravity(Gravity.CENTER, 0, -75);
+                toast.setView(view);
+                toast.show();
+
+                final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(1000);
+
+                /*                missionQuizsCourse.get(i).setIsActivated(1);
                 //슬라이드 드로어에 미션 추가
                 MapPOIItem tmppoiItem = mMapView.findPOIItemByTag(missionQuizsCourse.get(i).getId());
                 MapPOIItem aa1;
@@ -618,7 +712,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 }
                 mMapView.addPOIItem(aa1);
                 final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                vibrator.vibrate(1000);
+                vibrator.vibrate(1000);*/
             }
         }
         //missionQuizsCourse

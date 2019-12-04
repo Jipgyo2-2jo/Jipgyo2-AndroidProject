@@ -72,14 +72,6 @@ public class MissionQuiz implements Serializable {
         this.quizArrayList = quizArrayList;
     }
 
-    public int getActivated() {
-        return activated;
-    }
-
-    public void setActivated(int activated) {
-        this.activated = activated;
-    }
-
     public int getRightAnswer() {
         return rightAnswer;
     }
