@@ -14,7 +14,12 @@ import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -30,6 +35,12 @@ import static com.example.version1.activity.Activity_eachUniversityMap.CHANNEL_I
 
 public class tourGPSService extends Service {
     private ArrayList<MissionQuiz> missionQuizs;
+    private Messenger mClient = null;
+
+    public static final int MSG_REGISTER_CLIENT = 1;
+    //public static final int MSG_UNREGISTER_CLIENT = 2;
+    public static final int MSG_SEND_TO_SERVICE = 3;
+    public static final int MSG_SEND_TO_ACTIVITY = 4;
 
     public tourGPSService() {
     }
@@ -47,12 +58,37 @@ public class tourGPSService extends Service {
     @Override
     public IBinder onBind(Intent intent){
         Log.d("Service", "Bind됨");
-        return null;
+
+        return mMessenger.getBinder();
     }
+
+    private final Messenger mMessenger = new Messenger(new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Log.w("test","ControlService - message what : "+msg.what +" , msg.obj "+ msg.obj);
+            switch (msg.what) {
+                case MSG_REGISTER_CLIENT:
+                    mClient = msg.replyTo;  // activity로부터 가져온
+                    break;
+            }
+            return false;
+        }
+    }));
 
     @Override
     public boolean onUnbind(Intent intent){
         Log.d("Service", "UnBind됨");
+
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putInt("fromService", foundQuizs.size());
+            bundle.putSerializable("foundQuizs", foundQuizs);
+            Message msg = Message.obtain(null, MSG_SEND_TO_ACTIVITY);
+            msg.setData(bundle);
+            mClient.send(msg);      // msg 보내기
+        } catch (RemoteException e) {
+        }
+
         return true;
     }
 
@@ -65,6 +101,7 @@ public class tourGPSService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         missionQuizs = (ArrayList<MissionQuiz>) intent.getSerializableExtra("Missions");
         if(missionQuizs == null){
             Log.d("Mission위치", "GetExtra 실패");
@@ -101,7 +138,6 @@ public class tourGPSService extends Service {
 
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-
         final LocationListener gpsLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 Log.d("GPS in Service", "Location Update, 위도(" + location.getLatitude() + "), 경도(" + location.getLongitude() + "), provider(" + location.getProvider() + ")");
@@ -131,6 +167,8 @@ public class tourGPSService extends Service {
         return START_STICKY;
     }
 
+    ArrayList<MissionQuiz> foundQuizs = new ArrayList<>();
+
     @TargetApi(Build.VERSION_CODES.O)
     public void activateMission(Location location) {
         Location gl = new Location("2");
@@ -138,7 +176,12 @@ public class tourGPSService extends Service {
             gl.setLatitude(point.getLatitude());
             gl.setLongitude(point.getLongitude());
             if (location.distanceTo(gl) < 40 && point.getIsActivated() == 0){
+                Log.d("Service", "Found Mission");
+                point.setIsActivated(1);
+                foundQuizs.add(point);
 
+                final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(700);
             }
         }
     }
