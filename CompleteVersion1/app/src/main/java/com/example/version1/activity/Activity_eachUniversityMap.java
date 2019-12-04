@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +62,6 @@ import net.daum.mf.map.api.MapPolyline;
 import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Activity_eachUniversityMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener {
@@ -95,6 +95,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private CourseListFragment courseListFragment;
     private MissionListFragment missionListFragment;
     private MapPoint.GeoCoordinate mapPointGeo;
+    private RelativeLayout relativelayout;
+    private MapPoint.GeoCoordinate beforeLocation;
+    private TextView tv_moving;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -212,6 +215,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         setContentView(R.layout.activity_each_university_map);
 
+        relativelayout = findViewById(R.id.relativelayout);
         handleButton = findViewById(R.id.handle);
         finishbutton = findViewById(R.id.finishbutton);
         button1 = findViewById(R.id.button);
@@ -220,9 +224,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         buttonCourseSelect.setOnClickListener(buttonCourseSelectClickListener);
         courseFrameLayout = (FrameLayout) findViewById(R.id.courseFrameLayout);
         missionFrameLayout = (FrameLayout) findViewById(R.id.missionFrameLayout);
-//        RadioButton mapnormal = findViewById(R.id.mapnormal);
-//        RadioButton maphybrid = findViewById(R.id.maphybrid);
-//        RadioButton mapsatellite = findViewById(R.id.mapsatellite);
+        tv_moving = findViewById(R.id.tv_moving);
         RadioGroup mapradiogroup = findViewById(R.id.mapradiogroup);
 
         mapradiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -511,12 +513,12 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     //버튼을 누르면 투어종료 화면으로
     Button.OnClickListener fClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-
             //미션을 모두 완료한 경우.
             if(finishActivated == 1){
                 Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_tour_finish.class);
+                intent.putExtra("univName", univName);
                 intent.putExtra("missionNum", missionNum);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
             //미션을 모두 완료하지 못한 경우
             else{
@@ -596,9 +598,41 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         //gps와 건물의 거리가 (40m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
         if(playmode == 1){
             activateMission(mapPointGeo);
+            totalMoveDistance(mapPointGeo);
         }
         else
             return;
+    }
+
+    int tried = 0;
+    float range = 0;
+    float rangesum = 0;
+    public void totalMoveDistance(MapPoint.GeoCoordinate mapPointGeo) {
+        if(tried == 0){
+            tried++;
+            return;
+        }
+        else{
+            tried = 0;
+            if (beforeLocation == null) {
+                beforeLocation = mapPointGeo;
+            }
+            if (mapPointGeo != null) {
+                if (beforeLocation != mapPointGeo) {
+                    Location bl = new Location("0");//미션이 발생하는 곳의 위치(유동적)
+                    bl.setLatitude(beforeLocation.latitude);
+                    bl.setLongitude(beforeLocation.longitude);
+                    Location cl = new Location("0");//미션이 발생하는 곳의 위치(유동적)
+                    cl.setLatitude(mapPointGeo.latitude);
+                    cl.setLongitude(mapPointGeo.longitude);
+                    range = bl.distanceTo(cl);
+                    rangesum += range;
+                    Toast.makeText(this, "이전2 : " + bl + "현재2 : " + cl, Toast.LENGTH_SHORT).show();
+                }
+                String Rrange = String.format("%.0f", rangesum);
+                tv_moving.setText("총 이동거리: " + Rrange + "m");
+            }
+        }
     }
 
     public void onMissionFind(MissionQuiz found){
@@ -995,6 +1029,15 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
                 mMapView.addPOIItem(aa1);
                 ////************************************
+                break;
+            case 200:
+                finish();
+                break;
+            case 300:
+                Intent intent = new Intent();
+                relativelayout.removeAllViews();
+                setResult(300, intent);
+                finish();
                 break;
         }
     }

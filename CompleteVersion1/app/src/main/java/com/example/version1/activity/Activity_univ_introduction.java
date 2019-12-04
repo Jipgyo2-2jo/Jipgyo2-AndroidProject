@@ -70,7 +70,18 @@ public class Activity_univ_introduction extends AppCompatActivity {
             Intent intent = new Intent(Activity_univ_introduction.this, Activity_eachUniversityMap.class);
             //대학교 이름도 넘겨줌
             intent.putExtra("univName", univName);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode){
+            case 300:
+                finish();
+                break;
+        }
+    }
 }

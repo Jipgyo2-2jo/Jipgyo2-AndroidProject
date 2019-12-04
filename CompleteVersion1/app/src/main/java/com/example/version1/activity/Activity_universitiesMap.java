@@ -7,6 +7,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -44,8 +46,11 @@ import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 public class Activity_universitiesMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener{
 
@@ -62,6 +67,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private Button buttonschool;
     private Button buttonback;
     String selectedSchoolName;
+    Set<String> schoolClearSet;
+    private FrameLayout frameSchool;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -186,16 +193,30 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         buttonschool = (Button) findViewById(R.id.buttonschool);
         buttonback = (Button) findViewById(R.id.buttonback);
         rela = (RelativeLayout) findViewById(R.id.relativelayout);
-
+        Button schoolClear = findViewById(R.id.schoolClear);
+        TextView tvSchool = findViewById(R.id.tvSchool);
+        frameSchool = findViewById(R.id.frameSchool);
         buttonschool.setOnClickListener(buttonSchoolClickListener);
         buttonback.setOnClickListener(buttonbackClickListener);
+        schoolClear.setOnClickListener(schoolClearClickListener);
+
+        schoolClearSet = new HashSet<>();
+        SharedPreferences sharedPreferences = getSharedPreferences("SchoolClearFile", MODE_PRIVATE);
+        schoolClearSet = sharedPreferences.getStringSet("SchoolClearSet", schoolClearSet);
+        Iterator<String> iter = schoolClearSet.iterator();
+
+        while (iter.hasNext()) {
+            String tmpStr = iter.next();
+            if(tmpStr != null){
+                tvSchool.append(tmpStr);
+            }
+        }
 
         //기본 환경 설정
         mMapView.setMapType(MapView.MapType.Satellite);
         mMapView.setMapViewEventListener(this);
         mMapView.setPOIItemEventListener(this);
         mMapView.setCurrentLocationEventListener(this);
-        mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
         // 중심점 변경 + 줌 레벨 변경
         mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(36, 127.80), 11, false);
 
@@ -528,6 +549,16 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
     };
 
+    Button.OnClickListener schoolClearClickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (frameSchool.getVisibility() == View.INVISIBLE) {
+                frameSchool.setVisibility(View.VISIBLE);
+            } else if (frameSchool.getVisibility() == View.VISIBLE) {
+                frameSchool.setVisibility(View.INVISIBLE);
+            }
+        }
+    };
+
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
         Log.d("CalloutBalloons", "wrong touched");
@@ -628,7 +659,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 //위치 값을 가져올 수 있음
                 Log.d("MapRotation", Float.toString(mMapView.getMapRotationAngle()));
                 mMapView.setMapRotationAngle(0, false);
-//                mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
+                mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
             }
             else {
                 // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료합니다.2 가지 경우가 있습니다.
@@ -665,7 +696,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             // 3.  위치 값을 가져올 수 있음, 위치에 따른 맵 뷰 설정도 가능하다.
             Log.d("MapRotation", Float.toString(mMapView.getMapRotationAngle()));
             mMapView.setMapRotationAngle(0, false);
-//            mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
+            mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
 
         } else {  //2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요합니다. 2가지 경우(3-1, 4-1)가 있습니다.
 

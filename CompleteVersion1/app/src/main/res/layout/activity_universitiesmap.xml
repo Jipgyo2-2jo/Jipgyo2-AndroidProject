@@ -14,6 +14,35 @@
 
     </net.daum.mf.map.api.MapView>
 
+    <Button
+        android:id="@+id/schoolClear"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/schoollist"
+        android:layout_marginStart="5dp"
+        android:layout_alignParentStart="true" />
+
+    <FrameLayout
+        android:layout_width="185dp"
+        android:layout_height="match_parent"
+        android:background="#88FFF16D"
+        android:visibility="invisible"
+        android:id="@+id/frameSchool">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="55dp"
+            android:text="클리어한 학교 리스트\n\n"
+            android:textSize="15sp"
+            android:fontFamily="@font/maplestorybold"
+            android:id="@+id/tvSchool"/>
+
+    </FrameLayout>
+
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
