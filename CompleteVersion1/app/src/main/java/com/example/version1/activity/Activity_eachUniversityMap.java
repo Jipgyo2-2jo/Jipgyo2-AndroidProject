@@ -144,10 +144,14 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                     Log.i("미션 size"," " + foundQuizs.size());
 
                     if(foundQuizs != null) {
-                        for (MissionQuiz quiz : foundQuizs) {
-                            quiz.setIsActivated(1);
-                            Log.i("test", "act : foundquizs " + quiz.getId());
-                            onMissionFind(quiz);
+                        for (MissionQuiz find : foundQuizs) {
+                            for(MissionQuiz quiz : missionQuizsCourse) {
+                                if(quiz.getId() == find.getId()) {
+                                    Log.i("test", "act : foundquizs " + find.getId());
+                                    quiz.setIsActivated(1);
+                                    onMissionFind(quiz);
+                                }
+                            }
                         }
                     }
 
@@ -191,6 +195,13 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(serviceChannel);
+        }
+    }
+
+    private void deleteNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.deleteNotificationChannel(CHANNEL_ID);
         }
     }
 
@@ -327,23 +338,29 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     public void onStop(){
         super.onStop();
-        Log.d("Tour", "Paused");
+        Log.d("Tour", "Stoped");
 
-        //백그라운드에서 실행할 서비스 시작
-        Intent serviceIntent = new Intent(getApplicationContext(), tourGPSService.class);
-        serviceIntent.putExtra("Missions", missionQuizsCourse);
-        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
-        bindService(serviceIntent, conn, BIND_DEBUG_UNBIND);
+        if(playmode == 1) {
+            //백그라운드 서비스 동작용 Notification Channel 생성
+            createNotificationChannel();
+
+            //백그라운드에서 실행할 서비스 시작
+            Intent serviceIntent = new Intent(getApplicationContext(), tourGPSService.class);
+            serviceIntent.putExtra("Missions", missionQuizsCourse);
+            ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
+            bindService(serviceIntent, conn, BIND_DEBUG_UNBIND);
+        }
     }
 
     @Override
     public void onRestart(){
         super.onRestart();
 
-        Log.d("Tour", "Resumed");
+        Log.d("Tour", "Restarted");
 
         Intent serviceIntent = new Intent(this, tourGPSService.class);
         stopService(serviceIntent);
+        deleteNotificationChannel();
     }
 
     //드로어의 미션을 선택하면 화면이 이동한다.
@@ -474,9 +491,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         toast.setGravity(Gravity.CENTER, 0, -50);
                         toast.setView(view);
                         toast.show();
-
-                        //백그라운드 서비스 동작용 Notification Channel 생성
-                        createNotificationChannel();
 
                         courseFrameLayout.setVisibility(View.INVISIBLE);
                         missionFrameLayout.setVisibility(View.VISIBLE);
@@ -678,6 +692,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             gl.setLongitude(missionQuizsCourse.get(i).getLongitude());
             //40m보다 가까워질 경우 미션 활성화
             if(cl.distanceTo(gl) < 40 && missionQuizsCourse.get(i).getIsActivated() == 0){
+                Log.d("Activity", "미션 찾음");
                 missionQuizsCourse.get(i).setIsActivated(1);
                 onMissionFind(missionQuizsCourse.get(i));
 
