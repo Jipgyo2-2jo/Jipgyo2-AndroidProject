@@ -88,6 +88,7 @@ public class tourGPSService extends Service {
             msg.setData(bundle);
             mClient.send(msg);      // msg 보내기
         } catch (RemoteException e) {
+        } catch (NullPointerException e){
         }
 
         return true;

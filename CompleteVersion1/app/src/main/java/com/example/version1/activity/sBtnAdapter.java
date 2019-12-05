@@ -25,8 +25,6 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
 
     // 생성자로부터 전달된 resource id 값을 저장.
     int resourceId ;
-    // 생성자로부터 전달된 ListBtnClickListener  저장.
-//    private sBtnAdapter.ListBtnClickListener listBtnClickListener ;
 
     // ListViewBtnAdapter 생성자. 마지막에 ListBtnClickListener 추가.
     sBtnAdapter(Context context, int resource, ArrayList<sBtnItem> list) {
@@ -35,7 +33,6 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
         // resource id 값 복사. (super로 전달된 resource를 참조할 방법이 없음.)
         this.resourceId = resource ;
 
-//        this.listBtnClickListener = clickListener ;
         listViewItemList = list;
         filteredItemList = listViewItemList ;
     }
@@ -65,27 +62,6 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
         Univname.setText(listViewItem.getUnivname());
         Univnum.setText(listViewItem.getUnivnum());
 
-        // button1 클릭 시 TextView(textView1)의 내용 변경.
-/*        Button button1 = (Button) convertView.findViewById(R.id.button1);
-        button1.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                EatenMenu m = new EatenMenu();
-                m.setCalorie(l.get(pos).getSpecificmenu().getCalorie());
-                m.setName(l.get(pos).getSpecificmenu().getName());
-                m.setRating(0f);
-                m.setSpecificMenuID(l.get(pos).getSpecificmenu().getSpecificMenuID());
-                m.setCount(Integer.valueOf(counteditText.getText().toString()));
-
-                int remc = UserDailyInfo.getRemainingCalorie();
-                UserDailyInfo.setRemainingCalorie(remc-(m.getCalorie()*m.getCount()));
-                RecordDietActivity.eatenmenu.add(m);
-
-             //   Intent intent = new Intent(this, )
-                ((Activity)context).finish();
-            }
-
-        });*/
-
         return convertView;
     }
 
@@ -100,16 +76,18 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
         return filteredItemList.size() ;
     }
 
-    @Override
-    public Filter getFilter(){
-        if(listFilter == null){
-            listFilter = new ListFilter();
-        }
+    public Filter getFilter(int type){  //type: 1=이름, 2=시도
+//        if(listFilter == null){
+        if(type == 1)
+            listFilter = new ListFilterByName();
+        else if(type == 2)
+            listFilter = new ListFilterByDo();
+//        }
 
         return listFilter;
     }
 
-    private class ListFilter extends Filter{
+    private class ListFilterByName extends Filter{
         @Override
         protected FilterResults performFiltering(CharSequence constraint){
             FilterResults results = new FilterResults();
@@ -123,6 +101,44 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
 
                 for(sBtnItem item : listViewItemList){
                     if(item.getUnivname().contains(constraint.toString()))
+                        itemList.add(item);
+                }
+
+                results.values = itemList;
+                results.count = itemList.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results){
+
+            // update listview by filtered data list.
+            filteredItemList = (ArrayList<sBtnItem>) results.values ;
+
+            // notify
+            if (results.count > 0) {
+                notifyDataSetChanged() ;
+            } else {
+                notifyDataSetInvalidated() ;
+            }
+        }
+    }
+
+    private class ListFilterByDo extends Filter{
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint){
+            FilterResults results = new FilterResults();
+
+            if(constraint == null || constraint.length() == 0){
+                results.values = listViewItemList;
+                results.count = listViewItemList.size();
+            }
+            else{
+                ArrayList<sBtnItem> itemList = new ArrayList<>();
+
+                for(sBtnItem item : listViewItemList){
+                    if(item.getUniversities().get시도().contains(constraint.toString()))
                         itemList.add(item);
                 }
 
