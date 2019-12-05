@@ -162,6 +162,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             slidingDrawer.open();
             ((sBtnAdapter)listview.getAdapter()).getFilter(1).filter(newText);
 
+            Log.d("QueryText Changed", newText);
             return false;
         }
     };
@@ -496,8 +497,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 }
             });
 
+            searchView.setQuery("", false);
             searchView.setIconified(true);
-
+            slidingDrawer.close();
             ((sBtnAdapter)listview.getAdapter()).clearFilter();
         }
     };
