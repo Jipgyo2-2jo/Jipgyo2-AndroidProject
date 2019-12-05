@@ -1,48 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/infback"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/locImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_margin="30dp"
-        android:adjustViewBounds="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.75"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/locName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="30dp"
-        android:text="건물명 연혁 주요학과 특징 쭉 쓰기 ^^"
-        android:textColor="#1e90ff"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/locName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:paddingBottom="2dp"
+            android:text="장소 이름"
+            android:textColor="#1e90ff"
+            android:textSize="27dp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/text3"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="200dp"
-        android:text="건물명 연혁 주요학과 특징 쭉 쓰기 ^^"
-        android:textColor="#1e90ff"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/locImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center"/>
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="346dp"
-        android:layout_height="76dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="600dp"
-        android:background="@drawable/infme" />
+    </LinearLayout>
 
-</RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="기본 정보:"
+                android:textColor="#1e90ff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dp"
+                android:text="기본 정보 내용"
+                android:textColor="#1e90ff"
+                android:textSize="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="주요 학과:"
+                android:textColor="#1e90ff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dp"
+                android:text="주요 학과 내용"
+                android:textColor="#1e90ff"
+                android:textSize="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#1e90ff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="나머지 내용"
+                android:textColor="#1e90ff"
+                android:textSize="15dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/infme" />
+    </LinearLayout>
+
+</LinearLayout>

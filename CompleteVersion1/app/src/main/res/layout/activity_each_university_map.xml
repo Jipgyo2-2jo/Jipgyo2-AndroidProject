@@ -19,21 +19,20 @@
         android:orientation="horizontal"
         android:background="#77C2F09F">
 
-        <Button
+        <ImageButton
             android:id="@+id/finishbutton"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:text="투어 종료"
-            android:textColor="#331B1B"
-            android:background="@drawable/ellipse"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:src="@drawable/touring"
+            android:background="@android:color/transparent"/>
 
         <TextView
             android:layout_height="50dp"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:text="총 이동거리: 0m"
-            android:textSize="12sp"
+            android:textSize="18sp"
             android:id="@+id/tv_moving"/>
 
         <RadioGroup

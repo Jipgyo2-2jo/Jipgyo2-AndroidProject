@@ -189,7 +189,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         Log.d("onStart", "시작");
         setContentView(R.layout.activity_universitiesmap);
         ArrayList<sBtnItem> list = new ArrayList<>();
-
+        getSupportActionBar().setTitle("     이 학교가 내 학교냐");
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.abback));
         mMapView = (MapView) findViewById(R.id.map_view);
         buttonschool = (Button) findViewById(R.id.buttonschool);
         buttonback = (Button) findViewById(R.id.buttonback);
