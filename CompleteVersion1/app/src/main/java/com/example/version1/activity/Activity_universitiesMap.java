@@ -126,7 +126,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         //학교목록 버튼
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu);
 
         //검색창
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
