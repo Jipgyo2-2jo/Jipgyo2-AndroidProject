@@ -572,6 +572,10 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Intent serviceIntent = new Intent(this, tourGPSService.class);
+        stopService(serviceIntent);
+        deleteNotificationChannel();
+
         mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
         mMapView.setShowCurrentLocationMarker(false);
         playmode = 0;
