@@ -21,14 +21,14 @@
         android:layout_alignParentLeft="true"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
-        android:background="@drawable/schoollist"
+        android:background="@drawable/menu"
         android:layout_marginStart="5dp"
         android:layout_alignParentStart="true" />
 
     <FrameLayout
         android:layout_width="185dp"
         android:layout_height="match_parent"
-        android:background="#88FFF16D"
+        android:background="#99FCF4E8"
         android:visibility="invisible"
         android:id="@+id/frameSchool">
 
