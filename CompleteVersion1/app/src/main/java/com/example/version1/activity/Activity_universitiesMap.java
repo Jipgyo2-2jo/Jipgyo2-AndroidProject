@@ -129,7 +129,13 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         if(null!=searchManager){
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
-//        searchView.setIc
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                slidingDrawer.close();
+                return false;
+            }
+        });
         searchView.setIconifiedByDefault(true);
 
         return true;
@@ -489,6 +495,10 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 public void onCancel() {
                 }
             });
+
+            searchView.setIconified(true);
+
+            ((sBtnAdapter)listview.getAdapter()).clearFilter();
         }
     };
 
