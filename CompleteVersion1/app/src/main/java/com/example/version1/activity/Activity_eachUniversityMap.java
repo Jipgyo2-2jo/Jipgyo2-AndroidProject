@@ -544,9 +544,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     @Override
     public void onBackPressed() {
-        //Service Unibind
-        unbindService(conn);
-
         // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setMessage("투어를 종료하시겠습니까?\n클리어한 미션이 저장되지 않습니다.");
@@ -572,9 +569,15 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent serviceIntent = new Intent(this, tourGPSService.class);
-        stopService(serviceIntent);
-        deleteNotificationChannel();
+
+        if(playmode == 1) {
+            //Service Unibind
+            unbindService(conn);
+
+            Intent serviceIntent = new Intent(this, tourGPSService.class);
+            stopService(serviceIntent);
+            deleteNotificationChannel();
+        }
 
         mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
         mMapView.setShowCurrentLocationMarker(false);
