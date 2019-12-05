@@ -162,4 +162,9 @@ public class sBtnAdapter extends ArrayAdapter implements Filterable {
             }
         }
     }
+
+    public void clearFilter(){
+        filteredItemList = listViewItemList;
+        notifyDataSetChanged();
+    }
 }
