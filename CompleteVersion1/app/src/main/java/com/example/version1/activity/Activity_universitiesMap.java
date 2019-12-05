@@ -9,12 +9,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -121,8 +124,13 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
 
+        //학교목록 버튼
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu);
+
+        //검색창
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setMaxWidth(1000);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setQueryHint("학교명 검색");
         searchView.setOnQueryTextListener(queryTextListener);
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
@@ -139,6 +147,25 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         searchView.setIconifiedByDefault(true);
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id)
+        {
+            case android.R.id.home:
+            {
+                // 해당 버튼을 눌렀을 때 적절한 액션을 넣는다.
+                if (frameSchool.getVisibility() == View.INVISIBLE) {
+                    frameSchool.setVisibility(View.VISIBLE);
+                } else if (frameSchool.getVisibility() == View.VISIBLE) {
+                    frameSchool.setVisibility(View.INVISIBLE);
+                }
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //검색 리스너
@@ -192,17 +219,15 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         Log.d("onStart", "시작");
         setContentView(R.layout.activity_universitiesmap);
         ArrayList<sBtnItem> list = new ArrayList<>();
-        getSupportActionBar().setTitle("     이 학교가 내 학교냐");
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.abback));
+        getSupportActionBar().setTitle("이 학교가 내 학교냐");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
         mMapView = (MapView) findViewById(R.id.map_view);
         buttonschool = (Button) findViewById(R.id.buttonschool);
         buttonback = (Button) findViewById(R.id.buttonback);
-        Button schoolClear = findViewById(R.id.schoolClear);
         TextView tvSchool = findViewById(R.id.tvSchool);
         frameSchool = findViewById(R.id.frameSchool);
         buttonschool.setOnClickListener(buttonSchoolClickListener);
         buttonback.setOnClickListener(buttonbackClickListener);
-        schoolClear.setOnClickListener(schoolClearClickListener);
 
         schoolClearSet = new HashSet<>();
         SharedPreferences sharedPreferences = getSharedPreferences("SchoolClearFile", MODE_PRIVATE);
@@ -496,19 +521,10 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 }
             });
 
+            searchView.setQuery("", false);
             searchView.setIconified(true);
-
+            slidingDrawer.close();
             ((sBtnAdapter)listview.getAdapter()).clearFilter();
-        }
-    };
-
-    Button.OnClickListener schoolClearClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            if (frameSchool.getVisibility() == View.INVISIBLE) {
-                frameSchool.setVisibility(View.VISIBLE);
-            } else if (frameSchool.getVisibility() == View.VISIBLE) {
-                frameSchool.setVisibility(View.INVISIBLE);
-            }
         }
     };
 
