@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.example.version1.R;
 import com.example.version1.database.UniversityMissionQuizDB;
 import com.example.version1.database.UniversityTourAccessDB;
@@ -69,7 +71,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private static final String LOG_TAG = "Act_eachUniversitiesMap";
 
     private String univName;
-    private Button finishbutton;
+    private ImageButton finishbutton;
     private Button handleButton;
     private String tmpstr;
     private String mi = "미션 목록";
@@ -237,7 +239,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         missionFrameLayout = (FrameLayout) findViewById(R.id.missionFrameLayout);
         tv_moving = findViewById(R.id.tv_moving);
         RadioGroup mapradiogroup = findViewById(R.id.mapradiogroup);
-
+        Glide.with(this).load(R.drawable.touring).override(110,110).into(finishbutton);
         mapradiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -544,6 +546,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     @Override
     public void onBackPressed() {
+        //Service Unibind
+        unbindService(conn);
+
         // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setMessage("투어를 종료하시겠습니까?\n클리어한 미션이 저장되지 않습니다.");
@@ -569,15 +574,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if(playmode == 1) {
-            //Service Unibind
-            unbindService(conn);
-
-            Intent serviceIntent = new Intent(this, tourGPSService.class);
-            stopService(serviceIntent);
-            deleteNotificationChannel();
-        }
+        Intent serviceIntent = new Intent(this, tourGPSService.class);
+        stopService(serviceIntent);
+        deleteNotificationChannel();
 
         mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
         mMapView.setShowCurrentLocationMarker(false);
@@ -648,7 +647,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                     cl.setLongitude(mapPointGeo.longitude);
                     range = bl.distanceTo(cl);
                     rangesum += range;
-                    Toast.makeText(this, "이전2 : " + bl + "현재2 : " + cl, Toast.LENGTH_SHORT).show();
                 }
                 String Rrange = String.format("%.0f", rangesum);
                 tv_moving.setText("총 이동거리: " + Rrange + "m");
@@ -721,58 +719,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
                 final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
                 vibrator.vibrate(1000);
-
-                /*                missionQuizsCourse.get(i).setIsActivated(1);
-                //슬라이드 드로어에 미션 추가
-                MapPOIItem tmppoiItem = mMapView.findPOIItemByTag(missionQuizsCourse.get(i).getId());
-                MapPOIItem aa1;
-                aa1 = tmppoiItem;
-                mMapView.removePOIItem(tmppoiItem);
-                //이름을 미리 지정해서 넘겨준다.
-                missionListFragment.addMission(1, ""+tmppoiItem.getItemName()+ " " +missionQuizsCourse.get(i).getTypeName(),
-                        missionQuizsCourse.get(i).getRightAnswer() + "/"+missionQuizsCourse.get(i).getQuizArrayList().size(), missionQuizsCourse.get(i));
-                missionListFragment.adapter.notifyDataSetChanged();
-                //커스텀 토스트 메세지
-                Context context = getApplicationContext();
-                CharSequence txt = "미션 활성화!";
-                Typeface typeface = getResources().getFont(R.font.hoonwhitecatr);
-                int time = Toast.LENGTH_LONG;
-                Toast.makeText(context, txt, time).show();
-                Toast toast = Toast.makeText(context, txt, time);
-                LayoutInflater inflater = getLayoutInflater();
-                View view =
-                        inflater.inflate(R.layout.custom_toastview,
-                                (ViewGroup) findViewById(R.id.containers));
-                TextView txtView = view.findViewById(R.id.txtview);
-                txtView.setTypeface(typeface);
-                txtView.setText(txt);
-                toast.setGravity(Gravity.CENTER, 0, -75);
-                toast.setView(view);
-                toast.show();
-                //퀴즈 미션의 id와 건물(장소)의 id를 같도록 설정한다고 가정
-                //tag로 marker를 가져옴
-                //마커의 색 변화
-                UniversityTour tmptour = (UniversityTour) tmppoiItem.getUserObject();
-                if(tmptour.getLoctype() == 1){//식당
-                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapres);
-                }else if(tmptour.getLoctype() == 10){//매점
-                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapmar);
-                }else if(tmptour.getLoctype() == 100){//카페
-                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapcafe);
-                }else if(tmptour.getLoctype() == 1000){//기숙사
-                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapdor);
-                }else if(tmptour.getLoctype() == 11){//식당 + 매점
-                    tmppoiItem.setCustomImageResourceId(R.drawable.bmapdou);
-                }else{
-                    tmppoiItem.setCustomImageResourceId(R.drawable.bmap);
-                }
-                mMapView.addPOIItem(aa1);
-                final Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                vibrator.vibrate(1000);*/
             }
         }
-        //missionQuizsCourse
-        //미션이 활성화 될 건물이 있는지 확인
     }
 
     @Override
@@ -1022,8 +970,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 if(ansnum >= missionNum){
                     //투어종료버튼 활성화
                     finishActivated = 1;
-                    finishbutton.setBackgroundResource(R.drawable.ellipse2);
-                    finishbutton.setTextColor(R.color.colorPrimaryDark);
+                    Glide.with(this).load(R.drawable.tourclear).into(finishbutton);
                 }
                 //***마커의 색도 바뀜. (답이 모두 맞는 경우)
                 MapPOIItem aa = new MapPOIItem();

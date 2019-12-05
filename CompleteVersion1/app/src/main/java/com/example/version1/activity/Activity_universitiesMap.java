@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -76,14 +75,15 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private static final int COME_BACK_TO_MAIN = 1001;
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION};
 
+    private RelativeLayout rela;
+
     //for 검색기능
+    private MenuItem searchItem;
     private SlidingDrawer slidingDrawer;
     private ListView listview ;
     Queue<Universities> searchedUniv = new LinkedList<Universities>();
     sBtnAdapter adapter;
     private boolean cameback = false;
-    private String currentDo = null;
-    private SearchView searchView;
 
     //다른 액티비티에서 돌아왔을때 현재 상태 저장
     private MapPOIItem recent_location;
@@ -124,17 +124,19 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
 
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setMaxWidth(Integer.MAX_VALUE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            searchItem = menu.findItem(R.id.action_search);
+            SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+            searchView.setMaxWidth(Integer.MAX_VALUE);
 
-        searchView.setQueryHint("학교명 검색");
-        searchView.setOnQueryTextListener(queryTextListener);
-        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-        if(null!=searchManager){
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setQueryHint("학교명 검색");
+            searchView.setOnQueryTextListener(queryTextListener);
+            SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+            if(null!=searchManager){
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            }
+            searchView.setIconifiedByDefault(true);
         }
-        searchView.setIconifiedByDefault(true);
-
         return true;
     }
 
@@ -145,10 +147,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         public boolean onQueryTextSubmit(String query) {
             // TODO Auto-generated method stub
 
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
             createCustomMarkerSearched(mMapView, query);
-            slidingDrawer.close();
             return false;
         }
 
@@ -189,10 +188,13 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         Log.d("onStart", "시작");
         setContentView(R.layout.activity_universitiesmap);
         ArrayList<sBtnItem> list = new ArrayList<>();
+        getSupportActionBar().setTitle("     이 학교가 내 학교냐");
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.abback));
 
         mMapView = (MapView) findViewById(R.id.map_view);
         buttonschool = (Button) findViewById(R.id.buttonschool);
         buttonback = (Button) findViewById(R.id.buttonback);
+        rela = (RelativeLayout) findViewById(R.id.relativelayout);
         Button schoolClear = findViewById(R.id.schoolClear);
         TextView tvSchool = findViewById(R.id.tvSchool);
         frameSchool = findViewById(R.id.frameSchool);
@@ -235,7 +237,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
 
         if(cameback){
-            currentDo = null;
             moveToPOIItem(mMapView, recent_location);
             cameback = false;
         }
@@ -272,19 +273,71 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                     if (item.getUserObject().equals(((sBtnItem) listview.getAdapter().getItem(i)).getUniversities())) {
                         moveToPOIItem(mMapView, item);
 
-                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                         slidingDrawer.close();
                         return;
                     }
                 }
             }
         });
+
     }
+
+    //sharedreference를 이용하여 다시 구현하자.
+/*    @Override
+    protected void onRestart() {
+        super.onRestart();
+        ArrayList<sBtnItem> list = new ArrayList<>();
+        setContentView(R.layout.activity_universitiesmap);
+        mMapView = (MapView) findViewById(R.id.map_view);
+        //기본 환경 설정
+        mMapView.setMapViewEventListener(this);
+        mMapView.setPOIItemEventListener(this);
+        mMapView.setCurrentLocationEventListener(this);
+        // 중심점 변경 + 줌 레벨 변경
+        mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11, true);
+
+        mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
+        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+
+        buttonschool = (Button) findViewById(R.id.buttonschool);
+        buttonback = (Button) findViewById(R.id.buttonback);
+        rela = (RelativeLayout) findViewById(R.id.relativelayout);
+        slidingDrawer = (SlidingDrawer)findViewById(R.id.slidingdrawer);
+        listview = (ListView)findViewById(R.id.slistView);
+
+        buttonschool.setOnClickListener(buttonSchoolClickListener);
+        buttonback.setOnClickListener(buttonbackClickListener);
+
+        if (!checkLocationServicesStatus()) {
+
+            showDialogForLocationServiceSetting();
+        }else {
+
+            checkRunTimePermission();
+        }
+
+        sBtnItem item;
+
+        for(int i = 0; i < Universitiesarray.size(); i++){
+            //listview 아이템 생성
+            item = new sBtnItem();
+            Universities temp = Universitiesarray.get(i);
+            item.setUnivname(temp.get학교명());
+            item.setUnivnum(temp.get전화번호());
+            item.setUniversities(temp);
+            list.add(item);
+        }
+
+        // Adapter 생성
+        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list) ;
+        // 리스트뷰 참조 및 Adapter달기
+        listview.setAdapter(adapter);
+    }*/
 
     @Override
     public void onResume(){
         super.onResume();
+
 
     }
 
@@ -394,19 +447,19 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 //-------------------------------------------------------------------------
     public void moveToPOIItem(MapView mapView, final MapPOIItem mapPOIItem){
         Log.d("moveToPOIItem", "실행");
-        if(!mapView.getMapType().equals(MapView.MapType.Standard))
-            mapView.setMapType(MapView.MapType.Standard);
 
         String siDo;
         int zoomLevel;
 
         if (mapPOIItem.getUserObject().getClass().equals(DoAndSi.class)){ //선택된게 시도 poiItem
+            mapView.setMapType(MapView.MapType.Hybrid);
             Log.d(mapPOIItem.getItemName(), "시도 POIItemSelected: ");
             siDo = mapPOIItem.getItemName();
-            currentDo = siDo;
+            zoomLevel = 9;
         }
 
         else { //선택된게 학교 poiItem
+            mapView.setMapType(MapView.MapType.Standard);
             Log.d(mapPOIItem.getItemName(), "학교 POIItemSelected: ");
             siDo = ((Universities)mapPOIItem.getUserObject()).get시도();
             zoomLevel = 3;
@@ -423,13 +476,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 @Override
                 public void onCancel() {            }
             });
-
-            if(currentDo != null)
-                if(siDo.equals(currentDo)){
-                    return;
-                }
-
-            currentDo = siDo;
         }
 
         ArrayList<MapPOIItem> poiitems = new ArrayList<>();
@@ -494,7 +540,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             mMapView.removeAllPOIItems();
             mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
             currentPOIs = mapPOIItemsDoAndSi;
-            currentDo = null;
             mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11)), 200, new CancelableCallback() {
                 @Override
                 public void onFinish() {
