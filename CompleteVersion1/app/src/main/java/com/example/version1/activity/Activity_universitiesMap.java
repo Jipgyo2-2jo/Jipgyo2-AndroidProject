@@ -162,7 +162,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             slidingDrawer.open();
             ((sBtnAdapter)listview.getAdapter()).getFilter(1).filter(newText);
 
-            Log.d("QueryText Changed", newText);
             return false;
         }
     };
