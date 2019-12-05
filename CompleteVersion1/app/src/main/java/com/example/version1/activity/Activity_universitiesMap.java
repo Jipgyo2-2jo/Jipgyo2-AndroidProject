@@ -496,8 +496,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 }
             });
 
+            searchView.setQuery("", false);
             searchView.setIconified(true);
-
+            slidingDrawer.close();
             ((sBtnAdapter)listview.getAdapter()).clearFilter();
         }
     };
