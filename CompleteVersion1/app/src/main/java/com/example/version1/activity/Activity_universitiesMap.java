@@ -75,15 +75,13 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     private static final int COME_BACK_TO_MAIN = 1001;
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION};
 
-    private RelativeLayout rela;
-
     //for 검색기능
-    private MenuItem searchItem;
     private SlidingDrawer slidingDrawer;
     private ListView listview ;
     Queue<Universities> searchedUniv = new LinkedList<Universities>();
     sBtnAdapter adapter;
     private boolean cameback = false;
+    private String currentDo = null;
 
     //다른 액티비티에서 돌아왔을때 현재 상태 저장
     private MapPOIItem recent_location;
@@ -125,7 +123,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         inflater.inflate(R.menu.search_menu, menu);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            searchItem = menu.findItem(R.id.action_search);
             SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
             searchView.setMaxWidth(Integer.MAX_VALUE);
 
@@ -192,7 +189,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mMapView = (MapView) findViewById(R.id.map_view);
         buttonschool = (Button) findViewById(R.id.buttonschool);
         buttonback = (Button) findViewById(R.id.buttonback);
-        rela = (RelativeLayout) findViewById(R.id.relativelayout);
         Button schoolClear = findViewById(R.id.schoolClear);
         TextView tvSchool = findViewById(R.id.tvSchool);
         frameSchool = findViewById(R.id.frameSchool);
@@ -235,6 +231,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
 
         if(cameback){
+            currentDo = null;
             moveToPOIItem(mMapView, recent_location);
             cameback = false;
         }
@@ -277,65 +274,11 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 }
             }
         });
-
     }
-
-    //sharedreference를 이용하여 다시 구현하자.
-/*    @Override
-    protected void onRestart() {
-        super.onRestart();
-        ArrayList<sBtnItem> list = new ArrayList<>();
-        setContentView(R.layout.activity_universitiesmap);
-        mMapView = (MapView) findViewById(R.id.map_view);
-        //기본 환경 설정
-        mMapView.setMapViewEventListener(this);
-        mMapView.setPOIItemEventListener(this);
-        mMapView.setCurrentLocationEventListener(this);
-        // 중심점 변경 + 줌 레벨 변경
-        mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11, true);
-
-        mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
-        mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-
-        buttonschool = (Button) findViewById(R.id.buttonschool);
-        buttonback = (Button) findViewById(R.id.buttonback);
-        rela = (RelativeLayout) findViewById(R.id.relativelayout);
-        slidingDrawer = (SlidingDrawer)findViewById(R.id.slidingdrawer);
-        listview = (ListView)findViewById(R.id.slistView);
-
-        buttonschool.setOnClickListener(buttonSchoolClickListener);
-        buttonback.setOnClickListener(buttonbackClickListener);
-
-        if (!checkLocationServicesStatus()) {
-
-            showDialogForLocationServiceSetting();
-        }else {
-
-            checkRunTimePermission();
-        }
-
-        sBtnItem item;
-
-        for(int i = 0; i < Universitiesarray.size(); i++){
-            //listview 아이템 생성
-            item = new sBtnItem();
-            Universities temp = Universitiesarray.get(i);
-            item.setUnivname(temp.get학교명());
-            item.setUnivnum(temp.get전화번호());
-            item.setUniversities(temp);
-            list.add(item);
-        }
-
-        // Adapter 생성
-        adapter = new sBtnAdapter(this, R.layout.slistview_button_item, list) ;
-        // 리스트뷰 참조 및 Adapter달기
-        listview.setAdapter(adapter);
-    }*/
 
     @Override
     public void onResume(){
         super.onResume();
-
 
     }
 
@@ -453,7 +396,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             mapView.setMapType(MapView.MapType.Hybrid);
             Log.d(mapPOIItem.getItemName(), "시도 POIItemSelected: ");
             siDo = mapPOIItem.getItemName();
-            zoomLevel = 9;
+            currentDo = siDo;
         }
 
         else { //선택된게 학교 poiItem
@@ -474,6 +417,13 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 @Override
                 public void onCancel() {            }
             });
+
+            if(currentDo != null)
+                if(siDo.equals(currentDo)){
+                    return;
+                }
+
+            currentDo = siDo;
         }
 
         ArrayList<MapPOIItem> poiitems = new ArrayList<>();
@@ -538,6 +488,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             mMapView.removeAllPOIItems();
             mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
             currentPOIs = mapPOIItemsDoAndSi;
+            currentDo = null;
             mMapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(MapPoint.mapPointWithGeoCoord(35.570, 128.150), 11)), 200, new CancelableCallback() {
                 @Override
                 public void onFinish() {
