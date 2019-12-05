@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -159,6 +160,18 @@ public class Activity_basic_mission extends AppCompatActivity {
         editor.putInt("ansnumbers",ansnumbers1);
 
         editor.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("correctNum", correctNum);
+        intent.putExtra("missionQuiz", missionQuiz);
+        Log.d("112211", "onBackPressed:"+correctNum);
+        correctNum = 0;
+        setResult(100, intent);
+        finish();
+        //맞춘 정답 수를 넘기고 finish
     }
 }
 

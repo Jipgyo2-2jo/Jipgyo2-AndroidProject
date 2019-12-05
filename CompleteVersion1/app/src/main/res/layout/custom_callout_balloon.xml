@@ -22,7 +22,10 @@
             android:text="Custom Marker 11111111111111111111"
             android:textColor="#000000"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:paddingTop="7dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
 
         <TextView
             android:id="@+id/desc"
@@ -31,8 +34,9 @@
             android:paddingLeft="10sp"
             android:paddingRight="10sp"
             android:ellipsize="end"
-            android:maxLines="2"
-            android:text="custom marker desc.\n1232451241"
+            android:maxLines="4"
+            android:text="custom marker desc."
+            android:paddingBottom="20dp"
             android:textColor="#7E7E7E"
             android:textSize="14sp" />
     </LinearLayout>
