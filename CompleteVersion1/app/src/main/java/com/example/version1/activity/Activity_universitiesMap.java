@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -82,6 +83,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     sBtnAdapter adapter;
     private boolean cameback = false;
     private String currentDo = null;
+    private SearchView searchView;
 
     //다른 액티비티에서 돌아왔을때 현재 상태 저장
     private MapPOIItem recent_location;
@@ -122,18 +124,17 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-            searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
 
-            searchView.setQueryHint("학교명 검색");
-            searchView.setOnQueryTextListener(queryTextListener);
-            SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-            if(null!=searchManager){
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            }
-            searchView.setIconifiedByDefault(true);
+        searchView.setQueryHint("학교명 검색");
+        searchView.setOnQueryTextListener(queryTextListener);
+        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        if(null!=searchManager){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
+        searchView.setIconifiedByDefault(true);
+
         return true;
     }
 
@@ -144,7 +145,10 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         public boolean onQueryTextSubmit(String query) {
             // TODO Auto-generated method stub
 
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
             createCustomMarkerSearched(mMapView, query);
+            slidingDrawer.close();
             return false;
         }
 
@@ -268,6 +272,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                     if (item.getUserObject().equals(((sBtnItem) listview.getAdapter().getItem(i)).getUniversities())) {
                         moveToPOIItem(mMapView, item);
 
+                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                         slidingDrawer.close();
                         return;
                     }
