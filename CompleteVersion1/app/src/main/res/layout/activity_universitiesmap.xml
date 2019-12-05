@@ -14,17 +14,6 @@
 
     </net.daum.mf.map.api.MapView>
 
-    <Button
-        android:id="@+id/schoolClear"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/menu"
-        android:layout_marginStart="5dp"
-        android:layout_alignParentStart="true" />
-
     <FrameLayout
         android:layout_width="185dp"
         android:layout_height="match_parent"
@@ -35,7 +24,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="55dp"
+            android:paddingTop="10dp"
+            android:layout_marginLeft="10dp"
             android:text="클리어한 학교 리스트\n\n"
             android:textSize="15sp"
             android:fontFamily="@font/maplestorybold"
