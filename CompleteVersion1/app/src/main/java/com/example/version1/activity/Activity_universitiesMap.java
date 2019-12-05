@@ -394,19 +394,19 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 //-------------------------------------------------------------------------
     public void moveToPOIItem(MapView mapView, final MapPOIItem mapPOIItem){
         Log.d("moveToPOIItem", "실행");
+        if(!mapView.getMapType().equals(MapView.MapType.Standard))
+            mapView.setMapType(MapView.MapType.Standard);
 
         String siDo;
         int zoomLevel;
 
         if (mapPOIItem.getUserObject().getClass().equals(DoAndSi.class)){ //선택된게 시도 poiItem
-            mapView.setMapType(MapView.MapType.Hybrid);
             Log.d(mapPOIItem.getItemName(), "시도 POIItemSelected: ");
             siDo = mapPOIItem.getItemName();
             currentDo = siDo;
         }
 
         else { //선택된게 학교 poiItem
-            mapView.setMapType(MapView.MapType.Standard);
             Log.d(mapPOIItem.getItemName(), "학교 POIItemSelected: ");
             siDo = ((Universities)mapPOIItem.getUserObject()).get시도();
             zoomLevel = 3;
