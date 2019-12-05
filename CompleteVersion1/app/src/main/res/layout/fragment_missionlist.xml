@@ -11,8 +11,7 @@
         android:id="@+id/bulb"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_launcher_foreground"
-         />
+        android:src="@drawable/ic_launcher_foreground"/>
 
     <TextView
         android:id="@+id/missionType"
@@ -20,7 +19,7 @@
         android:layout_height="wrap_content"
         android:text="mission type"
         android:textColor="#666666"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/correctness"

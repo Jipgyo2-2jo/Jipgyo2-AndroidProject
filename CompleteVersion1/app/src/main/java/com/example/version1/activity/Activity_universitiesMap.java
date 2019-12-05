@@ -122,7 +122,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         inflater.inflate(R.menu.search_menu, menu);
 
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setMaxWidth(1250);
+        searchView.setMaxWidth(1000);
         searchView.setQueryHint("학교명 검색");
         searchView.setOnQueryTextListener(queryTextListener);
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
@@ -175,7 +175,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         //MainActivity에서 시도정보와 학교정보 받아옴
         doAndSiarray = (ArrayList<DoAndSi>) intent.getSerializableExtra("doAndSiarray");
         Universitiesarray = (ArrayList<Universities>) intent.getSerializableExtra("Universitiesarray");
-
+        
     }
 
     @Override
