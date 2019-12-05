@@ -65,11 +65,13 @@ import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Activity_eachUniversityMap extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.POIItemEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.MapViewEventListener {
 
     private static final String LOG_TAG = "Act_eachUniversitiesMap";
 
+    private Long ran;
     private String univName;
     private ImageButton finishbutton;
     private Button handleButton;
@@ -501,6 +503,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         missionFrameLayout.setVisibility(View.VISIBLE);
 
                         playmode = 1;
+                        ran = generateRandom(10);
                     }
                 }
             });
@@ -537,7 +540,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_tour_finish.class);
                 intent.putExtra("univName", univName);
                 intent.putExtra("missionNum", missionNum);
+                intent.putExtra("randnum", ran);
                 startActivityForResult(intent, 1);
+                Glide.with(getApplicationContext()).load(R.drawable.touring).override(110,110).into(finishbutton);
             }
             //미션을 모두 완료하지 못한 경우
             else{
@@ -1022,5 +1027,15 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    public static long generateRandom(int length) {
+        Random random = new Random();
+        char[] digits = new char[length];
+        digits[0] = (char) (random.nextInt(9) + '1');
+        for (int i = 1; i < length; i++) {
+            digits[i] = (char) (random.nextInt(10) + '0');
+        }
+        return Long.parseLong(new String(digits));
     }
 }
