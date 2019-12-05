@@ -358,9 +358,11 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         Log.d("Tour", "Restarted");
 
-        Intent serviceIntent = new Intent(this, tourGPSService.class);
-        stopService(serviceIntent);
-        deleteNotificationChannel();
+        if(playmode == 1) {
+            Intent serviceIntent = new Intent(this, tourGPSService.class);
+            stopService(serviceIntent);
+            deleteNotificationChannel();
+        }
     }
 
     //드로어의 미션을 선택하면 화면이 이동한다.
@@ -552,6 +554,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                playmode = 0;
                 finish(); // 현재 액티비티를 종료한다. (MainActivity에서 작동하기 때문에 애플리케이션을 종료한다.)
             }
         });
@@ -572,10 +575,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         if(playmode == 1) {
             //Service Unibind
-            unbindService(conn);
-
             Intent serviceIntent = new Intent(this, tourGPSService.class);
             stopService(serviceIntent);
+            unbindService(conn);
             deleteNotificationChannel();
         }
 

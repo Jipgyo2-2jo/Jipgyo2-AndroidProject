@@ -125,7 +125,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         inflater.inflate(R.menu.search_menu, menu);
 
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setMaxWidth(1250);
 
         searchView.setQueryHint("학교명 검색");
         searchView.setOnQueryTextListener(queryTextListener);
@@ -157,7 +157,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         public boolean onQueryTextChange(String newText) {
             // TODO Auto-generated method stub
             slidingDrawer.open();
-            ((sBtnAdapter)listview.getAdapter()).getFilter().filter(newText);
+            ((sBtnAdapter)listview.getAdapter()).getFilter(1).filter(newText);
 
             return false;
         }
@@ -457,6 +457,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     @Override//전국 지도 화면에서 예를 들어 경기도를 누르면 경기도를 카메라 확대를 하고 다른 마커들도 보이도록 한다.
     public void onPOIItemSelected(MapView mapView, final MapPOIItem mapPOIItem) {
         recent_location = mapPOIItem;
+        if(mapPOIItem.getUserObject().getClass().equals(DoAndSi.class))
+            ((sBtnAdapter)listview.getAdapter()).getFilter(2).filter(mapPOIItem.getItemName());
         moveToPOIItem(mapView, mapPOIItem);
     }
 
