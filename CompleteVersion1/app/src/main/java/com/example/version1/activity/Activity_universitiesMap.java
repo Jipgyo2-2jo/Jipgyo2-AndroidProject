@@ -317,6 +317,14 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
     @Override
     public void onBackPressed() {
+        if(slidingDrawer.isOpened()){
+            slidingDrawer.animateClose();
+            return;
+        }
+        else if (!searchView.isIconified()){
+            searchView.setIconified(true);
+            return;
+        }
         // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setMessage("종료하시겠습니까?");
@@ -431,6 +439,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             Log.d(mapPOIItem.getItemName(), "시도 POIItemSelected: ");
             siDo = mapPOIItem.getItemName();
             currentDo = siDo;
+            slidingDrawer.open();
         }
 
         else { //선택된게 학교 poiItem

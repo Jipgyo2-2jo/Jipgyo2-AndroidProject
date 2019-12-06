@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:orientation="vertical"
-    android:background="@drawable/misback"
+    android:background="@drawable/background"
     >
 
     <LinearLayout
@@ -20,9 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
             android:text="XXXX 미션"
-            android:fontFamily="@font/hoonwhitecatr"
-            android:textColor="#1e90ff"
+            android:fontFamily="@font/maplestorybold"
+            android:textColor="#ffffff"
             android:textSize="30dp"
             android:textStyle="bold" />
 
@@ -55,6 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <Button

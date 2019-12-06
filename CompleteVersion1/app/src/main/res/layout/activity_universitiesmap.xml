@@ -41,17 +41,20 @@
             android:id="@+id/buttonback"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="60dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="25dp"
             android:background="@drawable/minus"
             android:visibility="invisible" />
     </RelativeLayout>
+
     <SlidingDrawer
         android:id="@+id/slidingdrawer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="350dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
         android:content="@+id/content"
         android:handle="@+id/handle"
         android:orientation="vertical">
