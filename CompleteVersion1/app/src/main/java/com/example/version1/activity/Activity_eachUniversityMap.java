@@ -487,7 +487,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         handleButton.setText(tmpstr);
                         //커스텀 토스트 메세지
                         Context context = getApplicationContext();
-                        Typeface typeface = getResources().getFont(R.font.hoonwhitecatr);
+                        Typeface typeface = getResources().getFont(R.font.maplestorybold);
                         int time = Toast.LENGTH_LONG;
                         LayoutInflater inflater = getLayoutInflater();
                         View view = inflater.inflate(R.layout.custom_toastview,
@@ -716,7 +716,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 //커스텀 토스트 메세지
                 Context context = getApplicationContext();
                 CharSequence txt = "미션 활성화!";
-                Typeface typeface = getResources().getFont(R.font.hoonwhitecatr);
+                Typeface typeface = getResources().getFont(R.font.maplestorybold);
                 int time = Toast.LENGTH_LONG;
                 Toast.makeText(context, txt, time).show();
                 Toast toast = Toast.makeText(context, txt, time);
