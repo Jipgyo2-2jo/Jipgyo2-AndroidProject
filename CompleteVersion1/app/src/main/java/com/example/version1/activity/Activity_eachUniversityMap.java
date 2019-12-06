@@ -73,7 +73,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     private Long ran;
     private String univName;
-    private ImageButton finishbutton;
+    private Button finishbutton;
+    private Button changeMap;
     private Button handleButton;
     private String tmpstr;
     private String mi = "미션 목록";
@@ -240,25 +241,20 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         courseFrameLayout = (FrameLayout) findViewById(R.id.courseFrameLayout);
         missionFrameLayout = (FrameLayout) findViewById(R.id.missionFrameLayout);
         tv_moving = findViewById(R.id.tv_moving);
-        RadioGroup mapradiogroup = findViewById(R.id.mapradiogroup);
+        changeMap = findViewById(R.id.changeMap);
 
-        Glide.with(this).load(R.drawable.touring).override(110,110).into(finishbutton);
-        mapradiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        changeMap.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.mapnormal:
-                        mMapView.setMapType(MapView.MapType.Standard);
-                        break;
-                    case R.id.maphybrid:
-                        mMapView.setMapType(MapView.MapType.Hybrid);
-                        break;
-                    case R.id.mapsatellite:
-                        mMapView.setMapType(MapView.MapType.Satellite);
-                        break;
-                }
+            public void onClick(View view) {
+                if(mMapView.getMapType().equals(MapView.MapType.Standard))
+                    mMapView.setMapType(MapView.MapType.Hybrid);
+                else if(mMapView.getMapType().equals(MapView.MapType.Hybrid))
+                    mMapView.setMapType(MapView.MapType.Satellite);
+                else
+                    mMapView.setMapType(MapView.MapType.Standard);
             }
         });
+
 
         //어댑터를 이용해 코스 리스트 생성
         FragmentManager manager = getSupportFragmentManager();
@@ -542,7 +538,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 intent.putExtra("missionNum", missionNum);
                 intent.putExtra("randnum", ran);
                 startActivityForResult(intent, 1);
-                Glide.with(getApplicationContext()).load(R.drawable.touring).override(110,110).into(finishbutton);
+//                Glide.with(getApplicationContext()).load(R.drawable.touring).override(110,110).into(finishbutton);
             }
             //미션을 모두 완료하지 못한 경우
             else{
@@ -708,7 +704,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             gl.setLatitude(missionQuizsCourse.get(i).getLatitude());
             gl.setLongitude(missionQuizsCourse.get(i).getLongitude());
             //10m보다 가까워질 경우 미션 활성화
-            if(cl.distanceTo(gl) < 10 && missionQuizsCourse.get(i).getIsActivated() == 0){
+            if(cl.distanceTo(gl) < 40 && missionQuizsCourse.get(i).getIsActivated() == 0){
                 Log.d("Activity", "미션 찾음");
                 missionQuizsCourse.get(i).setIsActivated(1);
                 onMissionFind(missionQuizsCourse.get(i));
@@ -718,7 +714,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 CharSequence txt = "미션 활성화!";
                 Typeface typeface = getResources().getFont(R.font.hoonwhitecatr);
                 int time = Toast.LENGTH_LONG;
-                Toast.makeText(context, txt, time).show();
+//                Toast.makeText(context, txt, time).show();
                 Toast toast = Toast.makeText(context, txt, time);
                 LayoutInflater inflater = getLayoutInflater();
                 View view = inflater.inflate(R.layout.custom_toastview, (ViewGroup) findViewById(R.id.containers));
@@ -982,7 +978,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 if(ansnum >= missionNum){
                     //투어종료버튼 활성화
                     finishActivated = 1;
-                    Glide.with(this).load(R.drawable.tourclear).into(finishbutton);
+//                    Glide.with(this).load(R.drawable.tourclear).into(finishbutton);
                 }
                 //***마커의 색도 바뀜. (답이 모두 맞는 경우)
                 MapPOIItem aa = new MapPOIItem();
