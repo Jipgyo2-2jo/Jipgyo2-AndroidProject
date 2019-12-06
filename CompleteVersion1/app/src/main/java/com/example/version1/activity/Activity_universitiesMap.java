@@ -66,7 +66,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
     private MapView mMapView;
     private MapPOIItem mCustomMarker;
-    private Button buttonschool;
     private Button buttonback;
     Set<String> schoolClearSet;
     private FrameLayout frameSchool;
@@ -97,7 +96,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
 
         @Override//디폴트 값
-        public View getCalloutBalloon(MapPOIItem poiItem) {
+        public View getCalloutBalloon(final MapPOIItem poiItem) {
             mCalloutBalloon.findViewById(R.id.ballonlayout).setBackgroundResource(R.drawable.ballon);
             if(poiItem.getUserObject().getClass().equals(DoAndSi.class))
                 return null;
@@ -222,11 +221,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         getSupportActionBar().setTitle("이 학교가 내 학교냐");
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4f90c4")));
         mMapView = (MapView) findViewById(R.id.map_view);
-        buttonschool = (Button) findViewById(R.id.buttonschool);
         buttonback = (Button) findViewById(R.id.buttonback);
         TextView tvSchool = findViewById(R.id.tvSchool);
         frameSchool = findViewById(R.id.frameSchool);
-        buttonschool.setOnClickListener(buttonSchoolClickListener);
         buttonback.setOnClickListener(buttonbackClickListener);
 
         schoolClearSet = new HashSet<>();
@@ -442,7 +439,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             zoomLevel = 3;
 
             recent_location = mapPOIItem;
-            buttonschool.setVisibility(View.VISIBLE);
 
             //카메라 확대
             mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), zoomLevel)), 200, new CancelableCallback() {
@@ -495,19 +491,9 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
     }
 
-    Button.OnClickListener buttonSchoolClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent intent=new Intent(Activity_universitiesMap.this, Activity_univ_introduction.class);
-            intent.putExtra("univName", recent_location.getItemName());
-            startActivityForResult(intent, COME_BACK_TO_MAIN);
-            overridePendingTransition(R.anim.anim_slide_from_right, R.anim.anim_slide_to_left);
-        }
-    };
-
     Button.OnClickListener buttonbackClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             buttonback.setVisibility(View.INVISIBLE);
-            buttonschool.setVisibility(View.INVISIBLE);
             mMapView.setMapType(MapView.MapType.Standard);
             mMapView.removeAllPOIItems();
             mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
@@ -531,8 +517,12 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
-        Log.d("CalloutBalloons", "wrong touched");
+        Log.d("Balloon Clicked", "이동");
 
+        Intent intent=new Intent(Activity_universitiesMap.this, Activity_univ_introduction.class);
+        intent.putExtra("univName", mapPOIItem.getItemName());
+        startActivityForResult(intent, COME_BACK_TO_MAIN);
+        overridePendingTransition(R.anim.anim_slide_from_right, R.anim.anim_slide_to_left);
     }
 
     @Override

@@ -180,7 +180,7 @@ public class tourGPSService extends Service {
         for (MissionQuiz point : missionQuizs) {
             gl.setLatitude(point.getLatitude());
             gl.setLongitude(point.getLongitude());
-            if (location.distanceTo(gl) < 10 && point.getIsActivated() == 0){
+            if (location.distanceTo(gl) < 40 && point.getIsActivated() == 0){
                 Log.d("Service", "Found Mission");
                 point.setIsActivated(1);
                 foundQuizs.add(point);

@@ -1,11 +1,10 @@
 package com.example.version1.domain;
 
 public class UniversityIntroduction {
-
-    String univ_name;
-    String ideology;
-    String date;
-    String explain;
+    private String univ_name;
+    private String ideology;
+    private String date;
+    private String explain;
 
     public String getUniv_name() {
         return univ_name;
