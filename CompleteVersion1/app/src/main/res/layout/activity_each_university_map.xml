@@ -4,6 +4,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/relativelayout"
+    android:fontFamily="@font/maplestorybold"
     android:layout_weight="6">
 
     <net.daum.mf.map.api.MapView
