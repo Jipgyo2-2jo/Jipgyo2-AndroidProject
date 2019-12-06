@@ -3,6 +3,8 @@ package com.example.version1.domain;
 public class UniversityIntroduction {
 
     String univ_name;
+    String ideology;
+    String date;
     String explain;
 
     public String getUniv_name() {
@@ -11,6 +13,22 @@ public class UniversityIntroduction {
 
     public void setUniv_name(String univ_name) {
         this.univ_name = univ_name;
+    }
+
+    public String getIdeology() {
+        return ideology;
+    }
+
+    public void setIdeology(String ideology) {
+        this.ideology = ideology;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getExplain() {

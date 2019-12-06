@@ -603,6 +603,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         //구조물 위치
         mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(universityTour.getLatitude(), universityTour.getLongitude()));
         mCustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+        mCustomMarker.isCustomImageAutoscale();
         if(universityTour.getLoctype() == 1){//식당
             mCustomMarker.setCustomImageResourceId(R.drawable.xmapres);//이미지(png파일로 하자)
         }else if(universityTour.getLoctype() == 10){//매점
@@ -610,7 +611,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         }else if(universityTour.getLoctype() == 100){//카페
             mCustomMarker.setCustomImageResourceId(R.drawable.xmapcafe);//이미지(png파일로 하자)
         }else if(universityTour.getLoctype() == 1000){//기숙사
-            mCustomMarker.setCustomImageResourceId(R.drawable.xmapdor);//이미지(png파일로 하자)
+            mCustomMarker.setCustomImageResourceId(R.drawable.dor);//이미지(png파일로 하자)
         }else if(universityTour.getLoctype() == 11){//식당 + 매점
             mCustomMarker.setCustomImageResourceId(R.drawable.xmapdou);//이미지(png파일로 하자)
         }else{
@@ -687,7 +688,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         }else if(tmptour.getLoctype() == 100){//카페
             tmppoiItem.setCustomImageResourceId(R.drawable.bmapcafe);
         }else if(tmptour.getLoctype() == 1000){//기숙사
-            tmppoiItem.setCustomImageResourceId(R.drawable.bmapdor);
+            tmppoiItem.setCustomImageResourceId(R.drawable.dor);
         }else if(tmptour.getLoctype() == 11){//식당 + 매점
             tmppoiItem.setCustomImageResourceId(R.drawable.bmapdou);
         }else{
@@ -998,7 +999,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 }else if(tmptour.getLoctype() == 100){//카페
                     aa1.setCustomImageResourceId(R.drawable.gmapcafe);//이미지(png파일로 하자)
                 }else if(tmptour.getLoctype() == 1000){//기숙사
-                    aa1.setCustomImageResourceId(R.drawable.gmapdor);//이미지(png파일로 하자)
+                    aa1.setCustomImageResourceId(R.drawable.dor);//이미지(png파일로 하자)
                 }else if(tmptour.getLoctype() == 11){//식당 + 매점
                     aa1.setCustomImageResourceId(R.drawable.gmapdou);//이미지(png파일로 하자)
                 }else{
