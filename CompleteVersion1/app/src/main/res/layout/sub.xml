@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/colormissionQ">
+            android:background="@drawable/round_corner">
 
             <TextView
                 android:layout_width="345dp"
@@ -23,8 +23,7 @@
                 android:maxLines = "2"
                 android:text="10000000000000000000123456789123456789123456789"
                 android:textSize="20dp"
-                android:paddingBottom="8dp"
-                android:fontFamily="@font/ddobak"/>
+                android:paddingBottom="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -34,8 +33,7 @@
                 android:maxLines = "2"
                 android:text="정답!"
                 android:textSize="20dp"
-                android:textStyle="bold"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -43,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/radiogroup"
-            android:background="@color/colormissionA">
+            android:background="@drawable/round_corner">
 
         </RadioGroup>
 

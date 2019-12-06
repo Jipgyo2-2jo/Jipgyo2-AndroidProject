@@ -49,14 +49,15 @@ public class Activity_basic_mission extends AppCompatActivity {
         ansArray = new ArrayList<>();
         lloutArray = new ArrayList<>();
         //미션을 유동적으로 넣어준다.
+
         for(int i = 0; i < missionQuiz.getQuizArrayList().size(); i++) {
             Sub n_layout = new Sub(getApplicationContext());
             LinearLayout con = (LinearLayout) findViewById(R.id.con);
             TextView ques = n_layout.findViewById(R.id.ques);
             LinearLayout llout = n_layout.findViewById(R.id.anslayout);
-            ques.setTextColor(Color.WHITE);
+            ques.setTextColor(Color.rgb(205,133,63));
             TextView ans = n_layout.findViewById(R.id.ans);
-            ans.setTextColor(Color.WHITE);
+            ans.setTextColor(Color.rgb(205,133,63));
             ans.setId(i);
             ansArray.add(ans);
             lloutArray.add(llout);
@@ -66,7 +67,7 @@ public class Activity_basic_mission extends AppCompatActivity {
             for (int j = 0; j < missionQuiz.getQuizArrayList().get(i).getAnswers().size(); j++) {
                 RadioButton answertv = new RadioButton(this);
                 answertv.setText(missionQuiz.getQuizArrayList().get(i).getAnswers().get(j));
-                answertv.setTextColor(Color.WHITE);
+                answertv.setTextColor(Color.rgb(205,133,63));
                 answertv.setId(j+1);
                 answertv.setChecked(false);
                 radioGroup.addView(answertv);
