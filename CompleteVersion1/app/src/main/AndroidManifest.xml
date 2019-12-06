@@ -26,36 +26,44 @@
         <activity
             android:name=".activity.Activity_tour_finish"
             android:label="@string/title_activity_tour_finish"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.Activity_photo_mission"
             android:label="@string/title_activity_photo_mission"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".activity.Activity_basic_mission"
             android:label="@string/title_activity_basic_mission"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".activity.Activity_loc_information"
             android:label="@string/title_activity_loc_informaion"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".activity.Activity_univ_introduction"
             android:label="@string/title_activity_univ_introduction"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".activity.Activity_eachUniversityMap"
             android:label="@string/title_activity_each_university_map"
             android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".activity.Activity_choose_location"
             android:label="@string/title_activity_choose_location"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".activity.Activity_universitiesMap"
             android:label="Activity_universitiesMap"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".activity.Activity_loading"
             android:screenOrientation="portrait"
@@ -66,7 +74,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"  />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

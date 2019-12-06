@@ -626,7 +626,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         mapPointGeo = currentLocation.getMapPointGeoCoord();
         Log.d("onCurrentLocationUpdate", ""+mapPointGeo.latitude +"///"+mapPointGeo.longitude);
-        //gps와 건물의 거리가 (40m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
+        //gps와 건물의 거리가 (10m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
         if(playmode == 1){
             activateMission(mapPointGeo);
             totalMoveDistance(mapPointGeo);
@@ -706,8 +706,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         for(int i = 0; i < missionQuizsCourse.size(); i++){
             gl.setLatitude(missionQuizsCourse.get(i).getLatitude());
             gl.setLongitude(missionQuizsCourse.get(i).getLongitude());
-            //40m보다 가까워질 경우 미션 활성화
-            if(cl.distanceTo(gl) < 40 && missionQuizsCourse.get(i).getIsActivated() == 0){
+            //10m보다 가까워질 경우 미션 활성화
+            if(cl.distanceTo(gl) < 10 && missionQuizsCourse.get(i).getIsActivated() == 0){
                 Log.d("Activity", "미션 찾음");
                 missionQuizsCourse.get(i).setIsActivated(1);
                 onMissionFind(missionQuizsCourse.get(i));
