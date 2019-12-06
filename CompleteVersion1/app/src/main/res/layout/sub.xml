@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/round_corner">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,38 +11,43 @@
         android:orientation="vertical"
         android:id="@+id/anslayout">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/round_corner">
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="345dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/ques"
-                android:maxLines = "2"
+                android:layout_width="326dp"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:paddingBottom="8dp"
                 android:text="10000000000000000000123456789123456789123456789"
-                android:textSize="20dp"
-                android:paddingBottom="8dp"/>
+                android:textSize="20dp" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:id="@+id/ans"
-                android:maxLines = "2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@+id/ques"
+                android:gravity="center"
+                android:maxLines="2"
                 android:text="정답!"
                 android:textSize="20dp"
                 android:visibility="invisible" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/radiogroup"
-            android:background="@drawable/round_corner">
+            android:id="@+id/radiogroup">
 
         </RadioGroup>
 
