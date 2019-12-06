@@ -51,8 +51,10 @@ public class UniversityIntroductionDB {
 
                 UniversityIntroduction universityIntroduction = new UniversityIntroduction();
 
-                universityIntroduction.setUniv_name(Object.getString("ID"));
-                universityIntroduction.setExplain(Object.getString("ex2"));
+                universityIntroduction.setUniv_name(Object.getString("name"));
+                universityIntroduction.setIdeology(Object.getString("이념"));
+                universityIntroduction.setDate(Object.getString("년도"));
+                universityIntroduction.setExplain(Object.getString("설명"));
 
                 universityIntroductionarray.add(universityIntroduction);
             }

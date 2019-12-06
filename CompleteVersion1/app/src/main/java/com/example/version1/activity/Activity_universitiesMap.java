@@ -220,7 +220,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         setContentView(R.layout.activity_universitiesmap);
         ArrayList<sBtnItem> list = new ArrayList<>();
         getSupportActionBar().setTitle("이 학교가 내 학교냐");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4f90c4")));
         mMapView = (MapView) findViewById(R.id.map_view);
         buttonschool = (Button) findViewById(R.id.buttonschool);
         buttonback = (Button) findViewById(R.id.buttonback);
@@ -242,7 +242,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         }
 
         //기본 환경 설정
-        mMapView.setMapType(MapView.MapType.Satellite);
+        mMapView.setMapType(MapView.MapType.Standard);
         mMapView.setMapViewEventListener(this);
         mMapView.setPOIItemEventListener(this);
         mMapView.setCurrentLocationEventListener(this);
@@ -500,6 +500,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             Intent intent=new Intent(Activity_universitiesMap.this, Activity_univ_introduction.class);
             intent.putExtra("univName", recent_location.getItemName());
             startActivityForResult(intent, COME_BACK_TO_MAIN);
+            overridePendingTransition(R.anim.anim_slide_from_right, R.anim.anim_slide_to_left);
         }
     };
 
@@ -507,7 +508,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         public void onClick(View v) {
             buttonback.setVisibility(View.INVISIBLE);
             buttonschool.setVisibility(View.INVISIBLE);
-            mMapView.setMapType(MapView.MapType.Satellite);
+            mMapView.setMapType(MapView.MapType.Standard);
             mMapView.removeAllPOIItems();
             mMapView.addPOIItems(mapPOIItemsDoAndSi.toArray(new MapPOIItem[mapPOIItemsDoAndSi.size()]));
             currentPOIs = mapPOIItemsDoAndSi;
