@@ -378,7 +378,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     //코스가 선택되면 경로를 지도상에 그려줌
     public void onCourseSelected(String courseName, int position) {
         mMapView.removeAllPolylines();//나머지 polyline다 지워주고
-        Toast.makeText(this, "선택: " + position, Toast.LENGTH_SHORT).show();
         mMapView.addPolyline(polylineArrayList.get(position));
         universityTourPolyline = universityTourPolylinearray.get(position);
         missionNum = universityTourPolyline.getMissionNum();
@@ -828,7 +827,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     }
 
     private void onFinishReverseGeoCoding(String result) {
-//        Toast.makeText(LocationDemoActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
     }
 
     //ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.
@@ -968,7 +966,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             case 100:
                 int a = data.getIntExtra("correctNum", 0);
                 MissionQuiz m = (MissionQuiz) data.getSerializableExtra("missionQuiz");
-                Toast.makeText(this, "맞춘 정답 수: " + a, Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "맞춘 정답 수: " + a, Toast.LENGTH_LONG).show();
                 missionListFragment.modifyMission(a, m);
                 int ansnum = missionListFragment.getanswers();
                 missionListFragment.adapter.notifyDataSetChanged();
