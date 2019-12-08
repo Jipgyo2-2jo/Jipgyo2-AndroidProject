@@ -360,7 +360,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 
         //없는경우
         if(count==0){
-            Toast.makeText(getApplicationContext(), "Not Found: " + name, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "검색결과가 없습니다: " + name, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -453,7 +453,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
             mapView.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(mapPOIItem.getMapPoint(), zoomLevel)), 200, new CancelableCallback() {
                 @Override
                 public void onFinish() {
-                    Toast.makeText(getBaseContext(), "Animation to " + mapPOIItem.getItemName() + " complete", Toast.LENGTH_SHORT).show();
                 }
                 @Override
                 public void onCancel() {            }
@@ -596,7 +595,6 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
     }
 
     private void onFinishReverseGeoCoding(String result) {
-//        Toast.makeText(LocationDemoActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
     }
 
 

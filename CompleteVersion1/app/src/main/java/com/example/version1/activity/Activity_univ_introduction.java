@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ public class Activity_univ_introduction extends AppCompatActivity {
     ImageView iv;
     Toolbar toolbar;
     ArrayList<UniversityIntroduction> universityIntroductionArray;
+    private long mLastClickTime = 0;
 
     @TargetApi(Build.VERSION_CODES.O)
     @Override
@@ -77,6 +79,12 @@ public class Activity_univ_introduction extends AppCompatActivity {
 
     Button.OnClickListener ClickListener1 = new View.OnClickListener() {
         public void onClick(View v) {
+            //중복클릭 방지
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 3000){
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+
             finish();
             overridePendingTransition(R.anim.anim_slide_from_left, R.anim.anim_slide_to_right);
         }
@@ -84,6 +92,12 @@ public class Activity_univ_introduction extends AppCompatActivity {
 
     Button.OnClickListener ClickListener2 = new View.OnClickListener() {
         public void onClick(View v) {
+            //중복클릭 방지
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 3000){
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+
             Intent intent = new Intent(Activity_univ_introduction.this, Activity_eachUniversityMap.class);
             //대학교 이름도 넘겨줌
             intent.putExtra("univName", univName);

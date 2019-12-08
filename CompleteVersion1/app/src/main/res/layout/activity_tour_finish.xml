@@ -6,21 +6,25 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:orientation="vertical"
-    android:background="@drawable/jonback">
+    android:background="@drawable/background">
 
     <Button
         android:id="@+id/button1"
-        android:layout_width="166dp"
-        android:layout_height="76dp"
-        android:layout_marginLeft="210dp"
-        android:layout_marginTop="560dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="555dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/jonmap" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="180dp"
-        android:layout_height="90dp"
-        android:layout_marginLeft="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="555dp"
         android:background="@drawable/jonmain" />
 
@@ -28,8 +32,13 @@
         android:id="@+id/button3"
         android:layout_width="346dp"
         android:layout_height="76dp"
-        android:layout_marginLeft="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="640dp"
+        android:layout_marginRight="25dp"
         android:background="@drawable/jonjon" />
 
     <TextView
@@ -40,7 +49,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:textColor="#1e90ff"
+        android:textColor="#ffffff"
         android:textStyle="bold"
         android:text="미션 0개 Clear!"
         android:textSize="40dp" />
@@ -54,7 +63,7 @@
         android:layout_marginTop="350dp"
         android:gravity="center"
         android:text="고유번호를 율곡관 입학처에 제출하시면 경품을 드립니다."
-        android:textColor="#b0c4de"
+        android:textColor="#000000"
         android:textSize="30dp"
         android:textStyle="bold" />
 
@@ -67,7 +76,7 @@
         android:layout_marginTop="480dp"
         android:gravity="center"
         android:text="고유 번호"
-        android:textColor="#b0c4de"
+        android:textColor="#8b8687"
         android:textSize="30dp"
         android:textStyle="bold" />
 

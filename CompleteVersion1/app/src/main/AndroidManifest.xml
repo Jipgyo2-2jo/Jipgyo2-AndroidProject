@@ -55,11 +55,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"  />
         <activity
-            android:name=".activity.Activity_choose_location"
-            android:label="@string/title_activity_choose_location"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"  />
-        <activity
             android:name=".activity.Activity_universitiesMap"
             android:label="Activity_universitiesMap"
             android:theme="@style/AppTheme"

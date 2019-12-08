@@ -3,7 +3,6 @@ package com.example.version1.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         UniversitiesAccessDB universitiesAccessDB = new UniversitiesAccessDB();
         Universitiesarray = universitiesAccessDB.getUniversitiesFromDB();
-
-        Toast.makeText(getApplicationContext(), "Mainactivity 실행", Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(this, Activity_universitiesMap.class);
 

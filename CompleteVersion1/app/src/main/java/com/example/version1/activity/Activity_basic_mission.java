@@ -85,7 +85,7 @@ public class Activity_basic_mission extends AppCompatActivity {
         SharedPreferences sf = getSharedPreferences(missionName+"File",MODE_PRIVATE);
         ansnumbers = sf.getInt("ansnumbers", 0);
         ansnumbers1 = ansnumbers;
-        Toast.makeText(this, "정답 배열: "+ansnumbers, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "정답 배열: "+ansnumbers, Toast.LENGTH_SHORT).show();
         //정답 여부를 표시한다.
         for (int i = 0; i < ansArray.size(); i++) {
             rgArray.get(i).check(ansnumbers % 10);
