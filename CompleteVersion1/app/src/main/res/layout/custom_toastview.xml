@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="투어를 시작합니다"
-            android:textColor="#ffffff"
+            android:textColor="#4aa8d8"
             android:textSize="30sp"
             android:textStyle="bold" />
 
