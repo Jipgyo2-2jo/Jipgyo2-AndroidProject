@@ -42,10 +42,10 @@
             android:textSize="14sp" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="23.17dp"
             android:layout_gravity="center_horizontal|top"
-            android:text="학교 가기!"
+            android:background="@drawable/go"
             android:textSize="14sp"
             android:paddingBottom="7dp" />
 
@@ -54,5 +54,4 @@
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
-
 </LinearLayout>
