@@ -54,12 +54,13 @@ public class Activity_basic_mission extends AppCompatActivity {
             Sub n_layout = new Sub(getApplicationContext());
             LinearLayout con = (LinearLayout) findViewById(R.id.con);
             TextView ques = n_layout.findViewById(R.id.ques);
-            LinearLayout llout = n_layout.findViewById(R.id.anslayout);
+            LinearLayout llout = n_layout.findViewById(R.id.anslayout);/*
             ques.setTextColor(Color.rgb(205,133,63));
             TextView ans = n_layout.findViewById(R.id.ans);
             ans.setTextColor(Color.rgb(205,133,63));
             ans.setId(i);
-            ansArray.add(ans);
+            ansArray.add(ans);*/
+            con.setDividerPadding(1000);
             lloutArray.add(llout);
             RadioGroup radioGroup = n_layout.findViewById(R.id.radiogroup);
             ques.setText(missionQuiz.getQuizArrayList().get(i).getQuestion());
@@ -67,7 +68,7 @@ public class Activity_basic_mission extends AppCompatActivity {
             for (int j = 0; j < missionQuiz.getQuizArrayList().get(i).getAnswers().size(); j++) {
                 RadioButton answertv = new RadioButton(this);
                 answertv.setText(missionQuiz.getQuizArrayList().get(i).getAnswers().get(j));
-                answertv.setTextColor(Color.rgb(205,133,63));
+                answertv.setTextColor(Color.rgb(139,134,135));
                 answertv.setId(j+1);
                 answertv.setChecked(false);
                 radioGroup.addView(answertv);

@@ -429,8 +429,7 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
 //-------------------------------------------------------------------------
     public void moveToPOIItem(MapView mapView, final MapPOIItem mapPOIItem){
         Log.d("moveToPOIItem", "실행");
-//        if(!mapView.getMapType().equals(MapView.MapType.Standard))
-            mapView.setMapType(MapView.MapType.Standard);
+        mapView.setMapType(MapView.MapType.Standard);
 
         String siDo;
         int zoomLevel;
@@ -455,11 +454,14 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
                 public void onFinish() {
                 }
                 @Override
-                public void onCancel() {            }
+                public void onCancel() {
+
+                }
             });
 
             if(currentDo != null)
                 if(siDo.equals(currentDo)){
+                    mapView.selectPOIItem(mapPOIItem, true);
                     return;
                 }
 
@@ -482,10 +484,13 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         currentPOIs = poiitems;
         Log.d("addPOIItems", "실행후");
 
+        buttonback.setVisibility(View.VISIBLE);
+
         if (mapPOIItem.getUserObject().getClass().equals(DoAndSi.class)) //선택된게 시도 poiItem
             mapView.fitMapViewAreaToShowAllPOIItems();
-
-        buttonback.setVisibility(View.VISIBLE);
+        else {
+            mapView.selectPOIItem(mapPOIItem, true);
+        }
     }
 
     @Override//전국 지도 화면에서 예를 들어 경기도를 누르면 경기도를 카메라 확대를 하고 다른 마커들도 보이도록 한다.

@@ -18,29 +18,14 @@
 
             <TextView
                 android:id="@+id/ques"
-                android:layout_width="326dp"
+                android:textColor="#333030"
+                android:fontFamily="@font/maplestorybold"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:paddingBottom="8dp"
                 android:text="10000000000000000000123456789123456789123456789"
                 android:textSize="20dp" />
-
-            <TextView
-                android:id="@+id/ans"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_toRightOf="@+id/ques"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="정답!"
-                android:textSize="20dp"
-                android:visibility="invisible" />
 
         </RelativeLayout>
 
