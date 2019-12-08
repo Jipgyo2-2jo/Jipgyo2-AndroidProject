@@ -22,9 +22,10 @@
 
         <Button
             android:id="@+id/finishbutton"
-            android:text="투어 종료"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="62.49dp"
+            android:layout_height="47.07dp"
+            android:background="@drawable/mclear"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -37,10 +38,10 @@
 
         <Button
             android:id="@+id/changeMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="47.07dp"
             android:layout_gravity="right"
-            android:text="지도 변경">
+            android:background="@drawable/mapchange">
         </Button>
 
     </android.widget.Toolbar>
