@@ -100,7 +100,10 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="40dp"
-            android:background="@drawable/tromap" />
+            android:background="@drawable/back_button"
+            android:text="지도로 가기"
+            android:textSize="18dp"
+            android:textColor="#333030" />
 
         <Button
             android:id="@+id/button2"
@@ -109,7 +112,10 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="40dp"
-            android:background="@drawable/trotour" />
+            android:background="@drawable/go_button"
+            android:text="투어 시작하기"
+            android:textSize="18dp"
+            android:textColor="#333030" />
 
     </RelativeLayout>
 

@@ -22,7 +22,7 @@
 
         <Button
             android:id="@+id/finishbutton"
-            android:layout_width="62.49dp"
+            android:layout_width="57.1dp"
             android:layout_height="47.07dp"
             android:background="@drawable/mclear"
             />

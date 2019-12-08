@@ -24,7 +24,6 @@ public class Activity_basic_mission extends AppCompatActivity {
 
     MissionQuiz missionQuiz;
     private ArrayList<RadioGroup> rgArray;
-    private ArrayList<TextView> ansArray;
     private ArrayList<LinearLayout> lloutArray;
     Button ansbutton;
     Button backbutton;
@@ -46,7 +45,6 @@ public class Activity_basic_mission extends AppCompatActivity {
         textView.setText(missionName);
 
         rgArray = new ArrayList<>();
-        ansArray = new ArrayList<>();
         lloutArray = new ArrayList<>();
         //미션을 유동적으로 넣어준다.
 
@@ -54,12 +52,7 @@ public class Activity_basic_mission extends AppCompatActivity {
             Sub n_layout = new Sub(getApplicationContext());
             LinearLayout con = (LinearLayout) findViewById(R.id.con);
             TextView ques = n_layout.findViewById(R.id.ques);
-            LinearLayout llout = n_layout.findViewById(R.id.anslayout);/*
-            ques.setTextColor(Color.rgb(205,133,63));
-            TextView ans = n_layout.findViewById(R.id.ans);
-            ans.setTextColor(Color.rgb(205,133,63));
-            ans.setId(i);
-            ansArray.add(ans);*/
+            LinearLayout llout = n_layout.findViewById(R.id.anslayout);
             con.setDividerPadding(1000);
             lloutArray.add(llout);
             RadioGroup radioGroup = n_layout.findViewById(R.id.radiogroup);
@@ -88,24 +81,18 @@ public class Activity_basic_mission extends AppCompatActivity {
         ansnumbers1 = ansnumbers;
 //        Toast.makeText(this, "정답 배열: "+ansnumbers, Toast.LENGTH_SHORT).show();
         //정답 여부를 표시한다.
-        for (int i = 0; i < ansArray.size(); i++) {
+        for (int i = 0; i < lloutArray.size(); i++) {
             rgArray.get(i).check(ansnumbers % 10);
             ansnumbers = ansnumbers / 10;
         }
         if(ansnumbers1 != 0){
-            for(int i = 0; i < ansArray.size(); i++) {
+            for(int i = 0; i < lloutArray.size(); i++) {
                 //정답인경우
                 if(rgArray.get(i).getCheckedRadioButtonId() == missionQuiz.getQuizArrayList().get(i).getRightAnswerone()){
-                    ansArray.get(i).setVisibility(View.VISIBLE);
-                    ansArray.get(i).setText("정답!");
-                    ansArray.get(i).setTextColor(Color.GREEN);
                     lloutArray.get(i).setBackgroundResource(R.drawable.circle);
                     correctNum++;
                 }
                 else{
-                    ansArray.get(i).setVisibility(View.VISIBLE);
-                    ansArray.get(i).setText("오답!");
-                    ansArray.get(i).setTextColor(Color.RED);
                     lloutArray.get(i).setBackgroundResource(R.drawable.xmark);
                 }
             }
@@ -119,20 +106,14 @@ public class Activity_basic_mission extends AppCompatActivity {
         public void onClick(View v) {
             correctNum = 0;
             ansnumbers = 0;
-            for(int i = 0; i < ansArray.size(); i++) {
+            for(int i = 0; i < lloutArray.size(); i++) {
                 ansnumbers = ansnumbers + rgArray.get(i).getCheckedRadioButtonId()*(int)Math.pow(10,i);
                 //정답인경우
                 if(rgArray.get(i).getCheckedRadioButtonId() == missionQuiz.getQuizArrayList().get(i).getRightAnswerone()){
-                    ansArray.get(i).setVisibility(View.VISIBLE);
-                    ansArray.get(i).setText("정답!");
-                    ansArray.get(i).setTextColor(Color.GREEN);
                     lloutArray.get(i).setBackgroundResource(R.drawable.circle);
                     correctNum++;
                 }
                 else{
-                    ansArray.get(i).setVisibility(View.VISIBLE);
-                    ansArray.get(i).setText("오답!");
-                    ansArray.get(i).setTextColor(Color.RED);
                     lloutArray.get(i).setBackgroundResource(R.drawable.xmark);
                 }
             }

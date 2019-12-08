@@ -102,7 +102,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
                 android:paddingTop="10dp"
-                android:background="@drawable/infme" />
+                android:background="@drawable/main_button"
+                android:text="메뉴로 돌아가기"
+                android:textSize="18dp"
+                android:textColor="#333030"
+                android:gravity="center" />
         </LinearLayout>
     </ScrollView>
 

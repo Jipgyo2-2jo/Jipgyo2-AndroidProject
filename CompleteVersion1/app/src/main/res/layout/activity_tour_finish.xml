@@ -16,7 +16,10 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="555dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/jonmap" />
+        android:text="뒤로 가기"
+        android:textSize="18dp"
+        android:textColor="#333030"
+        android:background="@drawable/go_button" />
 
     <Button
         android:id="@+id/button2"
@@ -26,7 +29,10 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="555dp"
-        android:background="@drawable/jonmain" />
+        android:text="투어 선택하기"
+        android:textSize="18dp"
+        android:textColor="#333030"
+        android:background="@drawable/back_button" />
 
     <Button
         android:id="@+id/button3"
@@ -39,7 +45,10 @@
         android:layout_marginLeft="25dp"
         android:layout_marginTop="640dp"
         android:layout_marginRight="25dp"
-        android:background="@drawable/jonjon" />
+        android:background="@drawable/main_button"
+        android:text="메인으로 가기"
+        android:textSize="18dp"
+        android:textColor="#333030" />
 
     <TextView
         android:id="@+id/Clear"
