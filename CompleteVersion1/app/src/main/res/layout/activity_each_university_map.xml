@@ -20,12 +20,13 @@
         android:background="#4f90c4"
         android:id="@+id/app_toolbar">
 
-        <Button
+        <ImageButton
             android:id="@+id/finishbutton"
-            android:layout_width="57.1dp"
-            android:layout_height="47.07dp"
-            android:background="@drawable/mclear"
-            />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="left"
+            android:background="@drawable/goal1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,10 +40,10 @@
         <Button
             android:id="@+id/changeMap"
             android:layout_width="40dp"
-            android:layout_height="47.07dp"
+            android:layout_height="40dp"
             android:layout_gravity="right"
-            android:background="@drawable/mapchange">
-        </Button>
+            android:layout_marginRight="20dp"
+            android:background="@drawable/changemap"></Button>
 
     </android.widget.Toolbar>
 

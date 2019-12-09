@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +45,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.example.version1.R;
 import com.example.version1.database.UniversityMissionQuizDB;
 import com.example.version1.database.UniversityTourAccessDB;
@@ -71,7 +74,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
     private Long ran;
     private String univName;
-    private Button finishbutton;
+    private ImageButton finishbutton;
     private Button changeMap;
     private Button handleButton;
     private String tmpstr;
@@ -106,6 +109,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
+
+    private long mLastClickTime = 0;
 
     //Binding 서비스용
     public static final String CHANNEL_ID = "tourGPSServiceChannel";
@@ -549,9 +554,33 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 startActivityForResult(intent, 1);
 //                Glide.with(getApplicationContext()).load(R.drawable.touring).override(110,110).into(finishbutton);
             }
+
             //미션을 모두 완료하지 못한 경우
             else{
-                Toast.makeText(getApplicationContext(), "미션을 모두 완수하면 버튼이 활성화됩니다.", Toast.LENGTH_SHORT).show();
+                // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+                AlertDialog.Builder alBuilder = new AlertDialog.Builder(v.getContext());
+                alBuilder.setMessage("투어를 종료하시겠습니까?\n클리어한 미션이 저장되지 않습니다.");
+
+                // "예" 버튼을 누르면 실행되는 리스너
+                alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        playmode = 0;
+                        finish(); // 현재 액티비티를 종료한다. (MainActivity에서 작동하기 때문에 애플리케이션을 종료한다.)
+                    }
+                });
+                // "아니오" 버튼을 누르면 실행되는 리스너
+                alBuilder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return; // 아무런 작업도 하지 않고 돌아간다
+                    }
+                });
+                if(playmode == 0)
+                    alBuilder.setTitle("투어 종료");
+                else
+                    alBuilder.setTitle("아직 미션이 남아있습니다!");
+                alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
             }
 
         }
@@ -578,7 +607,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 return; // 아무런 작업도 하지 않고 돌아간다
             }
         });
-        alBuilder.setTitle("프로그램 종료");
+        alBuilder.setTitle("투어 종료");
         alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
     }
 
@@ -1006,7 +1035,16 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 if(ansnum >= missionNum){
                     //투어종료버튼 활성화
                     finishActivated = 1;
-//                    Glide.with(this).load(R.drawable.tourclear).into(finishbutton);
+                    Glide.with(this).load(R.drawable.goal3).centerCrop().into(finishbutton);
+                    new Handler().postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            //여기에 딜레이 후 시작할 작업들을 입력
+                            Glide.with(getApplicationContext()).load(R.drawable.goal2).centerCrop().into(finishbutton);
+                        }
+                    }, 3000);// 3초 정도 딜레이를 준 후 시작
                 }
                 //***마커의 색도 바뀜. (답이 모두 맞는 경우)
                 MapPOIItem aa = new MapPOIItem();
