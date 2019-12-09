@@ -48,6 +48,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="기본 정보:"
                 android:textColor="#333030"
                 android:textSize="20dp"
@@ -59,6 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="2dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="기본 정보 내용"
                 android:textColor="#8b8687"
                 android:textSize="15dp" />
@@ -69,29 +73,28 @@
                 android:text="주요 학과:"
                 android:textColor="#333030"
                 android:textSize="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/text2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="2dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="주요 학과 내용"
                 android:textColor="#8b8687"
                 android:textSize="15dp" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#1e90ff"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/text3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="나머지 내용"
                 android:textColor="#8b8687"
                 android:textSize="15dp" />
@@ -101,7 +104,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:paddingTop="10dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
                 android:background="@drawable/main_button"
                 android:text="메뉴로 돌아가기"
                 android:textSize="18dp"

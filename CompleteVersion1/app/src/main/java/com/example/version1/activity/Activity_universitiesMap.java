@@ -243,6 +243,8 @@ public class Activity_universitiesMap extends AppCompatActivity implements MapVi
         mMapView.setMapViewEventListener(this);
         mMapView.setPOIItemEventListener(this);
         mMapView.setCurrentLocationEventListener(this);
+        mMapView.setShowCurrentLocationMarker(false);
+
         // 중심점 변경 + 줌 레벨 변경
         mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(36, 127.80), 11, false);
 
