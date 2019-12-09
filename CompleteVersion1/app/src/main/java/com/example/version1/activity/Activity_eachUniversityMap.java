@@ -373,6 +373,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         if(playmode == 1) {
             Intent serviceIntent = new Intent(this, tourGPSService.class);
             stopService(serviceIntent);
+            unbindService(conn);
             deleteNotificationChannel();
         }
     }
@@ -584,14 +585,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if(playmode == 1) {
-            //Service Unibind
-            Intent serviceIntent = new Intent(this, tourGPSService.class);
-            stopService(serviceIntent);
-            unbindService(conn);
-            deleteNotificationChannel();
-        }
 
         mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
         mMapView.setShowCurrentLocationMarker(false);
