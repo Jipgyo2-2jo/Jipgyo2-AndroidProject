@@ -32,8 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,10 +43,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
-import com.bumptech.glide.Glide;
 import com.example.version1.R;
 import com.example.version1.database.UniversityMissionQuizDB;
 import com.example.version1.database.UniversityTourAccessDB;
+import com.example.version1.database.UniversityTourPhotoDB;
 import com.example.version1.database.UniversityTourPolylineDB;
 import com.example.version1.domain.MissionQuiz;
 import com.example.version1.domain.UniversityTour;
@@ -103,6 +101,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     private RelativeLayout relativelayout;
     private MapPoint.GeoCoordinate beforeLocation;
     private TextView tv_moving;
+    private ArrayList<UniversityTour> universityTourPhotoarray;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -179,7 +178,13 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         public View getCalloutBalloon(MapPOIItem poiItem) {
             mCalloutBalloon.findViewById(R.id.ballonlayout).setBackgroundResource(R.drawable.ballon);
             ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
-            ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(universityTourarray.get(poiItem.getTag() - 1).get한줄평());
+            UniversityTour tmpTour = (UniversityTour) poiItem.getUserObject();
+            if(tmpTour.getLoctype() == 2){
+                ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText("포토존");
+            }
+            else{
+                ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(universityTourarray.get(poiItem.getTag() - 1).get한줄평());
+            }
             return mCalloutBalloon;
         }
 
@@ -220,6 +225,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         //일단 DB에서 해당 학교의 장소 위치를 모두 받는 메소드를 실행한다.
         UniversityTourAccessDB universityTourAccessDB = new UniversityTourAccessDB();
         universityTourarray = universityTourAccessDB.getUniversityTourFromDB(univName);
+
+        UniversityTourPhotoDB universityTourPhotoAccessDB = new UniversityTourPhotoDB();
+        universityTourPhotoarray = universityTourPhotoAccessDB.getUniversityTourPhotoFromDB(univName);
 
         //DB에서 polyline을 가져온다.
         UniversityTourPolylineDB universityTourPolylineDB = new UniversityTourPolylineDB();
@@ -285,6 +293,9 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
 
         for (int i = 0; i < universityTourarray.size(); i++) {
             createCustomMarker(mMapView, universityTourarray.get(i));
+        }
+        for (int i = 0; i < universityTourPhotoarray.size(); i++) {
+            createCustomMarkerPhoto(mMapView, universityTourPhotoarray.get(i));
         }
 
         polylineArrayList = new ArrayList<MapPolyline>();
@@ -389,7 +400,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         @RequiresApi(api = Build.VERSION_CODES.M)
         public void onClick(View v) {
             if(courseselect == 0){
-                Toast.makeText(Activity_eachUniversityMap.this, "코스를 선택하세요", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Activity_eachUniversityMap.this, "먼저 코스를 선택하세요", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -445,9 +456,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                     missionQuizsCourse = new ArrayList<>();
                     ArrayList<Integer> tmpIntArr = universityTourPolyline.getMissionsIDs();
                     for(int i = 0; i < missionQuizs.size(); i++){
-                        Log.d("11111", ""+i);
                         if(tmpIntArr.contains(missionQuizs.get(i).getId())){
-                            Log.d("22222", ""+missionQuizs.get(i).getId());
                             missionQuizsCourse.add(missionQuizs.get(i));
                             //미션들은 다른 마커 이미지로 표시한다.
                             MapPOIItem aa = mMapView.findPOIItemByTag(missionQuizs.get(i).getId());
@@ -486,7 +495,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                         int time = Toast.LENGTH_LONG;
                         LayoutInflater inflater = getLayoutInflater();
                         View view = inflater.inflate(R.layout.custom_toastview,
-                                        (ViewGroup)findViewById(R.id.containers));
+                                (ViewGroup)findViewById(R.id.containers));
                         TextView txtView = view.findViewById(R.id.txtview);
                         txtView.setTypeface(typeface);
                         Toast toast = new Toast(getApplicationContext());
@@ -612,6 +621,23 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         }else{
             mCustomMarker.setCustomImageResourceId(R.drawable.xmap);//이미지(png파일로 하자)
         }
+        mCustomMarker.setCustomImageAutoscale(false);
+        mCustomMarker.setCustomImageAnchor(0.5f, 1.0f);
+
+        mapView.addPOIItem(mCustomMarker);
+    }
+
+    private void createCustomMarkerPhoto(MapView mapView, UniversityTour universityTour) {
+        mCustomMarker = new MapPOIItem();
+        mCustomMarker.setItemName(universityTour.get시설());//이름
+        mCustomMarker.setTag(0);//photo의 tag는 모두 0
+        mCustomMarker.setUserObject(universityTour);
+        //구조물 위치
+        mCustomMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(universityTour.getLatitude(), universityTour.getLongitude()));
+        mCustomMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+        mCustomMarker.isCustomImageAutoscale();
+        mCustomMarker.setCustomImageResourceId(R.drawable.photocamera);//포토존
+
         mCustomMarker.setCustomImageAutoscale(false);
         mCustomMarker.setCustomImageAnchor(0.5f, 1.0f);
 
@@ -756,12 +782,22 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     }
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
-        Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_loc_information.class);
-        UniversityTour universityTour = (UniversityTour) mapPOIItem.getUserObject();
-        intent.putExtra("locationDesc", universityTour);
-        intent.putExtra("univName", univName);
+        UniversityTour tmpTour = (UniversityTour) mapPOIItem.getUserObject();
+        if(tmpTour.getLoctype() == 2){
+            Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_photo_mission.class);
+            intent.putExtra("시설", tmpTour.get시설());
+            intent.putExtra("id", tmpTour.getId_num());
+            intent.putExtra("univName", univName);
+            startActivity(intent);
+        }
+        else{
+            Intent intent=new Intent(Activity_eachUniversityMap.this, Activity_loc_information.class);
+            UniversityTour universityTour = (UniversityTour) mapPOIItem.getUserObject();
+            intent.putExtra("locationDesc", universityTour);
+            intent.putExtra("univName", univName);
 
-        startActivity(intent);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -827,6 +863,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     }
 
     private void onFinishReverseGeoCoding(String result) {
+//        Toast.makeText(LocationDemoActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
     }
 
     //ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.
@@ -966,7 +1003,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             case 100:
                 int a = data.getIntExtra("correctNum", 0);
                 MissionQuiz m = (MissionQuiz) data.getSerializableExtra("missionQuiz");
-//                Toast.makeText(this, "맞춘 정답 수: " + a, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "맞춘 정답 수: " + a, Toast.LENGTH_LONG).show();
                 missionListFragment.modifyMission(a, m);
                 int ansnum = missionListFragment.getanswers();
                 missionListFragment.adapter.notifyDataSetChanged();
