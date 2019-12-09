@@ -666,14 +666,22 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         mapView.addPOIItem(mCustomMarker);
     }
 
+    int cycle = 0;
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         mapPointGeo = currentLocation.getMapPointGeoCoord();
-        Log.d("onCurrentLocationUpdate", ""+mapPointGeo.latitude +"///"+mapPointGeo.longitude);
-        //gps와 건물의 거리가 (10m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
+        Log.d("onCurrentLocationUpdate", ""+mapPointGeo.latitude +"///"+mapPointGeo.longitude + "//" + accuracyInMeters);
+        //gps와 건물의 거리가 (20m) 가까워지면 미션을 주는 처리, 미션 잠김 -> 활성화로 전환
         if(playmode == 1){
             activateMission(mapPointGeo);
-            totalMoveDistance(mapPointGeo);
+            if(accuracyInMeters < 10){
+                if(cycle > 1){//3번 위치를 받아올 때마다 한번 이동거리 업데이트
+                    totalMoveDistance(mapPointGeo);
+                    cycle = 0;
+                }else{
+                    cycle++;
+                }
+            }
         }
         else
             return;
@@ -682,6 +690,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
     int tried = 0;
     float range = 0;
     float rangesum = 0;
+
     public void totalMoveDistance(MapPoint.GeoCoordinate mapPointGeo) {
         if(tried == 0){
             tried++;
@@ -700,6 +709,7 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                     Location cl = new Location("0");//미션이 발생하는 곳의 위치(유동적)
                     cl.setLatitude(mapPointGeo.latitude);
                     cl.setLongitude(mapPointGeo.longitude);
+                    beforeLocation = mapPointGeo;
                     range = bl.distanceTo(cl);
                     rangesum += range;
                 }
@@ -750,8 +760,8 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
         for(int i = 0; i < missionQuizsCourse.size(); i++){
             gl.setLatitude(missionQuizsCourse.get(i).getLatitude());
             gl.setLongitude(missionQuizsCourse.get(i).getLongitude());
-            //10m보다 가까워질 경우 미션 활성화
-            if(cl.distanceTo(gl) < 40 && missionQuizsCourse.get(i).getIsActivated() == 0){
+            //20m보다 가까워질 경우 미션 활성화
+            if(cl.distanceTo(gl) < 20 && missionQuizsCourse.get(i).getIsActivated() == 0){
                 Log.d("Activity", "미션 찾음");
                 missionQuizsCourse.get(i).setIsActivated(1);
                 onMissionFind(missionQuizsCourse.get(i));
@@ -761,7 +771,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
                 CharSequence txt = "미션 활성화!";
                 Typeface typeface = getResources().getFont(R.font.maplestorybold);
                 int time = Toast.LENGTH_LONG;
-//                Toast.makeText(context, txt, time).show();
                 Toast toast = Toast.makeText(context, txt, time);
                 LayoutInflater inflater = getLayoutInflater();
                 View view = inflater.inflate(R.layout.custom_toastview, (ViewGroup) findViewById(R.id.containers));
@@ -1025,7 +1034,6 @@ public class Activity_eachUniversityMap extends AppCompatActivity implements Map
             case 100:
                 int a = data.getIntExtra("correctNum", 0);
                 MissionQuiz m = (MissionQuiz) data.getSerializableExtra("missionQuiz");
-                Toast.makeText(this, "맞춘 정답 수: " + a, Toast.LENGTH_LONG).show();
                 missionListFragment.modifyMission(a, m);
                 int ansnum = missionListFragment.getanswers();
                 missionListFragment.adapter.notifyDataSetChanged();
